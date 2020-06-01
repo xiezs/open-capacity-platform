@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 import com.open.capacity.common.auth.props.PermitUrlProperties;
+import com.open.capacity.uaa.server.constant.SecurityConstant;
 import com.open.capacity.uaa.server.handle.OauthLogoutHandler;
 import com.open.capacity.uaa.server.provider.SmsCodeAuthenticationProvider;
 
@@ -98,7 +99,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.authorizeRequests()
 				.anyRequest().authenticated();
-		http.formLogin().loginPage("/login.html").loginProcessingUrl("/user/login")
+		http.formLogin().loginPage(SecurityConstant.LOGIN_PAGE).loginProcessingUrl(SecurityConstant.LOGIN_PROCESSING_URL)
 				.successHandler(authenticationSuccessHandler).failureHandler(authenticationFailureHandler);
 
 		// 基于密码 等模式可以无session,不支持授权码模式
@@ -111,7 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 		}
 
-		http.logout().logoutSuccessUrl("/login.html")
+		http.logout().logoutSuccessUrl(SecurityConstant.LOGIN_PAGE)
 				.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
 				.addLogoutHandler(oauthLogoutHandler).clearAuthentication(true);
 
