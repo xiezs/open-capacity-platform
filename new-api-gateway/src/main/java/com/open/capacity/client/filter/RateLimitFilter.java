@@ -1,12 +1,10 @@
 package com.open.capacity.client.filter;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -26,8 +24,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.capacity.client.service.SysClientService;
 import com.open.capacity.client.utils.RedisLimiterUtils;
+import com.open.capacity.client.utils.TokenUtil;
 import com.open.capacity.common.web.Result;
-import com.open.capacity.redis.util.RedisUtil;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -43,9 +41,6 @@ import reactor.core.publisher.Mono;
 public class RateLimitFilter implements GlobalFilter, Ordered {
     // url匹配器
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
-    @Resource
-    private RedisUtil redisUtil;
-
 
     @Autowired
     private RedisLimiterUtils redisLimiterUtils;
@@ -103,17 +98,9 @@ public class RateLimitFilter implements GlobalFilter, Ordered {
     }
 
     private String extractToken(ServerHttpRequest request) {
-        List<String> strings = request.getHeaders().get("Authorization");
-        String authToken = null;
-        if (strings != null) {
-            authToken = strings.get(0).substring("Bearer".length()).trim();
-        }
-        if (StringUtils.isBlank(authToken)) {
-            strings = request.getQueryParams().get("access_token");
-            if (strings != null) {
-                authToken = strings.get(0);
-            }
-        }
+
+    	String authToken = TokenUtil.extractToken(request);
+    	
         return authToken;
     }
 
