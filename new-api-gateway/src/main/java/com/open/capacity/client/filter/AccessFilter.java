@@ -27,7 +27,11 @@ import com.open.capacity.common.auth.props.PermitUrlProperties;
 import reactor.core.publisher.Mono;
 
 /**
- * * 程序名 : AccessFilter 建立日期: 2018-09-09 作者 : someday 模块 : 网关 描述 : oauth校验 备注 :
+ * 程序名 : AccessFilter 
+ * 建立日期: 2018-09-09 
+ * 作者 : someday 
+ * 模块 : 网关 
+ * 描述 : oauth校验 备注 :
  * version20180909001
  * <p>
  * 修改历史 序号 日期 修改人 修改原因

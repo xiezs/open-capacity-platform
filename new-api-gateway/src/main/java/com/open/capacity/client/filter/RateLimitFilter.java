@@ -2,8 +2,7 @@ package com.open.capacity.client.filter;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-
-import javax.annotation.Resource;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -12,72 +11,57 @@ import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.open.capacity.client.service.SysClientService;
-import com.open.capacity.client.utils.RedisLimiterUtils;
+import com.open.capacity.client.service.RateLimitService;
 import com.open.capacity.client.utils.TokenUtil;
-import com.open.capacity.common.web.Result;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 /**
- * Created by owen on 2018/12/10.
- * 根据应用 url 限流 oauth_client_details if_limit 限流开关
- * limit_count 阈值
+ * 程序名 : RateLimitFilter 
+ * 建立日期: 2018-09-09 
+ * 作者 : someday 
+ * 模块 : 网关
+ * 描述 : 限流过滤 
+ * 备注 :
+ * version20180909001
+ * <p>
+ * 修改历史 序号 日期 修改人 修改原因
  */
 @Slf4j
 @Component
 @SuppressWarnings("all")
 public class RateLimitFilter implements GlobalFilter, Ordered {
-    // url匹配器
-    private final AntPathMatcher pathMatcher = new AntPathMatcher();
-
-    @Autowired
-    private RedisLimiterUtils redisLimiterUtils;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private TokenStore tokenStore;
-
-    @Resource
-    SysClientService sysClientService;
-
+   
+	@Autowired
+	private Map<String,RateLimitService> rateLimitServiceMap ;
 
     @Override
     public int getOrder() {
         return -500;
     }
 
-    /**
-     * 1. 判断token是否有效
-     * 2. 如果token有对应clientId
-     * 2.1 判断clientId是否有效
-     * 2.2 判断请求的服务service是否有效
-     * 2.3 判断clientId是否有权限访问service
-     * 3. 判断 clientId+service 每日限流
-     *
-     * @param exchange
-     * @param accessToken
-     * @return
-     */
+    
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        String accessToken = extractToken(exchange.getRequest());
-        if (!checkRateLimit(exchange, accessToken)) {
-            log.error("TOO MANY REQUESTS!");
-            exchange.getResponse().setStatusCode(HttpStatus.TOO_MANY_REQUESTS);
+        String accessToken =  TokenUtil.extractToken(exchange.getRequest());   
+        
+        String reqUrl = exchange.getRequest().getPath().value();
+        
+    	AtomicInteger isOpenRateLimit = new AtomicInteger(0);
 
+    	//超额自增处理
+    	rateLimitServiceMap.forEach((k,v) -> { if(!v.checkRateLimit(reqUrl, accessToken)){ isOpenRateLimit.incrementAndGet();}});
+		 
+        //超额限流
+        if ( isOpenRateLimit.get() > 0) {
+            exchange.getResponse().setStatusCode(HttpStatus.TOO_MANY_REQUESTS);
             ServerHttpResponse response = exchange.getResponse();
             JSONObject message = new JSONObject();
             message.put("resp_code", -1);
@@ -97,47 +81,6 @@ public class RateLimitFilter implements GlobalFilter, Ordered {
         return chain.filter(exchange);
     }
 
-    private String extractToken(ServerHttpRequest request) {
 
-    	String authToken = TokenUtil.extractToken(request);
-    	
-        return authToken;
-    }
-
-
-    private Boolean checkRateLimit(ServerWebExchange exchange, String accessToken) {
-        try {
-            String reqUrl = exchange.getRequest().getPath().value();
-
-            // 1. 按accessToken查找对应的clientId
-            OAuth2Authentication oauth2Authentication = tokenStore.readAuthentication(accessToken);
-            if (oauth2Authentication != null) {
-                String clientId = oauth2Authentication.getOAuth2Request().getClientId();
-                Map client = sysClientService.getClient(clientId);
-                if (client != null) {
-                    String flag = String.valueOf(client.get("if_limit"));
-
-                    if ("1".equals(flag)) {
-                        String accessLimitCount = String.valueOf(client.get("limit_count"));
-                        if (!accessLimitCount.isEmpty()) {
-                            Result result = redisLimiterUtils.rateLimitOfDay(clientId, reqUrl,
-                                    Long.parseLong(accessLimitCount));
-                            if (-1 == result.getResp_code()) {
-                                log.error("token:" + accessToken + result.getResp_msg());
-                                return false;
-                            }
-                        }
-                    }
-                }
-
-
-            }
-        } catch (Exception e) {
-            StackTraceElement stackTraceElement = e.getStackTrace()[0];
-            log.error("checkRateLimit:" + "---|Exception:" + stackTraceElement.getLineNumber() + "----" + e.getMessage());
-        }
-
-        return true;
-    }
-
+     
 }

@@ -16,8 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 /**
- * * 程序名 : ResponseStatsFilter 建立日期: 2018-09-09 
- *  作者 : someday 模块 : 网关 描述 : 应答traceId:
+ * 程序名 : ResponseStatsFilter 建立日期: 2018-09-09 
+ *  作者 : someday 
+ *  模块 : 网关 
+ *  描述 : 应答traceId:
  * version20180909001
  * <p>
  * 修改历史 序号 日期 修改人 修改原因
