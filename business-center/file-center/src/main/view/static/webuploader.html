@@ -22,7 +22,8 @@
         // swf文件路径
         swf: 'http://cdn.staticfile.org/webuploader/0.1.5/Uploader.swf',
         // 文件接收服务端。
-        server: './files-anon/bigFile',
+        // server: './files-anon/bigFile',
+        server: 'http://127.0.0.1:9200/api-file/files-anon/bigFile',
         formData:{
             guid : GUID
         },
@@ -41,9 +42,9 @@
     });
     //当文件上传成功时触发。
     uploader.on( "uploadSuccess", function( file ) {
-        console.log('xxxxxx')
         $.ajax({
-            url:'./files-anon/merge',
+            // url:'./files-anon/merge',
+            url:'http://127.0.0.1:9200/api-file/files-anon/merge',
             type:"POST",
             data: JSON.stringify(  { guid: GUID, fileName: file.name } ) ,
             contentType:"application/json; charset=utf-8",
