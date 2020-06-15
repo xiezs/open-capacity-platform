@@ -139,9 +139,7 @@ public class FileController {
 		try {
 			// 获取文件需要上传到的路径
 			String filePath = localFilePath;
-
 			log.info("guid:{},chunkNumber:{}",guid,chunk);
-
 			if(Objects.isNull(chunk)){
 				chunk = 0;
 			}
@@ -159,6 +157,8 @@ public class FileController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+
 		}
 	}
 
@@ -175,8 +175,8 @@ public class FileController {
 
 		// 得到 destTempFile 就是最终的文件
 		log.info("guid:{},fileName:{}",guid,fileName);
+		File parentFileDir = new File(filePath + File.separator + guid);
 		try {
-			File parentFileDir = new File(filePath + File.separator + guid);
 			if(parentFileDir.isDirectory()){
 				File destTempFile = new File(filePath , fileName);
 				if(!destTempFile.exists()){
@@ -189,6 +189,8 @@ public class FileController {
 						e.printStackTrace();
 					}
 				}
+
+
 				log.info("length:{} ",parentFileDir.listFiles().length);
 
 				for (int i = 0; i < parentFileDir.listFiles().length; i++) {
@@ -198,16 +200,21 @@ public class FileController {
 					FileUtils.copyFile(partFile, destTempfos);
 					destTempfos.close();
 				}
-				// 删除临时目录中的分片文件
-				FileUtils.deleteDirectory(parentFileDir);
-
 				return Result.succeed("");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Result.failed("");
+		}finally {
+			// 删除临时目录中的分片文件
+			try {
+				FileUtils.deleteDirectory(parentFileDir);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		return null;
+
+		return Result.failed("");
 	}
 
 
