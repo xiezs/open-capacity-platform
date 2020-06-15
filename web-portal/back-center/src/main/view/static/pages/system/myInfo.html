@@ -41,18 +41,20 @@
         </blockquote>
     </div>
 
+
     <div class="layui-form-item model-form-footer">
         <button class="layui-btn" lay-filter="user-form-submit" lay-submit>保存</button>
     </div>
 </form>
 
 <script>
-    layui.use(['layer', 'admin', 'form', 'formSelects','index','config','upload'], function () {
+    layui.use(['layer', 'admin', 'form', 'formSelects','index','config','upload','webuploader'], function () {
         var layer = layui.layer;
         var admin = layui.admin;
         var form = layui.form;
         var config = layui.config;
         var upload = layui.upload;
+
 
         form.render('radio');
 
@@ -116,6 +118,7 @@
                 layer.closeAll('loading');
             }
         });
+
 
     });
 </script>

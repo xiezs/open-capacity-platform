@@ -71,7 +71,8 @@
 <!-- highcharts  -->
 <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
 <script type="text/javascript" src="assets/libs/v5.3.0/ol.js"></script>
-
+<!-- webuploader  -->
+<script type="text/javascript" src="http://cdn.staticfile.org/webuploader/0.1.5/webuploader.min.js"></script>
 
 
 <script>
@@ -85,7 +86,9 @@
 	    step: 'step-lay/step',
 	    dtree: 'dtree/dtree',
 	    citypicker: 'city-picker/city-picker',
-	    tableSelect: 'tableSelect/tableSelect'
+	    tableSelect: 'tableSelect/tableSelect',
+        webuploader:'uploader/webuploader'
+
     }).use(['config', 'index', 'element'], function () {
         var config = layui.config;
         var index = layui.index;
