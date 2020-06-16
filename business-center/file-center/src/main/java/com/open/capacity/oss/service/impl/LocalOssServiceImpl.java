@@ -4,6 +4,7 @@ import com.open.capacity.common.web.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -125,13 +126,11 @@ public class LocalOssServiceImpl extends AbstractFileService {
 	 */
 	@Override
 	protected void mergeFile(String guid, String fileName, String filePath) throws Exception {
-		// 获取文件需要上传到的路径
-		String filePathName = filePath + File.separator + org.apache.commons.lang3.StringUtils.substringBeforeLast(fileName, ".")+ File.separator;
-		log.info("filePathName:{},fileName:{}",filePathName,fileName);
-
 		// 得到 destTempFile 就是最终的文件
 		log.info("guid:{},fileName:{}",guid,fileName);
+
 		File parentFileDir = new File(filePath + File.separator + guid);
+
 		try {
 			if(parentFileDir.isDirectory()){
 				File destTempFile = new File(filePath , fileName);

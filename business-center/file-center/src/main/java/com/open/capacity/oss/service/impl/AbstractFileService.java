@@ -13,6 +13,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -123,7 +124,21 @@ public abstract class AbstractFileService implements FileService {
 
 	@Override
 	public void chunk(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception {
+		// TODO: 2020/6/16  分片提交
 		chunkFile(guid,chunk,file,chunks,filePath);
+
+		FileInfo fileInfo = FileUtil.getFileInfo(file);
+		FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
+
+		if (oldFileInfo != null) {
+			return;
+		}
+
+		fileInfo.setBatchNumber(guid);
+		fileInfo.setSource(fileType().name());// 设置文件来源
+		fileInfo.setUrl(  guid + "_" + chunk + ".part" );
+		getFileDao().save(fileInfo);// 将文件信息保存到数据库
+
 	}
 
 	@Override
