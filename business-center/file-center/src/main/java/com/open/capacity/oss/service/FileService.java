@@ -29,4 +29,6 @@ public interface FileService {
 
 	void chunk(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception;
 
+	void merge(String guid,String fileName,String filePath) throws Exception;
+
 }

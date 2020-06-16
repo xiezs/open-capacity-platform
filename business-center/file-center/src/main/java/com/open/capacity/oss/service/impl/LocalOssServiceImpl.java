@@ -1,5 +1,6 @@
 package com.open.capacity.oss.service.impl;
 
+import com.open.capacity.common.web.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
@@ -18,6 +19,8 @@ import com.open.capacity.oss.utils.FileUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -110,6 +113,61 @@ public class LocalOssServiceImpl extends AbstractFileService {
 		}
 
 	}
+
+	/**
+	 * 合并分片文件
+	 * 每一个小片合并一个完整文件
+	 *
+	 * @param guid
+	 * @param fileName
+	 * @param filePath
+	 * @return
+	 */
+	@Override
+	protected void mergeFile(String guid, String fileName, String filePath) throws Exception {
+		// 获取文件需要上传到的路径
+		String filePathName = filePath + File.separator + org.apache.commons.lang3.StringUtils.substringBeforeLast(fileName, ".")+ File.separator;
+		log.info("filePathName:{},fileName:{}",filePathName,fileName);
+
+		// 得到 destTempFile 就是最终的文件
+		log.info("guid:{},fileName:{}",guid,fileName);
+		File parentFileDir = new File(filePath + File.separator + guid);
+		try {
+			if(parentFileDir.isDirectory()){
+				File destTempFile = new File(filePath , fileName);
+				if(!destTempFile.exists()){
+					//先得到文件的上级目录，并创建上级目录，在创建文件,
+					destTempFile.getParentFile().mkdir();
+					try {
+						//创建文件
+						destTempFile.createNewFile(); //上级目录没有创建，这里会报错
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+
+				log.info("length:{} ",parentFileDir.listFiles().length);
+
+				for (int i = 0; i < parentFileDir.listFiles().length; i++) {
+					File partFile = new File(parentFileDir, guid + "_" + i + ".part");
+					FileOutputStream destTempfos = new FileOutputStream(destTempFile, true);
+					//遍历"所有分片文件"到"最终文件"中
+					FileUtils.copyFile(partFile, destTempfos);
+					destTempfos.close();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			// 删除临时目录中的分片文件
+			try {
+				FileUtils.deleteDirectory(parentFileDir);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 
 
 }

@@ -72,7 +72,6 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
 	 * 上传大文件
 	 * 分片上传 每片一个临时文件
 	 *
-	 * @param request
 	 * @param guid
 	 * @param chunk
 	 * @param file
@@ -84,4 +83,18 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
 
 	}
 
+
+	/**
+	 * 合并分片文件
+	 * 每一个小片合并一个完整文件
+	 *
+	 * @param guid
+	 * @param fileName
+	 * @param filePath
+	 * @return
+	 */
+	@Override
+	protected void mergeFile(String guid, String fileName, String filePath) throws Exception {
+
+	}
 }

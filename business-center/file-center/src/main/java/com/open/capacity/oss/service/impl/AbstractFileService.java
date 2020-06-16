@@ -59,6 +59,14 @@ public abstract class AbstractFileService implements FileService {
 	 */
 	protected abstract void chunkFile( String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception;
 
+	/**
+	 * 合并分片文件
+	 *		每一个小片合并一个完整文件
+	 * @param fileName
+	 * @return
+	 */
+	protected abstract void mergeFile( String guid,String fileName,String filePath ) throws Exception;
+
 	protected static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
 	@Override
@@ -116,5 +124,10 @@ public abstract class AbstractFileService implements FileService {
 	@Override
 	public void chunk(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception {
 		chunkFile(guid,chunk,file,chunks,filePath);
+	}
+
+	@Override
+	public void merge(String guid, String fileName, String filePath) throws Exception {
+		mergeFile(guid,fileName,filePath);
 	}
 }
