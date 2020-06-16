@@ -1,5 +1,6 @@
 package com.open.capacity.oss.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,12 +17,15 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author 作者 owen 
  * @version 创建时间：2017年11月12日 上午22:57:51 
  * 七牛云oss存储文件
  */
 @Service("qiniuOssServiceImpl")
+@Slf4j
 public class QiniuOssServiceImpl extends AbstractFileService implements InitializingBean {
 
 	@Autowired
@@ -94,9 +98,22 @@ public class QiniuOssServiceImpl extends AbstractFileService implements Initiali
 
 	}
 
- 
+	/**
+	 * 上传大文件
+	 * 分片上传 每片一个临时文件
+	 *
+	 * @param request
+	 * @param guid
+	 * @param chunk
+	 * @param file
+	 * @param chunks
+	 * @return
+	 */
+	@Override
+	protected void chunkFile(HttpServletRequest request, String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath)throws Exception {
 
-  
+	}
+
 
 	@Override
 	public void afterPropertiesSet() throws Exception {

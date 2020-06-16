@@ -1,5 +1,6 @@
 package com.open.capacity.oss.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +16,9 @@ import com.open.capacity.oss.model.FileInfo;
 import com.open.capacity.oss.model.FileType;
 
 import cn.hutool.core.util.StrUtil;
- 
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * fastdfs存储文件
  * @author pm 1280415703@qq.com
@@ -23,6 +26,7 @@ import cn.hutool.core.util.StrUtil;
  */
 @Import(FdfsClientConfig.class)
 @Service("fastDfsOssServiceImpl")
+@Slf4j
 public class FastDfsOssServiceImpl extends AbstractFileService {
 
 	@Autowired
@@ -62,6 +66,22 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
              storageClient.deleteFile(storePath.getGroup(), storePath.getPath());
          }
          return true;
-     } 
+     }
+
+	/**
+	 * 上传大文件
+	 * 分片上传 每片一个临时文件
+	 *
+	 * @param request
+	 * @param guid
+	 * @param chunk
+	 * @param file
+	 * @param chunks
+	 * @return
+	 */
+	@Override
+	protected void chunkFile(HttpServletRequest request, String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath)throws Exception {
+
+	}
 
 }

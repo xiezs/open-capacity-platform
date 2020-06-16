@@ -1,5 +1,8 @@
 package com.open.capacity.oss.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +14,10 @@ import com.open.capacity.oss.model.FileInfo;
 import com.open.capacity.oss.model.FileType;
 import com.open.capacity.oss.utils.FileUtil;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.Objects;
+
 /**
  * 本地存储文件
  * 该实现文件服务只能部署一台 
@@ -20,6 +27,7 @@ import com.open.capacity.oss.utils.FileUtil;
  */
   
 @Service("localOssServiceImpl")
+@Slf4j
 public class LocalOssServiceImpl extends AbstractFileService {
 
 	@Autowired
@@ -66,5 +74,39 @@ public class LocalOssServiceImpl extends AbstractFileService {
 	protected boolean deleteFile(FileInfo fileInfo) {
 		return FileUtil.deleteFile(fileInfo.getPath());
 	}
-	 
+
+	/**
+	 * 上传大文件
+	 * 分片上传 每片一个临时文件
+	 *
+	 * @param request
+	 * @param guid
+	 * @param chunk
+	 * @param file
+	 * @param chunks
+	 * @return
+	 */
+	@Override
+	protected void chunkFile(HttpServletRequest request, String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath)throws Exception {
+		log.info("guid:{},chunkNumber:{}",guid,chunk);
+		if(Objects.isNull(chunk)){
+			chunk = 0;
+		}
+
+		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+		if (isMultipart) {
+			// 临时目录用来存放所有分片文件
+			String tempFileDir = filePath + File.separator + guid;
+			File parentFileDir = new File(tempFileDir);
+			if (!parentFileDir.exists()) {
+				parentFileDir.mkdirs();
+			}
+			// 分片处理时，前台会多次调用上传接口，每次都会上传文件的一部分到后台
+			File tempPartFile = new File(parentFileDir, guid + "_" + chunk + ".part");
+			FileUtils.copyInputStreamToFile(file.getInputStream(), tempPartFile);
+		}
+
+	}
+
+
 }

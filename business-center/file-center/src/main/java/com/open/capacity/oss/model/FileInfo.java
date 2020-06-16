@@ -22,6 +22,8 @@ public class FileInfo implements Serializable {
 	private Boolean isImg;
 //	上传文件类型
 	private String contentType;
+//  批次号，大文件上传使用
+	private String batchNumber;
 //	文件大小
 	private long size;
 //  冗余字段

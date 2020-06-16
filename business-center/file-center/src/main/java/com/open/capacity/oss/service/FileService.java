@@ -7,6 +7,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.oss.model.FileInfo;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author 作者 owen 
  * @version 创建时间：2017年11月12日 上午22:57:51
@@ -23,4 +26,7 @@ public interface FileService {
 	PageResult<FileInfo>  findList(Map<String, Object> params);
 
 	void unZip(String filePath, String descDir) throws RuntimeException ;
+
+	void chunk(HttpServletRequest request, String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception;
+
 }
