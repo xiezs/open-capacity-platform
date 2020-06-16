@@ -129,18 +129,13 @@ public class FileController {
 
 	/**
 	 * 上传大文件
-	 * @param request
-	 * @param response
 	 * @param file
 	 * @param chunks
 	 */
 	@PostMapping(value = "/files-anon/bigFile")
-	public Result bigFile(HttpServletRequest request, HttpServletResponse response, String guid, Integer chunk, MultipartFile file, Integer chunks){
+	public Result bigFile( String guid, Integer chunk, MultipartFile file, Integer chunks){
 		try {
-
-
-            fileServiceFactory.getFileService(FileType.LOCAL.toString()).chunk(request,guid,chunk,file,chunks,localFilePath);
-
+            fileServiceFactory.getFileService(FileType.LOCAL.toString()).chunk(guid,chunk,file,chunks,localFilePath);
             return Result.succeed("操作成功");
         }catch (Exception ex){
             return Result.failed("操作失败");

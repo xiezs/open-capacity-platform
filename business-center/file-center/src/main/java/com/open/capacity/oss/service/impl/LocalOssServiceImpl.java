@@ -7,6 +7,8 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.open.capacity.oss.dao.FileDao;
@@ -79,7 +81,6 @@ public class LocalOssServiceImpl extends AbstractFileService {
 	 * 上传大文件
 	 * 分片上传 每片一个临时文件
 	 *
-	 * @param request
 	 * @param guid
 	 * @param chunk
 	 * @param file
@@ -87,13 +88,15 @@ public class LocalOssServiceImpl extends AbstractFileService {
 	 * @return
 	 */
 	@Override
-	protected void chunkFile(HttpServletRequest request, String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath)throws Exception {
+	protected void chunkFile(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath)throws Exception {
 		log.info("guid:{},chunkNumber:{}",guid,chunk);
 		if(Objects.isNull(chunk)){
 			chunk = 0;
 		}
 
-		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+		// TODO: 2020/6/16 从RequestContextHolder上下文中获取 request对象
+		boolean isMultipart = ServletFileUpload.isMultipartContent(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+				.getRequest());
 		if (isMultipart) {
 			// 临时目录用来存放所有分片文件
 			String tempFileDir = filePath + File.separator + guid;

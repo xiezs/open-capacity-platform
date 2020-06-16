@@ -110,7 +110,7 @@ public class QiniuOssServiceImpl extends AbstractFileService implements Initiali
 	 * @return
 	 */
 	@Override
-	protected void chunkFile(HttpServletRequest request, String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath)throws Exception {
+	protected void chunkFile(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath)throws Exception {
 
 	}
 

@@ -57,7 +57,7 @@ public abstract class AbstractFileService implements FileService {
 	 * @param file
 	 * @return
 	 */
-	protected abstract void chunkFile(HttpServletRequest request, String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception;
+	protected abstract void chunkFile( String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception;
 
 	protected static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
@@ -114,7 +114,7 @@ public abstract class AbstractFileService implements FileService {
 
 
 	@Override
-	public void chunk(HttpServletRequest request, String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception {
-		chunkFile(request,guid,chunk,file,chunks,filePath);
+	public void chunk(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception {
+		chunkFile(guid,chunk,file,chunks,filePath);
 	}
 }

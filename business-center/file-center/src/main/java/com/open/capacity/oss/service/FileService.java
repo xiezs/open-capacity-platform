@@ -27,6 +27,6 @@ public interface FileService {
 
 	void unZip(String filePath, String descDir) throws RuntimeException ;
 
-	void chunk(HttpServletRequest request, String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception;
+	void chunk(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception;
 
 }
