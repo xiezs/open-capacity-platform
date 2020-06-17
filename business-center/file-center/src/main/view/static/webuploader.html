@@ -31,9 +31,11 @@
 <script src="https://cdn.bootcss.com/webuploader/0.1.1/webuploader.js"></script>
 <script>
     var GUID = WebUploader.Base.guid();//一个GUID
+    // upload-container 点击事件
     $('#upload-container').click(function(event) {
         $("#picker").find('input').click();
     });
+
     var uploader = WebUploader.create({
         auto: true,// 选完文件后，是否自动上传。
         dnd: '#upload-container',
@@ -56,6 +58,7 @@
         resize: false
     });
 
+    //当有一批文件加载进队列时触发事件
     uploader.on('fileQueued', function(file) {
         // 选中文件时要做的事情，比如在页面中显示选中的文件并添加到文件列表，获取文件的大小，文件类型等
         console.log(file.ext) // 获取文件的后缀
@@ -65,12 +68,14 @@
         $('#upload-list').append(html);
     });
 
+    //上传过程中 回调
     uploader.on('uploadProgress', function(file, percentage) {
         console.log(percentage * 100 + '%');
         var width = $('.upload-item').width();
         $('.'+file.id).width(width*percentage);
     });
 
+    //上传 成功回调
     uploader.on('uploadSuccess', function(file, response) {
         $.ajax({
             url:'/files-anon/merge',
@@ -85,11 +90,13 @@
         }})
     });
 
+    //上传 失败回调
     uploader.on('uploadError', function(file) {
         console.log(file);
         console.log(file.id+'upload error')
     });
 
+    //删除按钮 有bug 无法从队列删除 uploader.removeFile 有问题
     $('#upload-list').on('click', '.upload-item .btn-delete', function() {
         // 从文件队列中删除某个文件id
         file_id = $(this).data('file_id');
@@ -100,10 +107,12 @@
         console.log(uploader.getFiles());
     });
 
+    //重试按钮
     $('#upload-list').on('click', '.btn-retry', function() {
         uploader.retry($(this).data('file_id'));
     });
 
+    //文件全部上传完成后 打印文件队列
     uploader.on('uploadComplete', function(file) {
         console.log(uploader.getFiles());
     });
