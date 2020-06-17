@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author pm 1280415703@qq.com
  * @date 2019/8/11 16:22
  */
-@Slf4j
 @Import(FdfsClientConfig.class)
 @Service("fastDfsOssServiceImpl")
 public class FastDfsOssServiceImpl extends AbstractFileService {

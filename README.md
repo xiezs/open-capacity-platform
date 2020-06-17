@@ -2,8 +2,8 @@
 
 <p align="center"> 
  <img src="https://img.shields.io/circleci/project/vuejs/vue/dev.svg" alt="Build Status">
-  <img src="https://img.shields.io/badge/Spring%20Cloud-Greenwich.SR5.RELEASE-blue.svg" alt="Coverage Status">
-  <img src="https://img.shields.io/badge/Spring%20Boot-2.1.12.RELEASE-blue.svg" alt="Downloads">
+  <img src="https://img.shields.io/badge/Spring%20Cloud-Greenwich.SR6.RELEASE-blue.svg" alt="Coverage Status">
+  <img src="https://img.shields.io/badge/Spring%20Boot-2.1.14.RELEASE-blue.svg" alt="Downloads">
 </p>
 
 [![star](https://gitee.com/owenwangwen/open-capacity-platform/badge/star.svg?theme=white)](https://gitee.com/owenwangwen/open-capacity-platform/stargazers)
@@ -59,6 +59,7 @@ http://59.110.164.254:8066/login.html  admin/admin
 - 统一安全认证中心
 	- 支持oauth的四种模式登录
 	- 支持用户名、密码加图形验证码登录
+	- 手机校验码登录
 	- 支持第三方系统单点登录
 - 微服务架构基础支撑
 	- 服务注册发现、路由与负载均衡
