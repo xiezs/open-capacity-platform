@@ -12,8 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,7 +30,47 @@ import java.util.concurrent.Executors;
 public abstract class AbstractFileService implements FileService {
 
 	protected abstract FileDao getFileDao();
+
+	/**
+	 * 文件来源
+	 *
+	 * @return
+	 */
+	protected abstract FileType fileType();
+
+	/**
+	 * 上传文件
+	 *
+	 * @param file
+	 * @param fileInfo
+	 */
+	protected abstract void uploadFile(MultipartFile file, FileInfo fileInfo) throws Exception;
+	/**
+	 * 删除文件资源
+	 *
+	 * @param fileInfo
+	 * @return
+	 */
+	protected abstract boolean deleteFile(FileInfo fileInfo);
+
+	/**
+	 * 上传大文件
+	 *		分片上传 每片一个临时文件
+	 * @param file
+	 * @return
+	 */
+	protected abstract void chunkFile( String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception;
+
+	/**
+	 * 合并分片文件
+	 *		每一个小片合并一个完整文件
+	 * @param fileName
+	 * @return
+	 */
+	protected abstract void mergeFile( String guid,String fileName,String filePath ) throws Exception;
+
 	protected static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
 	@Override
 	public FileInfo upload(MultipartFile file  ) throws Exception {
 		FileInfo fileInfo = FileUtil.getFileInfo(file);
@@ -51,20 +94,6 @@ public abstract class AbstractFileService implements FileService {
 		return fileInfo;
 	}
 
-	/**
-	 * 文件来源
-	 * 
-	 * @return
-	 */
-	protected abstract FileType fileType();
-
-	/**
-	 * 上传文件
-	 * 
-	 * @param file
-	 * @param fileInfo
-	 */
-	protected abstract void uploadFile(MultipartFile file, FileInfo fileInfo) throws Exception;
 
 	@Override
 	public void delete(FileInfo fileInfo) {
@@ -73,19 +102,12 @@ public abstract class AbstractFileService implements FileService {
 		log.info("删除文件：{}", fileInfo);
 	}
 
-	/**
-	 * 删除文件资源
-	 * 
-	 * @param fileInfo
-	 * @return
-	 */
-	protected abstract boolean deleteFile(FileInfo fileInfo);
-	
 	@Override
 	public FileInfo getById(String id){
 		return getFileDao().getById(id);
 	}
-	
+
+	@Override
 	public PageResult<FileInfo> findList(Map<String, Object> params){
 		//设置分页信息，分别是当前页数和每页显示的总记录数【记住：必须在mapper接口中的方法执行之前设置该分页信息】
         PageHelper.startPage(MapUtils.getInteger(params, "page"),MapUtils.getInteger(params, "limit"),true);
@@ -98,5 +120,17 @@ public abstract class AbstractFileService implements FileService {
 	@Override
 	public void unZip(String filePath, String descDir) throws RuntimeException {
 
+	}
+
+
+	@Override
+	public void chunk(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception {
+		// TODO: 2020/6/16  分片提交
+		chunkFile(guid,chunk,file,chunks,filePath);
+	}
+
+	@Override
+	public void merge(String guid, String fileName, String filePath) throws Exception {
+		mergeFile(guid,fileName,filePath);
 	}
 }

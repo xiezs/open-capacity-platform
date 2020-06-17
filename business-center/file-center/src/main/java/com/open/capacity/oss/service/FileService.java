@@ -23,4 +23,9 @@ public interface FileService {
 	PageResult<FileInfo>  findList(Map<String, Object> params);
 
 	void unZip(String filePath, String descDir) throws RuntimeException ;
+
+	void chunk(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception;
+
+	void merge(String guid,String fileName,String filePath) throws Exception;
+
 }

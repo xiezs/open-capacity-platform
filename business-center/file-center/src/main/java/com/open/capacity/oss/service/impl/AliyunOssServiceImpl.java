@@ -9,12 +9,15 @@ import com.aliyun.oss.OSSClient;
 import com.open.capacity.oss.dao.FileDao;
 import com.open.capacity.oss.model.FileInfo;
 import com.open.capacity.oss.model.FileType;
- 
+
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author 作者 owen 
  * @version 创建时间：2017年11月12日 上午22:57:51
 *  阿里云oss存储文件
 */
+@Slf4j
 @Service("aliyunOssServiceImpl")
 public class AliyunOssServiceImpl extends AbstractFileService {
 
@@ -51,4 +54,33 @@ public class AliyunOssServiceImpl extends AbstractFileService {
 		return true;
 	}
 
+	/**
+	 * 上传大文件
+	 * 分片上传 每片一个临时文件
+	 *
+	 * @param guid
+	 * @param chunk
+	 * @param file
+	 * @param chunks
+	 * @return
+	 */
+	@Override
+	protected void chunkFile( String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception {
+
+	}
+
+
+	/**
+	 * 合并分片文件
+	 * 每一个小片合并一个完整文件
+	 *
+	 * @param guid
+	 * @param fileName
+	 * @param filePath
+	 * @return
+	 */
+	@Override
+	protected void mergeFile(String guid, String fileName, String filePath) throws Exception {
+
+	}
 }

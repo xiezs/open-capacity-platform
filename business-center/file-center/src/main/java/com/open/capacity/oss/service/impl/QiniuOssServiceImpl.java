@@ -16,11 +16,14 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author 作者 owen 
  * @version 创建时间：2017年11月12日 上午22:57:51 
  * 七牛云oss存储文件
  */
+@Slf4j
 @Service("qiniuOssServiceImpl")
 public class QiniuOssServiceImpl extends AbstractFileService implements InitializingBean {
 
@@ -61,6 +64,7 @@ public class QiniuOssServiceImpl extends AbstractFileService implements Initiali
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String getUploadToken() {
 		return this.auth.uploadToken(bucket, null, 3600, putPolicy);
 	}
@@ -72,6 +76,7 @@ public class QiniuOssServiceImpl extends AbstractFileService implements Initiali
 			uploadManager.put(file.getBytes(),  fileInfo.getName() , auth.uploadToken(bucket));
 			// 打印返回的信息
 		} catch (Exception e) {
+			log.error("上传文件异常：{}" ,e.getMessage() );
 		}
 		fileInfo.setUrl(endpoint+"/"+ fileInfo.getName());
 		fileInfo.setPath(endpoint+"/"+ fileInfo.getName());
@@ -88,15 +93,41 @@ public class QiniuOssServiceImpl extends AbstractFileService implements Initiali
 			    response = bucketManager.delete(bucket, fileInfo.getPath());
 			}
 		} catch (QiniuException e) {
+			log.error("删除文件异常：{}" ,e.getMessage() );
 			return false ;
 		}
         return true;
 
 	}
 
- 
+	/**
+	 * 上传大文件
+	 * 分片上传 每片一个临时文件
+	 *
+	 * @param guid
+	 * @param chunk
+	 * @param file
+	 * @param chunks
+	 * @return
+	 */
+	@Override
+	protected void chunkFile(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath)throws Exception {
 
-  
+	}
+
+	/**
+	 * 合并分片文件
+	 * 每一个小片合并一个完整文件
+	 *
+	 * @param guid
+	 * @param fileName
+	 * @param filePath
+	 * @return
+	 */
+	@Override
+	protected void mergeFile(String guid, String fileName, String filePath) throws Exception {
+
+	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {

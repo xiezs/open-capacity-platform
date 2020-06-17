@@ -12,6 +12,7 @@ CREATE TABLE `file_info` (
   `id` varchar(32) NOT NULL COMMENT '文件md5',
   `name` varchar(128) NOT NULL,
   `isImg` tinyint(1) NOT NULL,
+  `batchNumber` varchar(55) DEFAULT NULL COMMENT '批次号，大文件上传使用',
   `contentType` varchar(128) NOT NULL,
   `size` int(11) NOT NULL,
   `path` varchar(255) DEFAULT NULL COMMENT '物理路径',

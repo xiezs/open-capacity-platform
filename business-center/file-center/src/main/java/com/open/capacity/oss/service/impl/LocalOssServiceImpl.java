@@ -1,15 +1,28 @@
 package com.open.capacity.oss.service.impl;
 
+import com.open.capacity.common.web.Result;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.open.capacity.oss.dao.FileDao;
 import com.open.capacity.oss.model.FileInfo;
 import com.open.capacity.oss.model.FileType;
 import com.open.capacity.oss.utils.FileUtil;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Objects;
 
 /**
  * 本地存储文件
@@ -20,6 +33,7 @@ import com.open.capacity.oss.utils.FileUtil;
  */
   
 @Service("localOssServiceImpl")
+@Slf4j
 public class LocalOssServiceImpl extends AbstractFileService {
 
 	@Autowired
@@ -66,5 +80,109 @@ public class LocalOssServiceImpl extends AbstractFileService {
 	protected boolean deleteFile(FileInfo fileInfo) {
 		return FileUtil.deleteFile(fileInfo.getPath());
 	}
-	 
+
+	/**
+	 * 上传大文件
+	 * 分片上传 每片一个临时文件
+	 *
+	 * @param guid
+	 * @param chunk
+	 * @param file
+	 * @param chunks
+	 * @return
+	 */
+	@Override
+	protected void chunkFile(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath)throws Exception {
+		log.info("guid:{},chunkNumber:{}",guid,chunk);
+		if(Objects.isNull(chunk)){
+			chunk = 0;
+		}
+
+		// TODO: 2020/6/16 从RequestContextHolder上下文中获取 request对象
+		boolean isMultipart = ServletFileUpload.isMultipartContent(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+				.getRequest());
+		if (isMultipart) {
+			// 临时目录用来存放所有分片文件
+			String tempFileDir = filePath + File.separator + guid;
+			File parentFileDir = new File(tempFileDir);
+			if (!parentFileDir.exists()) {
+				parentFileDir.mkdirs();
+			}
+			// 分片处理时，前台会多次调用上传接口，每次都会上传文件的一部分到后台
+			File tempPartFile = new File(parentFileDir, guid + "_" + chunk + ".part");
+			FileUtils.copyInputStreamToFile(file.getInputStream(), tempPartFile);
+		}
+
+		// TODO: 2020/6/17 保存到数据库中 LOCAL
+		FileInfo fileInfo = FileUtil.getFileInfo(file);
+		FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
+
+		if (oldFileInfo != null) {
+			return;
+		}
+		fileInfo.setBatchNumber(guid);
+		fileInfo.setSource(fileType().name());// 设置文件来源
+		fileInfo.setUrl(  guid + "_" + chunk + ".part" );
+		getFileDao().save(fileInfo);// 将文件信息保存到数据库
+	}
+
+	/**
+	 * 合并分片文件
+	 * 每一个小片合并一个完整文件
+	 *
+	 * @param guid
+	 * @param fileName
+	 * @param filePath
+	 * @return
+	 */
+	@Override
+	protected void mergeFile(String guid, String fileName, String filePath) throws Exception {
+		// 得到 destTempFile 就是最终的文件
+		log.info("guid:{},fileName:{}",guid,fileName);
+
+		File parentFileDir = new File(filePath + File.separator + guid);
+
+		try {
+			if(parentFileDir.isDirectory()){
+				File destTempFile = new File(filePath , fileName);
+				if(!destTempFile.exists()){
+					//先得到文件的上级目录，并创建上级目录，在创建文件,
+					destTempFile.getParentFile().mkdir();
+					try {
+						//创建文件
+						destTempFile.createNewFile(); //上级目录没有创建，这里会报错
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+
+				log.info("length:{} ",parentFileDir.listFiles().length);
+
+				for (int i = 0; i < parentFileDir.listFiles().length; i++) {
+					File partFile = new File(parentFileDir, guid + "_" + i + ".part");
+					FileOutputStream destTempfos = new FileOutputStream(destTempFile, true);
+					//遍历"所有分片文件"到"最终文件"中
+					FileUtils.copyFile(partFile, destTempfos);
+					destTempfos.close();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			// 删除临时目录中的分片文件
+			try {
+				FileUtils.deleteDirectory(parentFileDir);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// TODO: 2020/6/17  合并文件 删除对应的记录组装成一条  LOCAL
+
+
+
+	}
+
+
+
 }

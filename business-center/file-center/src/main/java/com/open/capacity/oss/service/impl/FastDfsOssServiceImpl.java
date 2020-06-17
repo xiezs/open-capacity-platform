@@ -15,12 +15,14 @@ import com.open.capacity.oss.model.FileInfo;
 import com.open.capacity.oss.model.FileType;
 
 import cn.hutool.core.util.StrUtil;
- 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * fastdfs存储文件
  * @author pm 1280415703@qq.com
  * @date 2019/8/11 16:22
  */
+@Slf4j
 @Import(FdfsClientConfig.class)
 @Service("fastDfsOssServiceImpl")
 public class FastDfsOssServiceImpl extends AbstractFileService {
@@ -62,6 +64,35 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
              storageClient.deleteFile(storePath.getGroup(), storePath.getPath());
          }
          return true;
-     } 
+     }
 
+	/**
+	 * 上传大文件
+	 * 分片上传 每片一个临时文件
+	 *
+	 * @param guid
+	 * @param chunk
+	 * @param file
+	 * @param chunks
+	 * @return
+	 */
+	@Override
+	protected void chunkFile(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath)throws Exception {
+
+	}
+
+
+	/**
+	 * 合并分片文件
+	 * 每一个小片合并一个完整文件
+	 *
+	 * @param guid
+	 * @param fileName
+	 * @param filePath
+	 * @return
+	 */
+	@Override
+	protected void mergeFile(String guid, String fileName, String filePath) throws Exception {
+
+	}
 }
