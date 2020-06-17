@@ -116,13 +116,13 @@ public class SecurityHandlerConfig {
 	public WebResponseExceptionTranslator webResponseExceptionTranslator() {
 		return new DefaultWebResponseExceptionTranslator() {
 
-			public static final String BAD_MSG = "坏的凭证";
+			public static final String BAD_MSG = "Bad credentials";
 
 			@Override
 			public ResponseEntity<OAuth2Exception> translate(Exception e) throws Exception {
 				// e.printStackTrace();
 				OAuth2Exception oAuth2Exception;
-				if (e.getMessage() != null && e.getMessage().equals(BAD_MSG)) {
+				if (e.getMessage() != null && BAD_MSG.equals( e.getMessage())) {
 					oAuth2Exception = new InvalidGrantException("用户名或密码错误", e);
 				}else if (e instanceof InvalidGrantException) {
 					oAuth2Exception = new InvalidGrantException(e.getMessage(), e);
