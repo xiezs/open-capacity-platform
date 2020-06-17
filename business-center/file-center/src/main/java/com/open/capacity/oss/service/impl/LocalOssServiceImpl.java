@@ -1,13 +1,16 @@
 package com.open.capacity.oss.service.impl;
 
+import com.open.capacity.common.util.UUIDUtils;
 import com.open.capacity.common.web.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.entity.ContentType;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -20,6 +23,7 @@ import com.open.capacity.oss.utils.FileUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
@@ -112,18 +116,6 @@ public class LocalOssServiceImpl extends AbstractFileService {
 			File tempPartFile = new File(parentFileDir, guid + "_" + chunk + ".part");
 			FileUtils.copyInputStreamToFile(file.getInputStream(), tempPartFile);
 		}
-
-		// TODO: 2020/6/17 保存到数据库中 LOCAL
-		FileInfo fileInfo = FileUtil.getFileInfo(file);
-		FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
-
-		if (oldFileInfo != null) {
-			return;
-		}
-		fileInfo.setBatchNumber(guid);
-		fileInfo.setSource(fileType().name());// 设置文件来源
-		fileInfo.setUrl(  guid + "_" + chunk + ".part" );
-		getFileDao().save(fileInfo);// 将文件信息保存到数据库
 	}
 
 	/**
@@ -143,8 +135,14 @@ public class LocalOssServiceImpl extends AbstractFileService {
 		File parentFileDir = new File(filePath + File.separator + guid);
 
 		try {
+			int index = fileName.lastIndexOf(".");
+
+			// 文件扩展名
+			String fileSuffix = fileName.substring(index);
+			String suffix = "/" + LocalDate.now().toString() + "/"  + UUIDUtils.getGUID32() + fileSuffix;
+
+			File destTempFile = new File(filePath , suffix);
 			if(parentFileDir.isDirectory()){
-				File destTempFile = new File(filePath , fileName);
 				if(!destTempFile.exists()){
 					//先得到文件的上级目录，并创建上级目录，在创建文件,
 					destTempFile.getParentFile().mkdir();
@@ -166,6 +164,25 @@ public class LocalOssServiceImpl extends AbstractFileService {
 					destTempfos.close();
 				}
 			}
+			// TODO: 2020/6/17 保存到数据库中 LOCAL
+			FileInputStream fileInputStream = new FileInputStream(destTempFile);
+			MultipartFile multipartFile = new MockMultipartFile(destTempFile.getName(), destTempFile.getName(),
+					ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+
+			FileInfo fileInfo = FileUtil.getFileInfo(multipartFile);
+			FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
+
+			if (oldFileInfo != null) {
+				return;
+			}
+
+			String path = localFilePath + suffix;
+			String url = domain + urlPrefix + suffix;
+			fileInfo.setPath(path);
+			fileInfo.setUrl(url);
+			fileInfo.setSource(fileType().name());// 设置文件来源
+			getFileDao().save(fileInfo);// 将文件信息保存到数据库
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -176,10 +193,6 @@ public class LocalOssServiceImpl extends AbstractFileService {
 				e.printStackTrace();
 			}
 		}
-
-		// TODO: 2020/6/17  合并文件 删除对应的记录组装成一条  LOCAL
-
-
 
 	}
 

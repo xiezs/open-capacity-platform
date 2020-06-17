@@ -21,8 +21,8 @@ public interface FileDao {
 	@Select("select * from file_info t where t.id = #{id}")
 	FileInfo getById(String id);
 
-	@Insert("insert into file_info(id, name, isImg,batchNumber, contentType, size, path, url, source, createTime) "
-			+ "values(#{id}, #{name}, #{isImg},#{batchNumber}, #{contentType}, #{size}, #{path}, #{url}, #{source}, #{createTime})")
+	@Insert("insert into file_info(id, name, isImg, contentType, size, path, url, source, createTime) "
+			+ "values(#{id}, #{name}, #{isImg}, #{contentType}, #{size}, #{path}, #{url}, #{source}, #{createTime})")
 	int save(FileInfo fileInfo);
 
 	@Delete("delete from file_info where id = #{id}")
