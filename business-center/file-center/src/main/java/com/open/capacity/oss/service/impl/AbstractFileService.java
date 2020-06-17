@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -127,6 +128,9 @@ public abstract class AbstractFileService implements FileService {
 		// TODO: 2020/6/16  分片提交
 		chunkFile(guid,chunk,file,chunks,filePath);
 
+		if(Objects.isNull(chunk)){
+			chunk = 0;
+		}
 		FileInfo fileInfo = FileUtil.getFileInfo(file);
 		FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
 
