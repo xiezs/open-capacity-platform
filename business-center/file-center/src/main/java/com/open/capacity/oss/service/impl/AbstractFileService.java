@@ -127,22 +127,6 @@ public abstract class AbstractFileService implements FileService {
 	public void chunk(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception {
 		// TODO: 2020/6/16  分片提交
 		chunkFile(guid,chunk,file,chunks,filePath);
-
-		if(Objects.isNull(chunk)){
-			chunk = 0;
-		}
-		FileInfo fileInfo = FileUtil.getFileInfo(file);
-		FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
-
-		if (oldFileInfo != null) {
-			return;
-		}
-
-		fileInfo.setBatchNumber(guid);
-		fileInfo.setSource(fileType().name());// 设置文件来源
-		fileInfo.setUrl(  guid + "_" + chunk + ".part" );
-		getFileDao().save(fileInfo);// 将文件信息保存到数据库
-
 	}
 
 	@Override

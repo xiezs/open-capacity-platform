@@ -113,6 +113,17 @@ public class LocalOssServiceImpl extends AbstractFileService {
 			FileUtils.copyInputStreamToFile(file.getInputStream(), tempPartFile);
 		}
 
+		// TODO: 2020/6/17 保存到数据库中 LOCAL
+		FileInfo fileInfo = FileUtil.getFileInfo(file);
+		FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
+
+		if (oldFileInfo != null) {
+			return;
+		}
+		fileInfo.setBatchNumber(guid);
+		fileInfo.setSource(fileType().name());// 设置文件来源
+		fileInfo.setUrl(  guid + "_" + chunk + ".part" );
+		getFileDao().save(fileInfo);// 将文件信息保存到数据库
 	}
 
 	/**
@@ -165,6 +176,11 @@ public class LocalOssServiceImpl extends AbstractFileService {
 				e.printStackTrace();
 			}
 		}
+
+		// TODO: 2020/6/17  合并文件 删除对应的记录组装成一条  LOCAL
+
+
+
 	}
 
 
