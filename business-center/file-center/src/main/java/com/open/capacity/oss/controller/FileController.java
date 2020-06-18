@@ -145,7 +145,7 @@ public class FileController {
 	@RequestMapping(value = "/files-anon/merge",method =RequestMethod.POST )
 	public Result mergeFile(@RequestBody MergeFileDTO mergeFileDTO){
 		try {
-			fileServiceFactory.getFileService(FileType.LOCAL.toString()).merge(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath);
+			fileServiceFactory.getFileService(FileType.FASTDFS.toString()).merge(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath);
 			return Result.succeed("操作成功");
 		}catch (Exception ex){
 			return Result.failed("操作失败");

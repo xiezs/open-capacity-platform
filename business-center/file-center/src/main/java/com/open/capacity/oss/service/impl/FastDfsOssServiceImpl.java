@@ -1,10 +1,16 @@
 package com.open.capacity.oss.service.impl;
 
+import com.open.capacity.common.util.UUIDUtils;
+import com.open.capacity.oss.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.http.entity.ContentType;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +24,9 @@ import com.open.capacity.oss.model.FileType;
 import cn.hutool.core.util.StrUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * fastdfs存储文件
@@ -95,6 +104,52 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
 	 */
 	@Override
 	protected void mergeFile(String guid, String fileName, String filePath) throws Exception {
+
+		// 得到 destTempFile 就是最终的文件
+		log.info("guid:{},fileName:{}",guid,fileName);
+
+		File parentFileDir = new File(filePath + File.separator + guid);
+
+		try {
+			int index = fileName.lastIndexOf(".");
+
+			// 文件扩展名
+			String fileSuffix = fileName.substring(index);
+			String suffix = "/" + LocalDate.now().toString() + "/"  + UUIDUtils.getGUID32() + fileSuffix;
+
+			File destTempFile = new File(filePath , suffix);
+
+			FileUtil.saveBigFile(guid, parentFileDir, destTempFile);
+
+			// TODO: 2020/6/17 保存到数据库中 LOCAL
+			FileInputStream fileInputStream = new FileInputStream(destTempFile);
+			MultipartFile multipartFile = new MockMultipartFile(destTempFile.getName(), destTempFile.getName(),
+					ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+
+			FileInfo fileInfo = FileUtil.getFileInfo(multipartFile);
+			fileInfo.setName(fileName);
+			FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
+
+			if (oldFileInfo != null) {
+				return;
+			}
+
+			StorePath storePath = storageClient.uploadFile(multipartFile.getInputStream(), multipartFile.getSize(), FilenameUtils.getExtension(multipartFile.getOriginalFilename()), null);
+			fileInfo.setUrl(domain+ storePath.getFullPath());
+			fileInfo.setPath(storePath.getFullPath());
+			fileInfo.setSource(fileType().name());// 设置文件来源
+			getFileDao().save(fileInfo);// 将文件信息保存到数据库
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			// 删除临时目录中的分片文件
+			try {
+				FileUtils.deleteDirectory(parentFileDir);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 	}
 }
