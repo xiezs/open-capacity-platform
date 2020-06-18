@@ -1,24 +1,5 @@
 package com.open.capacity.oss.controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
-import com.open.capacity.oss.config.WebResourceConfig;
-import com.open.capacity.oss.model.MergeFileDTO;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.capacity.common.web.PageResult;
@@ -27,12 +8,18 @@ import com.open.capacity.log.annotation.LogAnnotation;
 import com.open.capacity.oss.config.OssServiceFactory;
 import com.open.capacity.oss.model.FileInfo;
 import com.open.capacity.oss.model.FileType;
+import com.open.capacity.oss.model.MergeFileDTO;
 import com.open.capacity.oss.service.FileService;
-
 import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author 作者 owen 

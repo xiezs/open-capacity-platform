@@ -7,9 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.oss.model.FileInfo;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author 作者 owen 
  * @version 创建时间：2017年11月12日 上午22:57:51
