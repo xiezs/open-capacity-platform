@@ -131,16 +131,21 @@ public class LocalOssServiceImpl extends AbstractFileService {
 	protected void mergeFile(String guid, String fileName, String filePath) throws Exception {
 		// 得到 destTempFile 就是最终的文件
 		log.info("guid:{},fileName:{}",guid,fileName);
+
 		File parentFileDir = new File(filePath + File.separator + guid);
+
 		try {
 			int index = fileName.lastIndexOf(".");
+
 			// 文件扩展名
 			String fileSuffix = fileName.substring(index);
 			String suffix = "/" + LocalDate.now().toString() + "/"  + UUIDUtils.getGUID32() + fileSuffix;
 
 			File destTempFile = new File(filePath , suffix);
-			//保存文件到磁盘
-			FileUtil.saveBigFile(guid, parentFileDir, destTempFile) ;
+
+			FileUtil.saveBigFile(guid, parentFileDir, destTempFile);
+
+			// TODO: 2020/6/17 保存到数据库中 LOCAL
 			FileInputStream fileInputStream = new FileInputStream(destTempFile);
 			MultipartFile multipartFile = new MockMultipartFile(destTempFile.getName(), destTempFile.getName(),
 					ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);

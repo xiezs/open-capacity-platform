@@ -1,22 +1,5 @@
 package com.open.capacity.oss.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.capacity.common.web.PageResult;
@@ -27,9 +10,16 @@ import com.open.capacity.oss.model.FileInfo;
 import com.open.capacity.oss.model.FileType;
 import com.open.capacity.oss.model.MergeFileDTO;
 import com.open.capacity.oss.service.FileService;
-
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author 作者 owen 
@@ -131,6 +121,7 @@ public class FileController {
 	 * @param chunks
 	 */
 	@PostMapping(value = "/files-anon/bigFile")
+//	@ResponseStatus(code= HttpStatus.INTERNAL_SERVER_ERROR,reason="server error")
 	public Result bigFile( String guid, Integer chunk, MultipartFile file, Integer chunks){
 		try {
             fileServiceFactory.getFileService(FileType.LOCAL.toString()).chunk(guid,chunk,file,chunks,localFilePath);
@@ -140,6 +131,11 @@ public class FileController {
         }
 	}
 
+
+	/**
+	 * 合并文件
+	 * @param mergeFileDTO
+	 */
 	@RequestMapping(value = "/files-anon/merge",method =RequestMethod.POST )
 	public Result mergeFile(@RequestBody MergeFileDTO mergeFileDTO){
 		try {
@@ -149,6 +145,23 @@ public class FileController {
 			return Result.failed("操作失败");
 		}
 	}
+
+
+	/**
+	 * 上传失败
+	 * @param mergeFileDTO
+	 * @return
+	 */
+	@RequestMapping(value = "/files-anon/uploadError",method =RequestMethod.POST )
+	public Result uploadError(@RequestBody MergeFileDTO mergeFileDTO){
+		try {
+			fileServiceFactory.getFileService(FileType.LOCAL.toString()).uploadError(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath);
+			return Result.succeed("操作成功");
+		}catch (Exception ex){
+			return Result.failed("操作失败");
+		}
+	}
+
 
 
 }

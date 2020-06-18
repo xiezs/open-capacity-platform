@@ -1,13 +1,5 @@
 package com.open.capacity.oss.service.impl;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import org.apache.commons.collections4.MapUtils;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.open.capacity.common.web.PageResult;
@@ -16,8 +8,17 @@ import com.open.capacity.oss.model.FileInfo;
 import com.open.capacity.oss.model.FileType;
 import com.open.capacity.oss.service.FileService;
 import com.open.capacity.oss.utils.FileUtil;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.io.FileUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author 作者 owen 
@@ -67,6 +68,15 @@ public abstract class AbstractFileService implements FileService {
 	 * @return
 	 */
 	protected abstract void mergeFile( String guid,String fileName,String filePath ) throws Exception;
+
+	/**
+	 * 失败回调
+	 * @param guid
+	 * @param fileName
+	 * @param filePath
+	 * @throws Exception
+	 */
+//	protected abstract void uploadError( String guid,String fileName,String filePath ) throws Exception;
 
 	protected static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
@@ -131,5 +141,19 @@ public abstract class AbstractFileService implements FileService {
 	@Override
 	public void merge(String guid, String fileName, String filePath) throws Exception {
 		mergeFile(guid,fileName,filePath);
+	}
+
+	@Override
+	public void uploadError(String guid, String fileName, String filePath) throws Exception {
+		File parentFileDir = new File(filePath + File.separator + guid);
+		try {
+		}finally {
+			// 删除临时目录中的分片文件
+			try {
+				FileUtils.deleteDirectory(parentFileDir);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

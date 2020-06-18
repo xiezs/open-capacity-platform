@@ -1,5 +1,8 @@
 package com.open.capacity.oss.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -10,15 +13,17 @@ import com.open.capacity.oss.dao.FileDao;
 import com.open.capacity.oss.model.FileInfo;
 import com.open.capacity.oss.model.FileType;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.Objects;
 
 /**
  * @author 作者 owen 
  * @version 创建时间：2017年11月12日 上午22:57:51
 *  阿里云oss存储文件
 */
-@Slf4j
 @Service("aliyunOssServiceImpl")
+@Slf4j
 public class AliyunOssServiceImpl extends AbstractFileService {
 
 	@Autowired

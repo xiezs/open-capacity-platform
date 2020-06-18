@@ -1,5 +1,6 @@
 package com.open.capacity.oss.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,15 +17,15 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author 作者 owen 
  * @version 创建时间：2017年11月12日 上午22:57:51 
  * 七牛云oss存储文件
  */
-@Slf4j
 @Service("qiniuOssServiceImpl")
+@Slf4j
 public class QiniuOssServiceImpl extends AbstractFileService implements InitializingBean {
 
 	@Autowired
@@ -64,7 +65,6 @@ public class QiniuOssServiceImpl extends AbstractFileService implements Initiali
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings("unused")
 	private String getUploadToken() {
 		return this.auth.uploadToken(bucket, null, 3600, putPolicy);
 	}
@@ -76,7 +76,6 @@ public class QiniuOssServiceImpl extends AbstractFileService implements Initiali
 			uploadManager.put(file.getBytes(),  fileInfo.getName() , auth.uploadToken(bucket));
 			// 打印返回的信息
 		} catch (Exception e) {
-			log.error("上传文件异常：{}" ,e.getMessage() );
 		}
 		fileInfo.setUrl(endpoint+"/"+ fileInfo.getName());
 		fileInfo.setPath(endpoint+"/"+ fileInfo.getName());
@@ -93,7 +92,6 @@ public class QiniuOssServiceImpl extends AbstractFileService implements Initiali
 			    response = bucketManager.delete(bucket, fileInfo.getPath());
 			}
 		} catch (QiniuException e) {
-			log.error("删除文件异常：{}" ,e.getMessage() );
 			return false ;
 		}
         return true;

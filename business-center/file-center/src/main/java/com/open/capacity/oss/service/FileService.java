@@ -28,4 +28,6 @@ public interface FileService {
 
 	void merge(String guid,String fileName,String filePath) throws Exception;
 
+	void uploadError(String guid,String fileName,String filePath) throws Exception;
+
 }
