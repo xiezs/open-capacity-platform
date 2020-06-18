@@ -1,11 +1,13 @@
 package com.open.capacity.oss.utils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.open.capacity.oss.model.FileInfo;
@@ -69,6 +71,39 @@ public class FileUtil {
 
 		return null;
 	}
+	
+	
+	public static String saveBigFile(String guid ,File parentFileDir, File destTempFile) {
+		try {
+			if(parentFileDir.isDirectory()){
+				if(!destTempFile.exists()){
+					//先得到文件的上级目录，并创建上级目录，在创建文件,
+					destTempFile.getParentFile().mkdir();
+					try {
+						//创建文件
+						destTempFile.createNewFile(); //上级目录没有创建，这里会报错
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+
+				log.info("length:{} ",parentFileDir.listFiles().length);
+
+				for (int i = 0; i < parentFileDir.listFiles().length; i++) {
+					File partFile = new File(parentFileDir, guid + "_" + i + ".part");
+					FileOutputStream destTempfos = new FileOutputStream(destTempFile, true);
+					//遍历"所有分片文件"到"最终文件"中
+					FileUtils.copyFile(partFile, destTempfos);
+					destTempfos.close();
+				}
+			}
+		} catch (Exception e) {
+			log.error("FileUtil->saveBigFile:{}" ,e.getMessage());
+		}
+
+		return null;
+	}
+
 
 	public static boolean deleteFile(String pathname) {
 		File file = new File(pathname);
