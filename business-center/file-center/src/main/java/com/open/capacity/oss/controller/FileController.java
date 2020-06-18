@@ -14,6 +14,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -133,6 +134,7 @@ public class FileController {
 	 * @param chunks
 	 */
 	@PostMapping(value = "/files-anon/bigFile")
+	@ResponseStatus(code= HttpStatus.INTERNAL_SERVER_ERROR,reason="server error")
 	public Result bigFile( String guid, Integer chunk, MultipartFile file, Integer chunks){
 		try {
             fileServiceFactory.getFileService(FileType.LOCAL.toString()).chunk(guid,chunk,file,chunks,localFilePath);
