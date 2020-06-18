@@ -142,34 +142,16 @@ public class LocalOssServiceImpl extends AbstractFileService {
 			String suffix = "/" + LocalDate.now().toString() + "/"  + UUIDUtils.getGUID32() + fileSuffix;
 
 			File destTempFile = new File(filePath , suffix);
-			if(parentFileDir.isDirectory()){
-				if(!destTempFile.exists()){
-					//先得到文件的上级目录，并创建上级目录，在创建文件,
-					destTempFile.getParentFile().mkdir();
-					try {
-						//创建文件
-						destTempFile.createNewFile(); //上级目录没有创建，这里会报错
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
 
-				log.info("length:{} ",parentFileDir.listFiles().length);
+			FileUtil.saveBigFile(guid, parentFileDir, destTempFile);
 
-				for (int i = 0; i < parentFileDir.listFiles().length; i++) {
-					File partFile = new File(parentFileDir, guid + "_" + i + ".part");
-					FileOutputStream destTempfos = new FileOutputStream(destTempFile, true);
-					//遍历"所有分片文件"到"最终文件"中
-					FileUtils.copyFile(partFile, destTempfos);
-					destTempfos.close();
-				}
-			}
 			// TODO: 2020/6/17 保存到数据库中 LOCAL
 			FileInputStream fileInputStream = new FileInputStream(destTempFile);
 			MultipartFile multipartFile = new MockMultipartFile(destTempFile.getName(), destTempFile.getName(),
 					ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
 
 			FileInfo fileInfo = FileUtil.getFileInfo(multipartFile);
+			fileInfo.setName(fileName);
 			FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
 
 			if (oldFileInfo != null) {
