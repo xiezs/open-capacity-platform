@@ -81,7 +81,7 @@
     });
 
     //上传 成功回调
-    uploader.on('uploadSuccess', function(file, response) {
+    uploader.on('uploadSuccess', function(file) {
         $.ajax({
             url:'/files-anon/merge',
             type:"POST",
@@ -99,6 +99,17 @@
     uploader.on('uploadError', function(file) {
         console.log(file);
         console.log(file.id+'upload error')
+        $.ajax({
+            url:'/files-anon/uploadError',
+            type:"POST",
+            data: JSON.stringify(  { guid: GUID, fileName: file.name } ) ,
+            contentType:"application/json; charset=utf-8",
+            dataType: "json",
+            success: function(data){
+                if(data.resp_code == 0){
+                    alert('上传成功!');
+                }
+        }})
     });
 
     //删除按钮 有bug 无法从队列删除 uploader.removeFile 有问题

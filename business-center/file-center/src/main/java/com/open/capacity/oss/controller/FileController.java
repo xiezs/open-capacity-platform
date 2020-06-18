@@ -142,6 +142,11 @@ public class FileController {
         }
 	}
 
+
+	/**
+	 * 合并文件
+	 * @param mergeFileDTO
+	 */
 	@RequestMapping(value = "/files-anon/merge",method =RequestMethod.POST )
 	public Result mergeFile(@RequestBody MergeFileDTO mergeFileDTO){
 		try {
@@ -151,6 +156,23 @@ public class FileController {
 			return Result.failed("操作失败");
 		}
 	}
+
+
+	/**
+	 * 上传失败
+	 * @param mergeFileDTO
+	 * @return
+	 */
+	@RequestMapping(value = "/files-anon/uploadError",method =RequestMethod.POST )
+	public Result uploadError(@RequestBody MergeFileDTO mergeFileDTO){
+		try {
+			fileServiceFactory.getFileService(FileType.LOCAL.toString()).uploadError(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath);
+			return Result.succeed("操作成功");
+		}catch (Exception ex){
+			return Result.failed("操作失败");
+		}
+	}
+
 
 
 }
