@@ -134,7 +134,7 @@ public class FileController {
 	 * @param chunks
 	 */
 	@PostMapping(value = "/files-anon/bigFile")
-	@ResponseStatus(code= HttpStatus.INTERNAL_SERVER_ERROR,reason="server error")
+//	@ResponseStatus(code= HttpStatus.INTERNAL_SERVER_ERROR,reason="server error")
 	public Result bigFile( String guid, Integer chunk, MultipartFile file, Integer chunks){
 		try {
             fileServiceFactory.getFileService(FileType.LOCAL.toString()).chunk(guid,chunk,file,chunks,localFilePath);
