@@ -191,22 +191,25 @@ hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 90000
 
 #设置最大容错超时时间
 hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: THREAD
+          thread:
+            timeoutInMilliseconds: 900000
+        timeout:
+          enabled: true
+      circuitBreaker:
+        forceOpen: false
+        sleepWindowInMilliseconds:  5000       
   threadpool:
     default:
       coreSize: 100
       maximumSize: 5000
       allowMaximumSizeToDivergeFromCoreSize: true
       maxQueueSize: -1
-  command:
-    default:
-      circuitBreaker:
-        forceOpen: false
-      execution:
-        timeout:
-          enabled: true
-        isolation:
-          thread:
-            timeoutInMilliseconds: 900000
+  
 
 
 swagger:

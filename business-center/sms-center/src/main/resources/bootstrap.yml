@@ -6,14 +6,18 @@ spring:
   application:
     name: sms-center
    
+
 management:
   endpoints:
     web:
       exposure:
         include: "*"
   endpoint:
+    chaosmonkey:
+      enabled: true
     health:
-      show-details: always     
+      show-details: always  
+ 
 #eureka client配置      
 eureka:
   client:

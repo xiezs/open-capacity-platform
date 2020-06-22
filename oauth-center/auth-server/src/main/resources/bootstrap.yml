@@ -17,8 +17,25 @@ management:
       exposure:
         include: "*"
   endpoint:
+    chaosmonkey:
+      enabled: true
     health:
       show-details: always   
+      
+      
+#chaos:
+#  monkey:
+#    assaults:
+#      level: 8
+#      latencyRangeStart: 1000
+#      latencyRangeEnd: 10000
+#      exceptionsActive: true
+#      killApplicationActive: true
+#    watcher:
+#      service:  true
+#      component: true
+#      repository: true
+#      restController: true      
 
 #eureka client 配置          
 eureka:

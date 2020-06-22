@@ -16,8 +16,12 @@ management:
       exposure:
         include: "*"
   endpoint:
+    chaosmonkey:
+      enabled: true
     health:
       show-details: always  
+
+
 #eureka client
 eureka:
   client:

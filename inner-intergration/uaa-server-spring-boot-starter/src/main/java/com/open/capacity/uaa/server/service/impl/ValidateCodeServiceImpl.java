@@ -140,4 +140,26 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
 	private String buildKey(String deviceId) {
 		return "DEFAULT_CODE_KEY:" + deviceId;
 	}
+
+	@Override
+	public void validate(String deviceId, String validCode) {
+		if (StringUtils.isBlank(deviceId)) {
+			throw new AuthenticationException("请在请求参数中携带deviceId参数"){};
+		}
+		String code = this.getCode(deviceId);
+		 
+		if (StringUtils.isBlank(validCode)) {
+			throw new AuthenticationException ("请填写验证码"){};
+		}
+
+		if (code == null) {
+			throw new AuthenticationException ("验证码不存在或已过期"){};
+		}
+
+		if (!StringUtils.equalsIgnoreCase(code, validCode)) {
+			throw new AuthenticationException ("验证码不正确"){};
+		}
+
+		this.remove(deviceId);
+	}
 }

@@ -23,8 +23,11 @@ management:
       exposure:
         include: "*"
   endpoint:
+    chaosmonkey:
+      enabled: true
     health:
-      show-details: always
+      show-details: always  
+      
 #eureka client 配置
 eureka:
   client:

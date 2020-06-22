@@ -48,7 +48,6 @@ import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHand
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler;
 import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGranter;
-import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter;
 import org.springframework.security.oauth2.provider.refresh.RefreshTokenGranter;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -64,10 +63,10 @@ import com.open.capacity.common.auth.props.PermitUrlProperties;
 import com.open.capacity.common.constant.UaaConstant;
 import com.open.capacity.common.feign.FeignInterceptorConfig;
 import com.open.capacity.common.rest.RestTemplateConfig;
-import com.open.capacity.common.util.SpringUtils;
 import com.open.capacity.uaa.server.service.RedisAuthorizationCodeServices;
 import com.open.capacity.uaa.server.service.RedisClientDetailsService;
 import com.open.capacity.uaa.server.service.ValidateCodeService;
+import com.open.capacity.uaa.server.token.PasswordEnhanceTokenGranter;
 import com.open.capacity.uaa.server.token.SMSCodeTokenGranter;
 
 /**
@@ -170,7 +169,7 @@ public class UAAServerConfig {
             //客户端模式   GRANT_TYPE = "client_credentials"; 
             tokenGranters.add(new ClientCredentialsTokenGranter(tokenServices, clientDetails, requestFactory));
             //密码模式	  GRANT_TYPE = "password"; 	
-            tokenGranters.add(new ResourceOwnerPasswordTokenGranter(authenticationManager, tokenServices,clientDetails, requestFactory));
+            tokenGranters.add(new PasswordEnhanceTokenGranter(authenticationManager, tokenServices,clientDetails, requestFactory,validateCodeService));
             //授权码模式   GRANT_TYPE = "authorization_code";
             tokenGranters.add(new AuthorizationCodeTokenGranter(tokenServices, authorizationCodeServices, clientDetails,requestFactory));
             //刷新模式	  GRANT_TYPE = "refresh_token";

@@ -30,4 +30,7 @@ public interface ValidateCodeService {
      * 验证验证码
      */
     void validate(HttpServletRequest request);
+    
+    
+    void validate(String deviceId , String validCode);
 }
