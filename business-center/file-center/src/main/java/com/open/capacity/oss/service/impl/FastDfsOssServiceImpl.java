@@ -1,8 +1,16 @@
 package com.open.capacity.oss.service.impl;
 
+import cn.hutool.core.util.StrUtil;
+import com.github.tobato.fastdfs.FdfsClientConfig;
+import com.github.tobato.fastdfs.domain.fdfs.StorePath;
+import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.open.capacity.common.util.UUIDUtils;
+import com.open.capacity.oss.dao.FileDao;
+import com.open.capacity.oss.model.FileInfo;
+import com.open.capacity.oss.model.FileType;
 import com.open.capacity.oss.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.entity.ContentType;
@@ -12,21 +20,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.github.tobato.fastdfs.FdfsClientConfig;
-import com.github.tobato.fastdfs.domain.fdfs.StorePath;
-import com.github.tobato.fastdfs.service.FastFileStorageClient;
-import com.open.capacity.oss.dao.FileDao;
-import com.open.capacity.oss.model.FileInfo;
-import com.open.capacity.oss.model.FileType;
-
-import cn.hutool.core.util.StrUtil;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * fastdfs存储文件
@@ -89,7 +90,20 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
 	 */
 	@Override
 	protected void chunkFile(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath)throws Exception {
+		log.info("guid:{},chunkNumber:{}",guid,chunk);
+		if(Objects.isNull(chunk)){
+			chunk = 0;
+		}
 
+		// TODO: 2020/6/16 从RequestContextHolder上下文中获取 request对象
+		boolean isMultipart = ServletFileUpload.isMultipartContent(((ServletRequestAttributes)
+				RequestContextHolder.currentRequestAttributes()).getRequest());
+		if (isMultipart) {
+
+
+
+
+		}
 	}
 
 
@@ -103,7 +117,7 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
 	 * @return
 	 */
 	@Override
-	protected void mergeFile(String guid, String fileName, String filePath) throws Exception {
+	protected FileInfo mergeFile(String guid, String fileName, String filePath) throws Exception {
 
 		// 得到 destTempFile 就是最终的文件
 		log.info("guid:{},fileName:{}",guid,fileName);
@@ -131,7 +145,7 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
 			FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
 
 			if (oldFileInfo != null) {
-				return;
+				return null;
 			}
 
 			StorePath storePath = storageClient.uploadFile(multipartFile.getInputStream(), multipartFile.getSize(), FilenameUtils.getExtension(multipartFile.getOriginalFilename()), null);
@@ -150,6 +164,6 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
 				e.printStackTrace();
 			}
 		}
-
+		return null;
 	}
 }

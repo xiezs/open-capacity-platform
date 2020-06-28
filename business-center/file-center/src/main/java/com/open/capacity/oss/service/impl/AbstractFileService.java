@@ -67,7 +67,7 @@ public abstract class AbstractFileService implements FileService {
 	 * @param fileName
 	 * @return
 	 */
-	protected abstract void mergeFile( String guid,String fileName,String filePath ) throws Exception;
+	protected abstract FileInfo mergeFile( String guid,String fileName,String filePath ) throws Exception;
 
 	/**
 	 * 失败回调
@@ -139,8 +139,8 @@ public abstract class AbstractFileService implements FileService {
 	}
 
 	@Override
-	public void merge(String guid, String fileName, String filePath) throws Exception {
-		mergeFile(guid,fileName,filePath);
+	public FileInfo merge(String guid, String fileName, String filePath) throws Exception {
+		 return mergeFile(guid,fileName,filePath);
 	}
 
 	@Override

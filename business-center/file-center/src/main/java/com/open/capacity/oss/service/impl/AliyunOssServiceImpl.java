@@ -1,21 +1,14 @@
 package com.open.capacity.oss.service.impl;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.aliyun.oss.OSSClient;
 import com.open.capacity.oss.dao.FileDao;
 import com.open.capacity.oss.model.FileInfo;
 import com.open.capacity.oss.model.FileType;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author 作者 owen 
@@ -85,7 +78,7 @@ public class AliyunOssServiceImpl extends AbstractFileService {
 	 * @return
 	 */
 	@Override
-	protected void mergeFile(String guid, String fileName, String filePath) throws Exception {
-
+	protected FileInfo mergeFile(String guid, String fileName, String filePath) throws Exception {
+		return null;
 	}
 }

@@ -1,11 +1,10 @@
 package com.open.capacity.oss.service;
 
-import java.util.Map;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.oss.model.FileInfo;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 /**
  * @author 作者 owen 
@@ -26,7 +25,7 @@ public interface FileService {
 
 	void chunk(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath) throws Exception;
 
-	void merge(String guid,String fileName,String filePath) throws Exception;
+	FileInfo merge(String guid,String fileName,String filePath) throws Exception;
 
 	void uploadError(String guid,String fileName,String filePath) throws Exception;
 
