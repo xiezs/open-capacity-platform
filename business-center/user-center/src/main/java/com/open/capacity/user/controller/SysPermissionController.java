@@ -46,7 +46,6 @@ public class SysPermissionController {
 	@Autowired
 	private SysPermissionService sysPermissionService;
 
-	private ObjectMapper objectMapper = new ObjectMapper();
 	/**
 	 * 删除权限标识
 	 * 参考 /permissions/1

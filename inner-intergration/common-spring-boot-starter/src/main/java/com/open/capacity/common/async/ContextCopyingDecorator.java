@@ -16,36 +16,24 @@ import org.springframework.web.context.request.RequestContextHolder;
  *
  */
 // https://stackoverflow.com/questions/23732089/how-to-enable-request-scope-in-async-task-executor
-// 传递RequestAttributes and MDC
-// SecurityContext
+// 传递RequestAttributes and MDC and SecurityContext
 public class ContextCopyingDecorator implements TaskDecorator {
     @Override
     public Runnable decorate(Runnable runnable) {
         try {
-			RequestAttributes context = RequestContextHolder.currentRequestAttributes(); 
-			Map<String,String> previous = MDC.getCopyOfContextMap(); 
-			SecurityContext securityContext = SecurityContextHolder.getContext();// 1
+			RequestAttributes context = RequestContextHolder.currentRequestAttributes();  //1
+			Map<String,String> previous = MDC.getCopyOfContextMap(); 					  //2
+			SecurityContext securityContext = SecurityContextHolder.getContext();	      //3
 			return () -> {
 			    try {
-			    	if(previous==null){
-			    		MDC.clear();
-			    	}else{
-			    		MDC.setContextMap(previous);
-			    	}
-			    	
-			        RequestContextHolder.setRequestAttributes(context);
-			        SecurityContextHolder.setContext(securityContext);// 2
+			    	RequestContextHolder.setRequestAttributes(context);	 //1
+			    	MDC.setContextMap(previous);					     //2				
+			        SecurityContextHolder.setContext(securityContext);   //3
 			        runnable.run();
 			    } finally {
-			        RequestContextHolder.resetRequestAttributes();
-			        // 清除操作
-			        SecurityContextHolder.clearContext();// 3
-
-			        if(previous==null){
-			    		MDC.clear();
-			    	}else{
-			    		MDC.setContextMap(previous);
-			    	}
+			        RequestContextHolder.resetRequestAttributes();		// 1
+			        MDC.clear(); 										// 2
+			        SecurityContextHolder.clearContext();				// 3
 			    }
 			};
 		} catch (IllegalStateException e) {

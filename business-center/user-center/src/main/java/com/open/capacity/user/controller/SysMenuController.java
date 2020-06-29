@@ -45,7 +45,6 @@ public class SysMenuController {
 
 	@Autowired
 	private SysMenuService menuService;
-	private ObjectMapper objectMapper = new ObjectMapper();
 
 	// <!-- -->
 	/**

@@ -12,6 +12,7 @@
 
     <properties>
         <log-version>1.0.0</log-version>
+        <sentry-version>1.7.30</sentry-version>
     </properties>
     <dependencies>
         <dependency>
@@ -24,6 +25,15 @@
             <artifactId>structlog4j-json</artifactId>
             <version>${log-version}</version>
         </dependency>
+        
+        <!-- 
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-logback</artifactId>
+            <version>${sentry-version}</version>
+        </dependency>
+         -->
+        
         <dependency>
             <groupId>com.open.capacity</groupId>
             <artifactId>common-spring-boot-starter</artifactId>

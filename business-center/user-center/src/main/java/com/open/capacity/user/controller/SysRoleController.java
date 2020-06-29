@@ -39,7 +39,6 @@ public class SysRoleController {
 
 	@Autowired
 	private SysRoleService sysRoleService;
-	private ObjectMapper objectMapper = new ObjectMapper();
 
 
 //	<!-- -->

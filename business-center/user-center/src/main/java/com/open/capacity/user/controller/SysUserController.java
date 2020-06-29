@@ -61,11 +61,6 @@ public class SysUserController {
     @Autowired
     private SysUserService sysUserService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    private ObjectMapper objectMapper = new ObjectMapper();
-
     /**
      * 当前登录用户 LoginAppUser
      *

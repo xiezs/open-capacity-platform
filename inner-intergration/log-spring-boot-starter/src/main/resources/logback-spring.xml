@@ -102,10 +102,20 @@
     <logger name="com.open.capacity.log.monitor" level="info" addtivity="false">
         <appender-ref ref="biz_log_async" />
     </logger>
-	
+	<!-- 
+	 <appender name="SENTRY" class="io.sentry.logback.SentryAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+           <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+	 -->
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="ERROR"/>
         <appender-ref ref="INFO"/>
+        <!-- <appender-ref ref="SENTRY" /> -->
     </root>
 </configuration>
