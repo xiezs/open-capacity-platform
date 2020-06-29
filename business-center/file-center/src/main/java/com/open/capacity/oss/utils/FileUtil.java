@@ -1,18 +1,13 @@
 package com.open.capacity.oss.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
-
+import com.open.capacity.oss.model.FileInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.open.capacity.oss.model.FileInfo;
-
-import lombok.extern.slf4j.Slf4j;
+import java.io.*;
+import java.util.Date;
 
 /**
  * @author 作者 owen 
@@ -121,4 +116,43 @@ public class FileUtil {
 
 		return false;
 	}
+
+	//byte数组写到到硬盘上
+	public static void byte2File(byte[] buf, String filePath, String fileName) {
+		BufferedOutputStream bos = null;
+		FileOutputStream fos = null;
+		File file = null;
+		try {
+			File dir = new File(filePath);
+
+
+			if (!dir.exists() ) {
+				dir.mkdirs();
+			}
+			file = new File(filePath + File.separator + fileName);
+			fos = new FileOutputStream(file);
+			bos = new BufferedOutputStream(fos);
+			bos.write(buf);
+			log.info("byte2File -》》 成功!!!");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+
 }

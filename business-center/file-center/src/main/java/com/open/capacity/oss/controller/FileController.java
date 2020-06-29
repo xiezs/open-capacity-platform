@@ -115,7 +115,7 @@ public class FileController {
 
 
 	/**
-	 * 	注意： 上传大文件
+	 * 	注意： 上传大文件为2个方法  bigFile 用了LOCAL,mergeFile也只能用用了LOCAL
 	 * 		LOCAL:本地方式存储，指单机版本下可以使用，根据 本地文件配置 d:/uploadshp 可以上传到该目录下，并且路径为当日日期分文件夹
 	 *		下载方式 就是以  WebResourceConfig 配置类 规定的一样 http://127.0.0.1:9200/api-file/statics/2020-06-28/06B323130BF34AAB88936B8918D90164.avi
 	 *		根据网关地址读取 statics 文件下的文件
@@ -136,7 +136,7 @@ public class FileController {
 //	@ResponseStatus(code= HttpStatus.INTERNAL_SERVER_ERROR,reason="server error")
 	public Result bigFile( String guid, Integer chunk, MultipartFile file, Integer chunks){
 		try {
-            fileServiceFactory.getFileService(FileType.LOCAL.toString()).chunk(guid,chunk,file,chunks,localFilePath);
+            fileServiceFactory.getFileService(FileType.FASTDFS.toString()).chunk(guid,chunk,file,chunks,localFilePath);
             return Result.succeed("操作成功");
         }catch (Exception ex){
             return Result.failed("操作失败");
@@ -151,7 +151,7 @@ public class FileController {
 	@RequestMapping(value = "/files-anon/merge",method =RequestMethod.POST )
 	public Result mergeFile(@RequestBody MergeFileDTO mergeFileDTO){
 		try {
-			return Result.succeed(fileServiceFactory.getFileService(FileType.LOCAL.toString()).merge(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath),"操作成功");
+			return Result.succeed(fileServiceFactory.getFileService(FileType.FASTDFS.toString()).merge(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath),"操作成功");
 		}catch (Exception ex){
 			return Result.failed("操作失败");
 		}

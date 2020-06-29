@@ -3,9 +3,11 @@ package com.open.capacity.oss.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.github.tobato.fastdfs.FdfsClientConfig;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
+import com.github.tobato.fastdfs.domain.proto.storage.DownloadByteArray;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
-import com.open.capacity.common.util.UUIDUtils;
 import com.open.capacity.oss.dao.FileDao;
+import com.open.capacity.oss.dao.FileExtendDao;
+import com.open.capacity.oss.model.FileExtend;
 import com.open.capacity.oss.model.FileInfo;
 import com.open.capacity.oss.model.FileType;
 import com.open.capacity.oss.utils.FileUtil;
@@ -14,12 +16,12 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.entity.ContentType;
-import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -41,7 +45,10 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
 
 	@Autowired
 	private FileDao fileDao;
-	
+
+	@Autowired
+	private FileExtendDao fileExtendDao;
+
 	@Autowired
     private FastFileStorageClient storageClient;
 
@@ -99,10 +106,26 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
 		boolean isMultipart = ServletFileUpload.isMultipartContent(((ServletRequestAttributes)
 				RequestContextHolder.currentRequestAttributes()).getRequest());
 		if (isMultipart) {
+			FileExtend fileExtend = new FileExtend();
+			String md5 = FileUtil.fileMd5(file.getInputStream());
+			fileExtend.setId(md5);
+			fileExtend.setGuid(guid);
+			fileExtend.setSize(file.getSize());
+			fileExtend.setName(guid + "_" + chunk + ".part");
+			fileExtend.setSource(fileType().name());
+			fileExtend.setCreateTime(new Date());
 
+            FileExtend oldFileExtend = fileExtendDao.getById(fileExtend.getId());
+            if (oldFileExtend != null) {
+                return;
+            }
 
+            // TODO: 2020/6/29 fastdfs上传
+            StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(),  FilenameUtils.getExtension(guid + "_" + chunk + ".part"), null);
+            fileExtend.setUrl(domain+ storePath.getFullPath());
+            fileExtend.setPath(storePath.getFullPath());
 
-
+			fileExtendDao.save(fileExtend);
 		}
 	}
 
@@ -118,52 +141,64 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
 	 */
 	@Override
 	protected FileInfo mergeFile(String guid, String fileName, String filePath) throws Exception {
-
 		// 得到 destTempFile 就是最终的文件
 		log.info("guid:{},fileName:{}",guid,fileName);
 
-		File parentFileDir = new File(filePath + File.separator + guid);
+        //根据guid 获取 全部临时分片数据
+		List<FileExtend> fileExtends = fileExtendDao.getByGuid(guid);
+		log.info("fileExtends -> size ：{}",fileExtends.size());
 
-		try {
-			int index = fileName.lastIndexOf(".");
+        File parentFileDir = new File(filePath + File.separator + guid);
+        File destTempFile = new File(filePath , fileName);
+        try {
+            if (CollectionUtils.isEmpty(fileExtends)){
+                return null;
+            }
 
-			// 文件扩展名
-			String fileSuffix = fileName.substring(index);
-			String suffix = "/" + LocalDate.now().toString() + "/"  + UUIDUtils.getGUID32() + fileSuffix;
+            // TODO: 2020/6/29 下载到本地进行操作
+            for (FileExtend extend:  fileExtends) {
+                DownloadByteArray callback = new DownloadByteArray();
+                byte[] buf = storageClient.downloadFile("group1", extend.getPath().substring(extend.getPath().lastIndexOf("group1/")+7),callback);
+                FileUtil.byte2File(buf,filePath + File.separator + guid,extend.getName());
+            }
 
-			File destTempFile = new File(filePath , suffix);
+            FileUtil.saveBigFile(guid, parentFileDir, destTempFile);
 
-			FileUtil.saveBigFile(guid, parentFileDir, destTempFile);
+            // TODO: 2020/6/17 保存到数据库中 FASTDFS
+            FileInputStream fileInputStream = new FileInputStream(destTempFile);
+            MultipartFile multipartFile = new MockMultipartFile(destTempFile.getName(), destTempFile.getName(),
+                    ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
 
-			// TODO: 2020/6/17 保存到数据库中 LOCAL
-			FileInputStream fileInputStream = new FileInputStream(destTempFile);
-			MultipartFile multipartFile = new MockMultipartFile(destTempFile.getName(), destTempFile.getName(),
-					ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+            FileInfo fileInfo = FileUtil.getFileInfo(multipartFile);
+            fileInfo.setName(fileName);
+            FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
 
-			FileInfo fileInfo = FileUtil.getFileInfo(multipartFile);
-			fileInfo.setName(fileName);
-			FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
+            if (oldFileInfo != null) {
+                return oldFileInfo;
+            }
 
-			if (oldFileInfo != null) {
-				return null;
-			}
+            StorePath storePath = storageClient.uploadFile(multipartFile.getInputStream(), multipartFile.getSize(), FilenameUtils.getExtension(multipartFile.getOriginalFilename()), null);
+            fileInfo.setUrl(domain+ storePath.getFullPath());
+            fileInfo.setPath(storePath.getFullPath());
 
-			StorePath storePath = storageClient.uploadFile(multipartFile.getInputStream(), multipartFile.getSize(), FilenameUtils.getExtension(multipartFile.getOriginalFilename()), null);
-			fileInfo.setUrl(domain+ storePath.getFullPath());
-			fileInfo.setPath(storePath.getFullPath());
-			fileInfo.setSource(fileType().name());// 设置文件来源
-			getFileDao().save(fileInfo);// 将文件信息保存到数据库
+            fileInfo.setSource(fileType().name());// 设置文件来源
+            getFileDao().save(fileInfo);// 将文件信息保存到数据库
 
-		} catch (Exception e) {
-			e.printStackTrace();
+            // TODO: 2020/6/29 更新分片文件的FileId
+            fileExtends.stream().forEach(vo->vo.setFileId(fileInfo.getId()));
+            fileExtendDao.batchUpdateSelective(fileExtends);
+            return  fileInfo;
+		}catch (Exception e){
+            e.printStackTrace();
+            return null;
 		}finally {
-			// 删除临时目录中的分片文件
-			try {
-				FileUtils.deleteDirectory(parentFileDir);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            // 删除临时目录中的分片文件
+            try {
+                destTempFile.delete();
+                FileUtils.deleteDirectory(parentFileDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 		}
-		return null;
 	}
 }
