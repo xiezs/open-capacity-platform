@@ -108,7 +108,7 @@
             <level>ERROR</level>
         </filter>
         <encoder>
-           <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+           <pattern>${CONSOLE_LOG_PATTERN_NO_COLOR}</pattern>
         </encoder>
     </appender>
 	 -->
