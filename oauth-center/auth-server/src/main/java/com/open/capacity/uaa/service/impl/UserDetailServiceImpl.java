@@ -1,10 +1,8 @@
 package com.open.capacity.uaa.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.authentication.ProviderNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,10 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.open.capacity.common.auth.details.LoginAppUser;
 import com.open.capacity.common.util.StringUtil;
-import com.open.capacity.log.annotation.LogAnnotation;
 import com.open.capacity.uaa.feign.UserFeignClient;
 
-import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -40,9 +36,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
         }
 
         if (loginAppUser == null) {
-            throw new InternalAuthenticationServiceException("用户不存在");
+            throw new UsernameNotFoundException("用户不存在");
         }else if (StringUtil.isBlank(loginAppUser.getUsername())) {
-        	throw new InternalAuthenticationServiceException("系统繁忙中");
+        	throw new ProviderNotFoundException("系统繁忙中");
         }
         else if (!loginAppUser.isEnabled()) {
             throw new DisabledException("用户已作废");
