@@ -7,18 +7,18 @@ import com.netflix.hystrix.exception.HystrixBadRequestException;
  * blog: https://blog.51cto.com/13005375 
  * code: https://gitee.com/owenwangwen/open-capacity-platform
  */
-public class HytrixException extends HystrixBadRequestException {
+public class HystrixException extends HystrixBadRequestException {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2437160791033393978L;
 
-	public HytrixException(String msg) {
+	public HystrixException(String msg) {
 	  super(msg);
 	}
 
-	public HytrixException(Exception e){
+	public HystrixException(Exception e){
 	  this(e.getMessage());
 	}
 }

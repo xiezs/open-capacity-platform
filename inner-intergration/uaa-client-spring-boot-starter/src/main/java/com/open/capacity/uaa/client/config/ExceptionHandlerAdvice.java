@@ -21,7 +21,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.open.capacity.common.exception.controller.ControllerException;
 import com.open.capacity.common.exception.dao.DataAccessException;
-import com.open.capacity.common.exception.hystrix.HytrixException;
+import com.open.capacity.common.exception.hystrix.HystrixException;
 import com.open.capacity.common.exception.service.ServiceException;
 
 /**
@@ -189,9 +189,9 @@ public class ExceptionHandlerAdvice {
 		return data;
 	}
 
-	@ExceptionHandler({ HytrixException.class })
+	@ExceptionHandler({ HystrixException.class })
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public Map<String, Object> hytrixException(HytrixException exception) {
+	public Map<String, Object> hytrixException(HystrixException exception) {
 		Map<String, Object> data = new HashMap<>();
 		data.put("resp_code", HttpStatus.INTERNAL_SERVER_ERROR.value());
 		data.put("resp_msg", exception.getMessage());

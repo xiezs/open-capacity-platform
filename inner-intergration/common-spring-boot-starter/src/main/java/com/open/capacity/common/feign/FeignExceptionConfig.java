@@ -9,7 +9,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 
-import com.open.capacity.common.exception.hystrix.HytrixException;
+import com.open.capacity.common.exception.hystrix.HystrixException;
 import com.open.capacity.common.exception.service.ServiceException;
 
 import feign.Response;
@@ -53,7 +53,7 @@ public class FeignExceptionConfig {
                         result.setStatus(response.status());
                         // 业务异常包装成自定义异常类HytrixException
                         if (result.getStatus() != HttpStatus.OK.value()) {
-                            exception = new HytrixException(result.getResp_msg());
+                            exception = new HystrixException(result.getResp_msg());
                         } else {
                             exception = feign.FeignException.errorStatus(methodKey, response);
                         }

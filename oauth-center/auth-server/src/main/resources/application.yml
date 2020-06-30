@@ -127,8 +127,6 @@ hystrix:
 
 ##feign参数优化
 feign:
-  hystrix:
-    enabled: true
   client:
     config: 
       default:  
