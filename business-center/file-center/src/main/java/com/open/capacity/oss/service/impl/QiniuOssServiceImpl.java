@@ -1,5 +1,6 @@
 package com.open.capacity.oss.service.impl;
 
+import com.open.capacity.common.util.UUIDUtils;
 import com.open.capacity.oss.dao.FileDao;
 import com.open.capacity.oss.model.FileInfo;
 import com.open.capacity.oss.model.FileType;
@@ -68,14 +69,23 @@ public class QiniuOssServiceImpl extends AbstractFileService implements Initiali
 
 	@Override
 	protected void uploadFile(MultipartFile file, FileInfo fileInfo) throws Exception {
+		String fileName = file.getOriginalFilename();
+		// 检查文件后缀格式
+		String fileEnd = fileName.substring(
+				fileName.lastIndexOf(".") + 1)
+				.toLowerCase();
+		String fileId = UUIDUtils.getGUID32();
+		StringBuffer tempFilePath = new StringBuffer();
+		tempFilePath.append(fileId).append(".").append(fileEnd);
+
 		try {
 			// 调用put方法上传
-			uploadManager.put(file.getBytes(),  fileInfo.getName() , auth.uploadToken(bucket));
+			uploadManager.put(file.getBytes(),  tempFilePath.toString() , auth.uploadToken(bucket));
 			// 打印返回的信息
 		} catch (Exception e) {
 		}
-		fileInfo.setUrl(endpoint+"/"+ fileInfo.getName());
-		fileInfo.setPath(endpoint+"/"+ fileInfo.getName());
+		fileInfo.setUrl(endpoint+"/"+ tempFilePath);
+		fileInfo.setPath(endpoint+"/"+ tempFilePath);
 		
 
 	}
