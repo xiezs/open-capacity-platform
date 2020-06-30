@@ -101,6 +101,8 @@ public class LocalOssServiceImpl extends AbstractFileService {
 		boolean isMultipart = ServletFileUpload.isMultipartContent(((ServletRequestAttributes)
 				RequestContextHolder.currentRequestAttributes()).getRequest());
 		if (isMultipart) {
+			StringBuffer tempFilePath = new StringBuffer();
+			tempFilePath.append(guid).append("_").append(chunk).append(".part");
 			// 临时目录用来存放所有分片文件
 			String tempFileDir = filePath + File.separator + guid;
 			File parentFileDir = new File(tempFileDir);
@@ -108,7 +110,7 @@ public class LocalOssServiceImpl extends AbstractFileService {
 				parentFileDir.mkdirs();
 			}
 			// 分片处理时，前台会多次调用上传接口，每次都会上传文件的一部分到后台
-			File tempPartFile = new File(parentFileDir, guid + "_" + chunk + ".part");
+			File tempPartFile = new File(parentFileDir, tempFilePath.toString());
 			FileUtils.copyInputStreamToFile(file.getInputStream(), tempPartFile);
 		}
 	}

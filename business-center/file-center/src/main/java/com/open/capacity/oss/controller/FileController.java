@@ -137,7 +137,7 @@ public class FileController {
 //	@ResponseStatus(code= HttpStatus.INTERNAL_SERVER_ERROR,reason="server error")
 	public Result bigFile( String guid, Integer chunk, MultipartFile file, Integer chunks){
 		try {
-            fileServiceFactory.getFileService(FileType.FASTDFS.toString()).chunk(guid,chunk,file,chunks,localFilePath);
+            fileServiceFactory.getFileService(FileType.QINIU.toString()).chunk(guid,chunk,file,chunks,localFilePath);
             return Result.succeed("操作成功");
         }catch (Exception ex){
             return Result.failed("操作失败");
@@ -152,7 +152,7 @@ public class FileController {
 	@RequestMapping(value = "/files-anon/merge",method =RequestMethod.POST )
 	public Result mergeFile(@RequestBody MergeFileDTO mergeFileDTO){
 		try {
-			return Result.succeed(fileServiceFactory.getFileService(FileType.FASTDFS.toString()).merge(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath),"操作成功");
+			return Result.succeed(fileServiceFactory.getFileService(FileType.QINIU.toString()).merge(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath),"操作成功");
 		}catch (Exception ex){
 			return Result.failed("操作失败");
 		}

@@ -106,12 +106,14 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
 		boolean isMultipart = ServletFileUpload.isMultipartContent(((ServletRequestAttributes)
 				RequestContextHolder.currentRequestAttributes()).getRequest());
 		if (isMultipart) {
+			StringBuffer tempFilePath = new StringBuffer();
+			tempFilePath.append(guid).append("_").append(chunk).append(".part");
 			FileExtend fileExtend = new FileExtend();
 			String md5 = FileUtil.fileMd5(file.getInputStream());
 			fileExtend.setId(md5);
 			fileExtend.setGuid(guid);
 			fileExtend.setSize(file.getSize());
-			fileExtend.setName(guid + "_" + chunk + ".part");
+			fileExtend.setName(tempFilePath.toString());
 			fileExtend.setSource(fileType().name());
 			fileExtend.setCreateTime(new Date());
 
@@ -121,7 +123,7 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
             }
 
             // TODO: 2020/6/29 fastdfs上传
-            StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(),  FilenameUtils.getExtension(guid + "_" + chunk + ".part"), null);
+            StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(),  FilenameUtils.getExtension(tempFilePath.toString()), null);
             fileExtend.setUrl(domain+ storePath.getFullPath());
             fileExtend.setPath(storePath.getFullPath());
 
