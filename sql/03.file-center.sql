@@ -21,3 +21,22 @@ CREATE TABLE `file_info` (
   PRIMARY KEY (`id`),
   KEY `createTime` (`createTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+-- ----------------------------
+-- Table structure for file_info_extend
+-- ----------------------------
+DROP TABLE IF EXISTS `file_info_extend`;
+CREATE TABLE `file_info_extend` (
+  `id` varchar(32) NOT NULL COMMENT '文件md5',
+  `guid` varchar(32) NOT NULL COMMENT '文件分片id',
+  `name` varchar(128) NOT NULL,
+  `size` int(11) NOT NULL,
+  `path` varchar(255) DEFAULT NULL COMMENT '物理路径',
+  `url` varchar(1024) NOT NULL,
+  `source` varchar(32) NOT NULL,
+  `fileId` varchar(32) DEFAULT NULL,
+  `createTime` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文件拓展表';

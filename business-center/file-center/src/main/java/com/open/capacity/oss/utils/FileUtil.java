@@ -1,18 +1,15 @@
 package com.open.capacity.oss.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
-
+import com.open.capacity.oss.model.FileInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.open.capacity.oss.model.FileInfo;
-
-import lombok.extern.slf4j.Slf4j;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Date;
 
 /**
  * @author 作者 owen 
@@ -71,8 +68,7 @@ public class FileUtil {
 
 		return null;
 	}
-	
-	
+
 	public static String saveBigFile(String guid ,File parentFileDir, File destTempFile) {
 		try {
 			if(parentFileDir.isDirectory()){
@@ -122,4 +118,109 @@ public class FileUtil {
 
 		return false;
 	}
+
+	//byte数组写到到硬盘上
+	public static void byte2File(byte[] buf, String filePath, String fileName) {
+		BufferedOutputStream bos = null;
+		FileOutputStream fos = null;
+		File file = null;
+		try {
+			File dir = new File(filePath);
+
+
+			if (!dir.exists() ) {
+				dir.mkdirs();
+			}
+			file = new File(filePath + File.separator + fileName);
+			fos = new FileOutputStream(file);
+			bos = new BufferedOutputStream(fos);
+			bos.write(buf);
+			log.info("byte2File -》》 成功!!!");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
+	 * 从网络Url中下载文件
+	 * @param urlStr
+	 * @param fileName
+	 * @param savePath
+	 * @throws IOException
+	 */
+	public static void downLoadByUrl(String urlStr,String savePath,String fileName){
+		InputStream inputStream = null;
+		FileOutputStream fos = null;
+		try{
+			URL url = new URL(urlStr);
+			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+
+			//设置超时间为3秒
+			conn.setConnectTimeout(3*1000);
+
+			//得到输入流
+			inputStream = conn.getInputStream();
+			//获取自己数组
+			byte[] getData = readInputStream(inputStream);
+
+			//文件保存位置
+			File saveDir = new File(savePath);
+			if(!saveDir.exists()){
+				saveDir.mkdir();
+			}
+			File file = new File(saveDir + File.separator + fileName);
+			fos = new FileOutputStream(file);
+			fos.write(getData);
+
+			log.info("info:"+url+" download success");
+		}catch (IOException e) {
+			e.printStackTrace();
+			log.info("Unexpected code ");
+		}finally {
+			try {
+				if(fos!=null){
+					fos.close();
+				}
+				if(inputStream!=null){
+					inputStream.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+
+	/**
+	 * 从输入流中获取字节数组
+	 * @param inputStream
+	 * @return
+	 * @throws IOException
+	 */
+	public static  byte[] readInputStream(InputStream inputStream) throws IOException {
+		byte[] buffer = new byte[1024];
+		int len = 0;
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		while((len = inputStream.read(buffer)) != -1) {
+			bos.write(buffer, 0, len);
+		}
+		bos.close();
+		return bos.toByteArray();
+	}
+
 }

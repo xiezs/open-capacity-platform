@@ -1,11 +1,13 @@
 package com.open.capacity.oss.service.impl;
 
 import com.open.capacity.common.util.UUIDUtils;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.oss.dao.FileDao;
+import com.open.capacity.oss.model.FileInfo;
+import com.open.capacity.oss.model.FileType;
+import com.open.capacity.oss.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +18,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.open.capacity.oss.dao.FileDao;
-import com.open.capacity.oss.model.FileInfo;
-import com.open.capacity.oss.model.FileType;
-import com.open.capacity.oss.utils.FileUtil;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -103,9 +98,11 @@ public class LocalOssServiceImpl extends AbstractFileService {
 		}
 
 		// TODO: 2020/6/16 从RequestContextHolder上下文中获取 request对象
-		boolean isMultipart = ServletFileUpload.isMultipartContent(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-				.getRequest());
+		boolean isMultipart = ServletFileUpload.isMultipartContent(((ServletRequestAttributes)
+				RequestContextHolder.currentRequestAttributes()).getRequest());
 		if (isMultipart) {
+			StringBuffer tempFilePath = new StringBuffer();
+			tempFilePath.append(guid).append("_").append(chunk).append(".part");
 			// 临时目录用来存放所有分片文件
 			String tempFileDir = filePath + File.separator + guid;
 			File parentFileDir = new File(tempFileDir);
@@ -113,7 +110,7 @@ public class LocalOssServiceImpl extends AbstractFileService {
 				parentFileDir.mkdirs();
 			}
 			// 分片处理时，前台会多次调用上传接口，每次都会上传文件的一部分到后台
-			File tempPartFile = new File(parentFileDir, guid + "_" + chunk + ".part");
+			File tempPartFile = new File(parentFileDir, tempFilePath.toString());
 			FileUtils.copyInputStreamToFile(file.getInputStream(), tempPartFile);
 		}
 	}
@@ -128,7 +125,7 @@ public class LocalOssServiceImpl extends AbstractFileService {
 	 * @return
 	 */
 	@Override
-	protected void mergeFile(String guid, String fileName, String filePath) throws Exception {
+	protected FileInfo mergeFile(String guid, String fileName, String filePath) throws Exception {
 		// 得到 destTempFile 就是最终的文件
 		log.info("guid:{},fileName:{}",guid,fileName);
 
@@ -155,7 +152,8 @@ public class LocalOssServiceImpl extends AbstractFileService {
 			FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
 
 			if (oldFileInfo != null) {
-				return;
+				destTempFile.delete();
+				return oldFileInfo;
 			}
 
 			String path = localFilePath + suffix;
@@ -164,9 +162,10 @@ public class LocalOssServiceImpl extends AbstractFileService {
 			fileInfo.setUrl(url);
 			fileInfo.setSource(fileType().name());// 设置文件来源
 			getFileDao().save(fileInfo);// 将文件信息保存到数据库
-
+			return  fileInfo;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}finally {
 			// 删除临时目录中的分片文件
 			try {

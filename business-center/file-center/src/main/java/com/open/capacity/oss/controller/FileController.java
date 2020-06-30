@@ -114,7 +114,20 @@ public class FileController {
 	}
 
 
-
+	/**
+	 * 	注意： 上传大文件为2个方法  bigFile 用了LOCAL,mergeFile也只能用用了LOCAL
+	 * 		LOCAL:本地方式存储，指单机版本下可以使用，根据 本地文件配置 d:/uploadshp 可以上传到该目录下，并且路径为当日日期分文件夹
+	 *		下载方式 就是以  WebResourceConfig 配置类 规定的一样 http://127.0.0.1:9200/api-file/statics/2020-06-28/06B323130BF34AAB88936B8918D90164.avi
+	 *		根据网关地址读取 statics 文件下的文件
+	 *	（特别注意，该模式下只支持单台服务器，多台服务器会有问题，因为分片会在不太服务器中，暂时无法合并多台服务器的文件，有折中的方法，做共享文件夹，这样成本太大，不建议，如果多台服务器，推荐oss存储或者分布式文件存储）
+	 *
+	 * 		FASTDFS:分布式文件存储，即分布式系统常用的文件存储方式，适合多台服务器，逻辑是将各个分片存入FASTDFS 的存储目录中，然后在合并方法中把文件 downloadFile 下载到本地进行合并并保存文件
+	 * 		最终才是一个文件提供给用户，这里有个问题，就是操作的任务耗时太久，如果经过nginx的有可能被超时返回，建议合并方法可以做异步请求，直接丢到后台任务进行最终通过消息的方式提醒用户即可
+	 *
+	 *		QINIU:七牛OSS上传和FASTDFS类似一样的逻辑,也是适合多台服务器往OSS服务器上传文件，然后在合并方法中把文件保存好完整文件在上传到OSS
+	 *
+	 *		ALIYUN:暂时没有申请key,没有实现逻辑和七牛OSS一样
+	 */
 	/**
 	 * 上传大文件
 	 * @param file
@@ -139,8 +152,7 @@ public class FileController {
 	@RequestMapping(value = "/files-anon/merge",method =RequestMethod.POST )
 	public Result mergeFile(@RequestBody MergeFileDTO mergeFileDTO){
 		try {
-			fileServiceFactory.getFileService(FileType.LOCAL.toString()).merge(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath);
-			return Result.succeed("操作成功");
+			return Result.succeed(fileServiceFactory.getFileService(FileType.LOCAL.toString()).merge(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath),"操作成功");
 		}catch (Exception ex){
 			return Result.failed("操作失败");
 		}
@@ -155,7 +167,8 @@ public class FileController {
 	@RequestMapping(value = "/files-anon/uploadError",method =RequestMethod.POST )
 	public Result uploadError(@RequestBody MergeFileDTO mergeFileDTO){
 		try {
-			fileServiceFactory.getFileService(FileType.LOCAL.toString()).uploadError(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath);
+			//使用默认的 FileService
+			fileServiceFactory.getFileService(null).uploadError(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath);
 			return Result.succeed("操作成功");
 		}catch (Exception ex){
 			return Result.failed("操作失败");
