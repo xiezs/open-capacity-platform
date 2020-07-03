@@ -15,8 +15,9 @@
 简称ocp是基于layui+springcloud的企业级微服务框架(用户权限管理，配置中心管理，应用管理，....),其核心的设计目标是分离前后端，快速开发部署，学习简单，功能强大，提供快速接入核心接口能力，其目标是帮助企业搭建一套类似百度能力开放平台的框架；  
 - 基于layui前后端分离的企业级微服务架构  
 - 兼容spring cloud netflix & spring cloud alibaba  
-- 优化Spring Security内部实现，实现API调用的统一出口和权限认证授权中心  
+- 优化Spring Security内部实现，实现API调用的统一出口和权限认证授权中心     
 - 提供完善的企业微服务流量监控，日志监控能力   
+- 通用的微服务架构应用非功能性(NFR)需求,更容易地在不同的项目中复用    
 - 提供完善的压力测试方案  
 - 提供完善的灰度发布方案  
 - 提供完善的微服务部署方案  
@@ -142,17 +143,20 @@ http://59.110.164.254:8066/login.html  admin/admin
     </tr>
 </table>
  
-#  APM监控
+# APM监控 #
 <table>
 	<tr>
         <td><img src="https://images.gitee.com/uploads/images/2019/0330/105610_52def254_869801.png "屏幕截图.png"/></td>
         <td><img src="https://images.gitee.com/uploads/images/2019/0330/105638_5c7ab9ac_869801.png "屏幕截图.png"/></td>
-    </tr>
-	<tr>
         <td><img src="https://images.gitee.com/uploads/images/2019/0330/105713_c9c94365_869801.png "屏幕截图.png"/></td>
         <td><img src="https://images.gitee.com/uploads/images/2019/0330/105736_ac478159_869801.png "屏幕截图.png"/></td>
+	</tr>
+	<tr>
+		<td><img src="https://images.gitee.com/uploads/images/2020/0703/151910_2bf8f7cf_869801.png "屏幕截图.png"/></td>
+		<td><img src="https://images.gitee.com/uploads/images/2020/0703/151518_a64fb77c_869801.png "屏幕截图.png"/></td>
+		<td><img src="https://images.gitee.com/uploads/images/2020/0703/151713_216d7010_869801.png "屏幕截图.png"/></td>
+		<td><img src="https://images.gitee.com/uploads/images/2020/0703/151810_74106796_869801.png "屏幕截图.png"/></td>
     </tr>
-     
 </table>
 
 # 系统监控 #
