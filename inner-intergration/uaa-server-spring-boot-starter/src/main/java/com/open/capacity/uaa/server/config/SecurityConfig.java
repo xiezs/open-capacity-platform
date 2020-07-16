@@ -54,10 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private OauthLogoutHandler oauthLogoutHandler;
 	@Autowired
 	private PermitUrlProperties permitUrlProperties ;
-	
-	@Autowired
-	private ValidateCodeConfig validateCodeConfig ;
-
+	 
 	@Autowired
 	private SmsCodeAuthenticationProvider smsCodeAuthenticationProvider;
 
@@ -119,8 +116,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		//注册到AuthenticationManager中去 增加支持SmsCodeAuthenticationToken
 		http.authenticationProvider(smsCodeAuthenticationProvider);
 
-		//增加验证码处理
-		http.apply(validateCodeConfig) ;
 		// http.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler);
 		// 解决不允许显示在iframe的问题
 		http.headers().frameOptions().disable();

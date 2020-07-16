@@ -18,7 +18,16 @@ spring:
       eager: true
   main:
     allow-bean-definition-overriding: true
-csp:
-  sentinel:
-    app:
-      type: 1    
+
+
+#metrics
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    chaosmonkey:
+      enabled: true
+    health:
+      show-details: always  

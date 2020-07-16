@@ -5,14 +5,7 @@ server:
   servlet:
     context-path: /api-auth
   use-forward-headers: false  
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always   
+
 
 
 spring:

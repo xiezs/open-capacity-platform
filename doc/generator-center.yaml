@@ -1,15 +1,7 @@
 #端口
 server:
   port: 6503   #固定端口
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always    
+ 
 
 spring:
   datasource:

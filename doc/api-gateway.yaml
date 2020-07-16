@@ -1,15 +1,7 @@
 #端口
 server:
   port: 9200
-#metrics
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
+ 
 spring:
   cloud: 
     sentinel:

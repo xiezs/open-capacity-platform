@@ -2,14 +2,6 @@
 server:
   port: 4000
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always     
 
 
 #阿里短信配置      

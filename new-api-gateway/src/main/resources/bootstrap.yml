@@ -20,13 +20,16 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
+#metrics
 management:
   endpoints:
     web:
       exposure:
         include: "*"
   endpoint:
+    chaosmonkey:
+      enabled: true
     health:
-      show-details: always
+      show-details: always  
   
  

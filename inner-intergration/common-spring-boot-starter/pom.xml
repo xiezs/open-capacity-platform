@@ -9,9 +9,11 @@
   <description>公共支撑</description>
   
   <properties>
+  		<xss-version>1.5.5</xss-version>
+  		<chaos-monkey>2.1.1</chaos-monkey>
 		<orika-version>1.5.2</orika-version>
 		<modelmapper-version>2.3.3</modelmapper-version>
-		<xss-version>1.5.5</xss-version>
+		
   </properties>
   
 	<dependencies>
@@ -54,6 +56,12 @@
             <version>${xss-version}</version>
         </dependency>
 		
+		<!-- 混沌工程 -->
+		<dependency>
+		    <groupId>de.codecentric</groupId>
+		    <artifactId>chaos-monkey-spring-boot</artifactId>
+		    <version>${chaos-monkey}</version>
+		</dependency>
 		
 		<!--  feign http rpc -->
 		<dependency>

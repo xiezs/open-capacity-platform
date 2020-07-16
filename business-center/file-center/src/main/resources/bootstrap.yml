@@ -17,3 +17,15 @@ spring:
       eager: true    
   application:
     name: file-center
+    
+#metrics
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    chaosmonkey:
+      enabled: true
+    health:
+      show-details: always  

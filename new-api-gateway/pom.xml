@@ -42,12 +42,14 @@
 					<groupId>org.hibernate</groupId>
 					<artifactId>hibernate-validator</artifactId>
 				</exclusion>
-				
 				<exclusion>
 					<groupId>org.apache.httpcomponents</groupId>
 					<artifactId>httpclient</artifactId>
 				</exclusion>
-				
+				<exclusion>
+					<groupId>de.codecentric</groupId>
+					<artifactId>chaos-monkey-spring-boot</artifactId>
+				</exclusion>
 				<!-- 
 					<exclusion>
 					<groupId>org.apache.commons</groupId>
