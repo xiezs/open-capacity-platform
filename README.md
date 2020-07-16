@@ -18,6 +18,7 @@
 - 兼容spring cloud netflix & spring cloud alibaba  
 - 优化Spring Security内部实现，实现API调用的统一出口和权限认证授权中心  
 - 提供完善的企业微服务流量监控，日志监控能力   
+- 通用的微服务架构应用非功能性(NFR)需求,更容易地在不同的项目中复用    
 - 提供完善的压力测试方案  
 - 提供完善的灰度发布方案  
 - 提供完善的微服务部署方案  
@@ -43,6 +44,8 @@ http://59.110.164.254:8066/login.html  admin/admin
 	<tr>
             <td><img src=https://images.gitee.com/uploads/images/2019/1209/121109_59a8822c_869801.png "屏幕截图.png"" />
 			<td><img src=https://images.gitee.com/uploads/images/2019/1209/121142_1f491d9b_869801.png "屏幕截图.png"" />
+			<td><img src=https://images.gitee.com/uploads/images/2020/0401/194112_aa2542bd_869801.png "屏幕截图.png" />	
+			<td><img src=https://images.gitee.com/uploads/images/2020/0518/105108_51d550de_869801.png "屏幕截图.png"" />					
 	</tr>
 </table>
 
@@ -50,7 +53,7 @@ http://59.110.164.254:8066/login.html  admin/admin
 # 技术介绍
 <table>
 	<tr>
-		<td><img src="https://images.gitee.com/uploads/images/2019/0523/091013_fffdcf8b_869801.png "屏幕截图.png"></td>
+		<td><img src="https://images.gitee.com/uploads/images/2020/0716/173815_cc75fc64_869801.png "屏幕截图.png"></td>
 		<td><img src="https://images.gitee.com/uploads/images/2020/0531/225148_0dff4506_1441068.png "屏幕截图.png"></td>
     </tr>
 	
@@ -60,6 +63,7 @@ http://59.110.164.254:8066/login.html  admin/admin
 - 统一安全认证中心
 	- 支持oauth的四种模式登录
 	- 支持用户名、密码加图形验证码登录
+	- 手机校验码登录
 	- 支持第三方系统单点登录
 - 微服务架构基础支撑
 	- 服务注册发现、路由与负载均衡
@@ -148,15 +152,19 @@ http://59.110.164.254:8066/login.html  admin/admin
     </tr>
 </table>
  
-#  APM监控
+# APM监控 #
 <table>
 	<tr>
         <td><img src="https://images.gitee.com/uploads/images/2019/0330/105610_52def254_869801.png "屏幕截图.png"/></td>
         <td><img src="https://images.gitee.com/uploads/images/2019/0330/105638_5c7ab9ac_869801.png "屏幕截图.png"/></td>
-    </tr>
-	<tr>
         <td><img src="https://images.gitee.com/uploads/images/2019/0330/105713_c9c94365_869801.png "屏幕截图.png"/></td>
         <td><img src="https://images.gitee.com/uploads/images/2019/0330/105736_ac478159_869801.png "屏幕截图.png"/></td>
+	</tr>
+	<tr>
+		<td><img src="https://images.gitee.com/uploads/images/2020/0703/151910_2bf8f7cf_869801.png "屏幕截图.png"/></td>
+		<td><img src="https://images.gitee.com/uploads/images/2020/0703/151518_a64fb77c_869801.png "屏幕截图.png"/></td>
+		<td><img src="https://images.gitee.com/uploads/images/2020/0703/151713_216d7010_869801.png "屏幕截图.png"/></td>
+		<td><img src="https://images.gitee.com/uploads/images/2020/0703/151810_74106796_869801.png "屏幕截图.png"/></td>
     </tr>
      
 </table>
@@ -205,8 +213,8 @@ e.启动gray-center的discovery-console-desktop
 [https://github.com/Nepxion/Docs/blob/master/discovery-doc/README_QUICK_START.md](https://github.com/Nepxion/Docs/blob/master/discovery-doc/README_QUICK_START.md)，感谢军哥分享  
 
 
-# Spring Cloud Alibaba 版本
-https://gitee.com/owenwangwen/open-capacity-platform/tree/alibaba
+# Spring Cloud NETFLIX 版本
+https://gitee.com/owenwangwen/open-capacity-platform/tree/2.0.1/
 
 # vue 版本
 vue 前端：https://gitee.com/owenwangwen/jeecp  
