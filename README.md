@@ -214,9 +214,7 @@ https://github.com/ctripcorp/apollo
 # Spring Cloud Alibaba 版本
 https://gitee.com/owenwangwen/open-capacity-platform/tree/alibaba
 
-# vue 版本
-vue 前端：https://gitee.com/owenwangwen/jeecp  
-vue 后端：https://gitee.com/owenwangwen/open-capacity-platform/tree/vue/
+
 
 # oracle 版本
 https://gitee.com/owenwangwen/open-capacity-platform/tree/oracle/
