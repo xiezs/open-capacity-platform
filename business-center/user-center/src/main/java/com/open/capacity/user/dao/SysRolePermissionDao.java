@@ -17,7 +17,7 @@ import com.open.capacity.common.model.SysPermission;
 @Mapper
 public interface SysRolePermissionDao {
 
-	@Insert("insert into sys_role_permission(roleId, permissionId) values(#{roleId}, #{permissionId})")
+	@Insert("insert into sys_role_permission(role_id, permission_id) values(#{roleId}, #{permissionId})")
 	int saveRolePermission(@Param("roleId") Long roleId, @Param("permissionId") Long permissionId);
 
 	int deleteRolePermission(@Param("roleId") Long roleId, @Param("permissionId") Long permissionId);

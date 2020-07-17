@@ -63,8 +63,8 @@ public class SecurityHandlerConfig {
 
 				response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
-				rsp.put("resp_code", HttpStatus.UNAUTHORIZED.value() + "");
-				rsp.put("resp_msg", msg);
+				rsp.put("code", HttpStatus.UNAUTHORIZED.value() + "");
+				rsp.put("msg", msg);
 
 				response.setContentType("application/json;charset=UTF-8");
 				response.getWriter().write(objectMapper.writeValueAsString(rsp));
@@ -94,8 +94,8 @@ public class SecurityHandlerConfig {
 				
 				response.setStatus(HttpStatus.UNAUTHORIZED.value() );
 				
-				rsp.put("resp_code", HttpStatus.UNAUTHORIZED.value() + "") ;
-                rsp.put("resp_msg", authException.getMessage()) ;
+				rsp.put("code", HttpStatus.UNAUTHORIZED.value() + "") ;
+                rsp.put("msg", authException.getMessage()) ;
                 
                 response.setContentType("application/json;charset=UTF-8");
     			response.getWriter().write(objectMapper.writeValueAsString(rsp));
@@ -113,7 +113,7 @@ public class SecurityHandlerConfig {
     }
     /**
 	 * 处理spring security oauth 处理失败返回消息格式
-	 * resp_code
+	 * code
 	 * resp_desc
 	 */
     @Bean
@@ -128,8 +128,8 @@ public class SecurityHandlerConfig {
 
     	        response.setStatus(HttpStatus.UNAUTHORIZED.value() );
 				
-				rsp.put("resp_code", HttpStatus.UNAUTHORIZED.value() + "") ;
-                rsp.put("resp_msg", authException.getMessage()) ;
+				rsp.put("code", HttpStatus.UNAUTHORIZED.value() + "") ;
+                rsp.put("msg", authException.getMessage()) ;
                 
                 response.setContentType("application/json;charset=UTF-8");
     			response.getWriter().write(objectMapper.writeValueAsString(rsp));

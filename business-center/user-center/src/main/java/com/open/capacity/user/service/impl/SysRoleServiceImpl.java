@@ -70,8 +70,7 @@ public class SysRoleServiceImpl implements SysRoleService {
 	public void update(SysRole sysRole) throws ServiceException {
 		try {
 			sysRole.setUpdateTime(new Date());
-
-			sysRoleDao.updateByOps(sysRole);
+			sysRoleDao.updateByPrimaryKey(sysRole);
 			log.info("修改角色：{}", sysRole);
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -84,9 +83,9 @@ public class SysRoleServiceImpl implements SysRoleService {
 		try {
 			SysRole sysRole = sysRoleDao.findById(id);
 
-			sysRoleDao.delete(id);
+			sysRoleDao.deleteByPrimaryKey(id);
 			rolePermissionDao.deleteRolePermission(id, null);
-			roleMenuDao.delete(id, null) ;
+			roleMenuDao.deleteByPrimaryKey(id, null) ;
 			userRoleDao.deleteUserRole(null, id);
 			
 			
@@ -182,7 +181,7 @@ public class SysRoleServiceImpl implements SysRoleService {
 				i = sysRoleDao.save(sysRole);
 			}else {
 				sysRole.setUpdateTime(new Date());
-				i = sysRoleDao.updateByOps(sysRole);
+				i = sysRoleDao.updateByPrimaryKey(sysRole);
 			}
 			return i>0?Result.succeed("操作成功"):Result.failed("操作失败");
 		} catch (Exception e) {

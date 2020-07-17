@@ -16,8 +16,8 @@ public class TestController {
     /**
      * 手动埋点  可以参考美团监控项目cat
      * key
-     * resp_code
-     * resp_msg
+     * code
+     * msg
      */
     @Resource
     Tracing tracing;
@@ -34,8 +34,8 @@ public class TestController {
         //手动埋点
         span.tag("class", stes[1].getClassName());
         span.tag("method", stes[1].getMethodName());
-        span.tag("resp_code", "0000");
-        span.tag("resp_msg", "success");
+        span.tag("code", "0000");
+        span.tag("msg", "success");
         testService.secondBiz();
         span.finish();
         return "hello";

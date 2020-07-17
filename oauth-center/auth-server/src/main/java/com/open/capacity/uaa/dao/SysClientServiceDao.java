@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import com.open.capacity.uaa.model.SysService;
+import com.open.capacity.common.model.SysService;
 
 /**
  * @Author: [gitgeek]
@@ -21,12 +21,12 @@ import com.open.capacity.uaa.model.SysService;
 public interface SysClientServiceDao {
 
 
-    @Insert("insert into sys_client_service(clientId, serviceId) values(#{clientId}, #{serviceId})")
+    @Insert("insert into sys_client_service(client_id, service_id) values(#{clientId}, #{serviceId})")
     int save(@Param("clientId") Long clientId, @Param("serviceId") Long serviceId);
 
     int delete(@Param("clientId") Long clientId, @Param("serviceId") Long serviceId);
 
-    @Select("select t.serviceId from sys_client_service t where t.clientId = #{clientId}")
+    @Select("select t.service_id from sys_client_service t where t.clientId = #{clientId}")
     Set<Long> findServiceIdsByClientId(Long clientId);
 
     List<SysService> findServicesBySlientIds(@Param("clientIds") Set<Long> clientIds);

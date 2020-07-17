@@ -93,11 +93,11 @@
 
                     admin.req('api-user/permissions/'+obj.data.id, {  }, function (data) {
                         layer.closeAll('loading');
-                        if (data.resp_code == 0) {
-                            layer.msg(data.resp_msg, {icon: 1, time: 500});
+                        if (data.code == 0) {
+                            layer.msg(data.msg, {icon: 1, time: 500});
                             table.reload('auth-table', {});
                         } else {
-                            layer.msg(data.resp_msg, {icon: 2, time: 500});
+                            layer.msg(data.msg, {icon: 2, time: 500});
                         }
                     }, 'DELETE');
 
@@ -135,12 +135,12 @@
             admin.req('api-user/permissions/saveOrUpdate', JSON.stringify(data.field), function (data) {
                 layer.closeAll('loading');
                 console.log(data);
-                if (data.resp_code == 0) {
-                    layer.msg(data.resp_msg, {icon: 1, time: 500});
+                if (data.code == 0) {
+                    layer.msg(data.msg, {icon: 1, time: 500});
                     table.reload('auth-table');
                     layer.closeAll('page');
                 } else {
-                    layer.msg(data.resp_msg, {icon: 2, time: 500});
+                    layer.msg(data.msg, {icon: 2, time: 500});
                 }
             }, $('#auth-form').attr('method'));
             return false;

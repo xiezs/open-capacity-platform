@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.capacity.common.annotation.ApiIdempotent;
 import com.open.capacity.common.auth.details.LoginAppUser;
 import com.open.capacity.common.exception.controller.ControllerException;
@@ -256,7 +254,7 @@ public class SysUserController {
                 throw new IllegalArgumentException("新密码不能为空");
             }
 
-            if (sysUser.getId() == 1L) {
+            if (sysUser.getId() == 1277137734524300032L) {
                 return Result.failed("超级管理员不给予修改");
             }
 
@@ -285,7 +283,7 @@ public class SysUserController {
     public Result updateEnabled(@RequestParam Map<String, Object> params) throws ControllerException {
         try {
             Long id = MapUtils.getLong(params, "id");
-            if (id == 1L) {
+            if (id == 1277137734524300032L) {
                 return Result.failed("超级管理员不给予修改");
             }
             return sysUserService.updateEnabled(params);
@@ -306,7 +304,7 @@ public class SysUserController {
     @LogAnnotation(module = "user-center", recordRequestParam = false)
     public Result resetPassword(@PathVariable Long id) throws ControllerException {
         try {
-            if (id == 1L) {
+            if (id == 1277137734524300032L) {
                 return Result.failed("超级管理员不给予修改");
             }
             sysUserService.updatePassword(id, null, "123456");

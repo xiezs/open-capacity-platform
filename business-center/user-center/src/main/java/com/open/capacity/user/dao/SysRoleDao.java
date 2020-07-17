@@ -10,6 +10,8 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.open.capacity.common.model.SysMenu;
 import com.open.capacity.common.model.SysRole;
 
 /**
@@ -18,23 +20,24 @@ import com.open.capacity.common.model.SysRole;
  * 角色
  */
 @Mapper
-public interface SysRoleDao {
+public interface SysRoleDao extends BaseMapper<SysRole>{
 
 	@Options(useGeneratedKeys = true, keyProperty = "id")
-	@Insert("insert into sys_role(code, name, createTime, updateTime) values(#{code}, #{name}, #{createTime}, #{createTime})")
+	@Insert("insert into sys_role(code, name, create_time, update_time) values(#{code}, #{name}, #{createTime}, #{createTime})")
 	int save(SysRole sysRole);
 
-	@Update("update sys_role t set t.name = #{name} ,t.updateTime = #{updateTime} where t.id = #{id}")
-	int updateByOps(SysRole sysRole);
+	
+	@Delete("delete from sys_role where id = #{id}")
+	int deleteByPrimaryKey(Long id);
+	
+	@Update("update sys_role t set t.name = #{name} ,t.update_time = #{updateTime} where t.id = #{id}")
+	int updateByPrimaryKey(SysRole sysRole);
 
-	@Select("select * from sys_role t where t.id = #{id}")
+	@Select("select id ,code, name, create_time createTime , update_time  updateTime from sys_role t where t.id = #{id}")
 	SysRole findById(Long id);
 
-	@Select("select * from sys_role t where t.code = #{code}")
+	@Select("select id ,code, name, create_time createTime , update_time  updateTime from sys_role t where t.code = #{code}")
 	SysRole findByCode(String code);
-
-	@Delete("delete from sys_role where id = #{id}")
-	int delete(Long id);
 
 	int count(Map<String, Object> params);
 

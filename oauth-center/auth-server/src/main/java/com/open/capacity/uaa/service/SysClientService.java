@@ -3,10 +3,10 @@ package com.open.capacity.uaa.service;
 import java.util.List;
 import java.util.Map;
 
+import com.open.capacity.common.model.SysClient;
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.common.web.Result;
 import com.open.capacity.uaa.dto.SysClientDto;
-import com.open.capacity.uaa.model.SysClient;
 
 @SuppressWarnings("all")
 public interface SysClientService {

@@ -15,6 +15,6 @@ CREATE TABLE `sys_log` (
   `params` text COMMENT '方法参数',
   `remark` text COMMENT '备注',
   `flag` tinyint(1) NOT NULL,
-  `createTime` datetime NOT NULL,
+  `create_time` datetime NOT NULL,
   PRIMARY KEY (`id`) 
 ) ENGINE=archive DEFAULT CHARSET=utf8mb4;

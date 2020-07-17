@@ -55,11 +55,11 @@
             console.log(data);
             admin.req('api-user/permissions/granted', JSON.stringify(data), function (data) {
             	layer.closeAll('loading');
-                if (data.resp_code == 0) {
-                    layer.msg(data.resp_msg, {icon: 1, time: 500});
+                if (data.code == 0) {
+                    layer.msg(data.msg, {icon: 1, time: 500});
                     admin.finishPopupCenter();
                 } else {
-                    layer.msg(data.resp_msg, {icon: 2, time: 500});
+                    layer.msg(data.msg, {icon: 2, time: 500});
                 }
                 
             }, $('#role-form').attr('method'));

@@ -22,7 +22,7 @@
 	</select>
 
 	<select id="findList" resultType="com.open.capacity.common.model.SysPermission">
-		select * from sys_permission t
+		select id, permission, name, create_time createTime , update_time updateTime  from sys_permission t
 		<include refid="where" />
 		order by t.id desc
 		<!--<if test="start != null and start >= 0 and length != null and length > 0">-->

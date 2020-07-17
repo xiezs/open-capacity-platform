@@ -88,8 +88,8 @@ public class GatewayFallbackProvider implements FallbackProvider {
 			public InputStream getBody() throws IOException {
 				JSONObject r = new JSONObject();
 				try {
-					r.put("resp_code", "9999");
-					r.put("resp_msg", cause.getMessage());
+					r.put("code", "9999");
+					r.put("msg", cause.getMessage());
 				} catch (JSONException e) {
 					log.error("系统错误，错误原因:{}" , e.getStackTrace()[0] );
 				}

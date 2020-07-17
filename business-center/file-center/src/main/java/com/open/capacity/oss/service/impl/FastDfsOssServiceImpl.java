@@ -117,7 +117,7 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
 			fileExtend.setSource(fileType().name());
 			fileExtend.setCreateTime(new Date());
 
-            FileExtend oldFileExtend = fileExtendDao.getById(fileExtend.getId());
+            FileExtend oldFileExtend = fileExtendDao.findById(fileExtend.getId());
             if (oldFileExtend != null) {
                 return;
             }
@@ -147,7 +147,7 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
 		log.info("guid:{},fileName:{}",guid,fileName);
 
         //根据guid 获取 全部临时分片数据
-		List<FileExtend> fileExtends = fileExtendDao.getByGuid(guid);
+		List<FileExtend> fileExtends = fileExtendDao.findByGuid(guid);
 		log.info("fileExtends -> size ：{}",fileExtends.size());
 
         File parentFileDir = new File(filePath + File.separator + guid);
@@ -173,7 +173,7 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
 
             FileInfo fileInfo = FileUtil.getFileInfo(multipartFile);
             fileInfo.setName(fileName);
-            FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
+            FileInfo oldFileInfo = getFileDao().findById(fileInfo.getId());
 
             if (oldFileInfo != null) {
                 return oldFileInfo;

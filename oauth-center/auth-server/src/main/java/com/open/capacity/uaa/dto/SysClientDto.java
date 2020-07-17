@@ -3,7 +3,7 @@ package com.open.capacity.uaa.dto;
 import java.util.List;
 import java.util.Set;
 
-import com.open.capacity.uaa.model.SysClient;
+import com.open.capacity.common.model.SysClient;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -83,7 +83,7 @@ public abstract class AbstractFileService implements FileService {
 	@Override
 	public FileInfo upload(MultipartFile file  ) throws Exception {
 		FileInfo fileInfo = FileUtil.getFileInfo(file);
-		FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
+		FileInfo oldFileInfo = getFileDao().findById(fileInfo.getId());
 		if (oldFileInfo != null) {
 			return oldFileInfo;
 		}
@@ -113,7 +113,7 @@ public abstract class AbstractFileService implements FileService {
 
 	@Override
 	public FileInfo getById(String id){
-		return getFileDao().getById(id);
+		return getFileDao().findById(id);
 	}
 
 	@Override

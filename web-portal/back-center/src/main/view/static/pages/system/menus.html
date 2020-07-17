@@ -86,11 +86,11 @@
 
                     admin.req('api-user/menus/'+obj.data.id, {}, function (data) {
                         layer.closeAll('loading');
-                        if (0 == data.resp_code) {
-                            layer.msg(data.resp_msg, {icon: 1, time: 500});
+                        if (0 == data.code) {
+                            layer.msg(data.msg, {icon: 1, time: 500});
                             renderTable();
                         } else {
-                            layer.msg(data.resp_msg, {icon: 2, time: 500});
+                            layer.msg(data.msg, {icon: 2, time: 500});
                         }
                     }, 'DELETE');
 
@@ -100,7 +100,7 @@
 
         // 显示编辑弹窗
         var showEditModel = function (data) {
-
+			debugger ;
             if (data){
                 data.isMenu = data.isMenu.toString();
                 data.hidden = data.hidden.toString();

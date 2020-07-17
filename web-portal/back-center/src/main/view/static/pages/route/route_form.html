@@ -70,13 +70,13 @@
             layer.load(2);
 
             admin.req('route/add', JSON.stringify(contact , null , '\t'), function (data) {
-                if (data.resp_code == 0) {
+                if (data.code == 0) {
                     layer.closeAll('loading');
-                    layer.msg(data.resp_msg, {icon: 1, time: 500});
+                    layer.msg(data.msg, {icon: 1, time: 500});
                     admin.finishPopupCenter();
                 } else {
                     layer.closeAll('loading');
-                    layer.msg(data.resp_msg, {icon: 2, time: 500});
+                    layer.msg(data.msg, {icon: 2, time: 500});
                 }
             }, 'POST');
             return false;

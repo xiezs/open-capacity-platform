@@ -58,7 +58,7 @@ public class TokenAuthenticationConverter
 		String authorizationHeaderToken = resolveFromAuthorizationHeader(request.getHeaders());
 		String parameterToken = request.getQueryParams().getFirst("access_token");
 		if (authorizationHeaderToken   != null) {
-			// must have value {"resp_code":401,"resp_msg":"Not Authenticated"}
+			// must have value {"code":401,"msg":"Not Authenticated"}
 			if (parameterToken  != null) {
 				//add by someday 
 				if(!authorizationHeaderToken.equals(parameterToken)){

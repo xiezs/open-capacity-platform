@@ -62,7 +62,7 @@ public class ResExceptionHandler extends DefaultErrorWebExceptionHandler {
 	 */
 	@Override
 	protected HttpStatus getHttpStatus(Map<String, Object> errorAttributes) {
-		int statusCode = (int) errorAttributes.get("resp_code");
+		int statusCode = (int) errorAttributes.get("code");
 		return HttpStatus.valueOf(statusCode);
 	}
 
@@ -93,8 +93,8 @@ public class ResExceptionHandler extends DefaultErrorWebExceptionHandler {
 	 */
 	public static Map<String, Object> response(int status, String errorMessage) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("resp_code", status);
-		map.put("resp_msg", errorMessage);
+		map.put("code", status);
+		map.put("msg", errorMessage);
 		return map;
 	}
 

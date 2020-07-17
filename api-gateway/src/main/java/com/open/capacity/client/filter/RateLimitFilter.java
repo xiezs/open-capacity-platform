@@ -156,15 +156,15 @@ public class RateLimitFilter extends ZuulFilter {
 					Map client = sysClientService.getClient(clientId);
 					
 					if(client!=null){
-						String flag = String.valueOf(client.get("if_limit") ) ;
+						String flag = String.valueOf(client.get("ifLimit") ) ;
 						
 						if("1".equals(flag)){
-							String accessLimitCount =  String.valueOf(client.get("limit_count") );
+							String accessLimitCount =  String.valueOf(client.get("limitCount") );
 							if (!accessLimitCount.isEmpty()) {
 								Result result = redisLimiterUtils.rateLimitOfDay(clientId, request.getRequestURI(),
 										Long.parseLong(accessLimitCount));
-								if (-1 == result.getResp_code()) {
-									log.error("token:" + details.getTokenValue() + result.getResp_msg());
+								if (-1 == result.getCode()) {
+									log.error("token:" + details.getTokenValue() + result.getMsg());
 									// ((ResultMsg)
 									// this.error_info.get()).setMsg("clientid:" +
 									// client_id + ":token:" + accessToken + ":" +

@@ -19,7 +19,7 @@ public interface SysServiceDao {
 
  
 
-	@Select("select p.* from sys_service p inner join sys_client_service rp on p.id = rp.serviceId where rp.clientId = #{clientId} order by p.sort")
+	@Select("select p.id,p.parent_id parentId , p.name, p.path, p.sort, p.create_time createTime , p.update_time updateTime,p.is_service isService from sys_service p inner join sys_client_service rp on p.id = rp.service_id where rp.client_id = #{clientId} order by p.sort")
 	List<Map> listByClientId(Long clientId);
  
  

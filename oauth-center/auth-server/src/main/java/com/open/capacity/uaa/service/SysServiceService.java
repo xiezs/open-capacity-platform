@@ -3,7 +3,7 @@ package com.open.capacity.uaa.service;
 import java.util.List;
 import java.util.Set;
 
-import com.open.capacity.uaa.model.SysService;
+import com.open.capacity.common.model.SysService;
 
 public interface SysServiceService {
 

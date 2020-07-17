@@ -29,8 +29,8 @@ public class ApiEncryptUtil {
 	private static final String DATA = "data";
 	private static final long TSDIFF = 12000; // 时间戳12秒误差
 
-	private static final String CODE ="resp_code" ;
-	private static final String MESSAGE ="resp_msg" ;
+	private static final String CODE ="code" ;
+	private static final String MESSAGE ="msg" ;
 	
 	/**
 	 * 生成签名

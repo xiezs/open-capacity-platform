@@ -111,10 +111,10 @@
                     layer.load(2);
                     admin.req('api-user/users/'+obj.data.id+'/resetPassword', {}, function (data) {
                         layer.closeAll('loading');
-                        if (data.resp_code == 0) {
-                            layer.msg(data.resp_msg, {icon: 1, time: 500});
+                        if (data.code == 0) {
+                            layer.msg(data.msg, {icon: 1, time: 500});
                         } else {
-                            layer.msg(data.resp_msg, {icon: 2, time: 500});
+                            layer.msg(data.msg, {icon: 2, time: 500});
                         }
                     }, 'POST');
                 });
@@ -171,11 +171,11 @@
                 enabled: obj.elem.checked ? true : false
             }, function (data) {
                 layer.closeAll('loading');
-                if (data.resp_code == 0) {
-                    layer.msg(data.resp_msg, {icon: 1, time: 500});
+                if (data.code == 0) {
+                    layer.msg(data.msg, {icon: 1, time: 500});
                     //table.reload('table-user', {});
                 } else {
-                    layer.msg(data.resp_msg, {icon: 2, time: 500});
+                    layer.msg(data.msg, {icon: 2, time: 500});
                     $(obj.elem).prop('checked', !obj.elem.checked);
                     form.render('checkbox');
                 }

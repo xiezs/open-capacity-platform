@@ -29,8 +29,8 @@ public class ResAuthenticationEntryPoint implements ServerAuthenticationEntryPoi
     @Override
     public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException e) {
     	JSONObject message = new JSONObject();
-		message.put("resp_code", HttpStatus.UNAUTHORIZED.value());
-		message.put("resp_msg",  e.getMessage());
+		message.put("code", HttpStatus.UNAUTHORIZED.value());
+		message.put("msg",  e.getMessage());
 		
         ServerHttpResponse response = exchange.getResponse();
         response.getHeaders().setAccessControlAllowCredentials(true);

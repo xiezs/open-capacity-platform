@@ -13,15 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.capacity.common.exception.controller.ControllerException;
 import com.open.capacity.common.exception.service.ServiceException;
 import com.open.capacity.common.model.SysRole;
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.common.web.Result;
 import com.open.capacity.log.annotation.LogAnnotation;
-import com.open.capacity.log.dto.LogEntry;
-import com.open.capacity.log.monitor.BizLog;
 import com.open.capacity.user.service.SysRoleService;
 
 import io.swagger.annotations.Api;
@@ -48,9 +45,9 @@ public class SysRoleController {
 	 * @return
 	 * @throws JsonProcessingException 
 	 */
-	@PreAuthorize("hasAuthority('role:get/roles')")
-	@ApiOperation(value = "后台管理查询角色")
 	@GetMapping("/roles")
+	@ApiOperation(value = "后台管理查询角色")
+	@PreAuthorize("hasAuthority('role:get/roles')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
 	public PageResult<SysRole> findRoles(@RequestParam Map<String, Object> params) throws ControllerException {
 		try {
@@ -67,8 +64,8 @@ public class SysRoleController {
 	 * @return
 	 * @throws ControllerException 
 	 */
-	@PreAuthorize("hasAnyAuthority('role:post/roles','role:put/roles')")
 	@PostMapping("/roles/saveOrUpdate")
+	@PreAuthorize("hasAnyAuthority('role:post/roles','role:put/roles')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
 	public Result saveOrUpdate(@RequestBody SysRole sysRole) throws ControllerException {
 		try {
@@ -84,9 +81,9 @@ public class SysRoleController {
 	 * @param id
 	 * @throws ControllerException 
 	 */
-	@PreAuthorize("hasAuthority('role:delete/roles/{id}')")
-	@ApiOperation(value = "后台管理删除角色")
 	@DeleteMapping("/roles/{id}")
+	@ApiOperation(value = "后台管理删除角色")
+	@PreAuthorize("hasAuthority('role:delete/roles/{id}')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
 	public Result deleteRole(@PathVariable Long id) throws ControllerException {
 		try {

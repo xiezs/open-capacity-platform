@@ -94,8 +94,8 @@ public class AccessFilter implements GlobalFilter, Ordered {
 
 					ServerHttpResponse response = exchange.getResponse();
 					JSONObject message = new JSONObject();
-					message.put("resp_code", 401);
-					message.put("resp_msg", "未认证通过！");
+					message.put("code", 401);
+					message.put("msg", "未认证通过！");
 					byte[] bits = message.toJSONString().getBytes(StandardCharsets.UTF_8);
 					DataBuffer buffer = response.bufferFactory().wrap(bits);
 					response.setStatusCode(HttpStatus.UNAUTHORIZED);

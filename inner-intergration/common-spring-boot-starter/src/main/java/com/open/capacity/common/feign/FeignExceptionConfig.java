@@ -48,12 +48,12 @@ public class FeignExceptionConfig {
                 // 非业务异常包装成自定义异常类ServiceException
                 if (StringUtils.isNotEmpty(json)) {
 
-                    if (json.contains("resp_code")) {
+                    if (json.contains("code")) {
                         FeignFailResult result = mapper.readValue(json, FeignFailResult.class);
                         result.setStatus(response.status());
                         // 业务异常包装成自定义异常类HytrixException
                         if (result.getStatus() != HttpStatus.OK.value()) {
-                            exception = new HystrixException(result.getResp_msg());
+                            exception = new HystrixException(result.getMsg());
                         } else {
                             exception = feign.FeignException.errorStatus(methodKey, response);
                         }

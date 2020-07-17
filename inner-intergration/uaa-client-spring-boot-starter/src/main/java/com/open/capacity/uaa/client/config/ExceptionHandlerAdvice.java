@@ -43,8 +43,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Map<String, Object> badRequestException(IllegalArgumentException exception) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.BAD_REQUEST.value());
-		data.put("resp_msg", exception.getMessage());
+		data.put("code", HttpStatus.BAD_REQUEST.value());
+		data.put("msg", exception.getMessage());
 
 		return data;
 	}
@@ -60,8 +60,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	public Map<String, Object> badMethodExpressException(AccessDeniedException exception) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.FORBIDDEN.value());
-		data.put("resp_msg", exception.getMessage());
+		data.put("code", HttpStatus.FORBIDDEN.value());
+		data.put("msg", exception.getMessage());
 
 		return data;
 	}
@@ -69,8 +69,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Map<String, Object> handleError(MissingServletRequestParameterException e) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.BAD_REQUEST.value());
-		data.put("resp_msg", e.getMessage());
+		data.put("code", HttpStatus.BAD_REQUEST.value());
+		data.put("msg", e.getMessage());
 
 		return data;
 	}
@@ -79,8 +79,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Map<String, Object> handleError(MethodArgumentTypeMismatchException e) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.BAD_REQUEST.value());
-		data.put("resp_msg", e.getMessage());
+		data.put("code", HttpStatus.BAD_REQUEST.value());
+		data.put("msg", e.getMessage());
 
 		return data;
 	}
@@ -89,8 +89,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Map<String, Object> handleError(MethodArgumentNotValidException e) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.BAD_REQUEST.value());
-		data.put("resp_msg", e.getMessage());
+		data.put("code", HttpStatus.BAD_REQUEST.value());
+		data.put("msg", e.getMessage());
 
 		return data;
 	}
@@ -99,8 +99,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Map<String, Object> handleError(BindException e) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.BAD_REQUEST.value());
-		data.put("resp_msg", e.getMessage());
+		data.put("code", HttpStatus.BAD_REQUEST.value());
+		data.put("msg", e.getMessage());
 
 		return data;
 	}
@@ -109,8 +109,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Map<String, Object> handleError(ConstraintViolationException e) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.BAD_REQUEST.value());
-		data.put("resp_msg", e.getMessage());
+		data.put("code", HttpStatus.BAD_REQUEST.value());
+		data.put("msg", e.getMessage());
 
 		return data;
 	}
@@ -120,8 +120,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public Map<String, Object> handleError(NoHandlerFoundException e) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		data.put("resp_msg", e.getMessage());
+		data.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		data.put("msg", e.getMessage());
 
 		return data;
 	}
@@ -130,8 +130,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public Map<String, Object> handleError(HttpMessageNotReadableException e) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		data.put("resp_msg", e.getMessage());
+		data.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		data.put("msg", e.getMessage());
 
 		return data;
 	}
@@ -140,8 +140,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
 	public Map<String, Object> handleError(HttpRequestMethodNotSupportedException e) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.METHOD_NOT_ALLOWED.value());
-		data.put("resp_msg", e.getMessage());
+		data.put("code", HttpStatus.METHOD_NOT_ALLOWED.value());
+		data.put("msg", e.getMessage());
 
 		return data;
 	}
@@ -150,8 +150,8 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public Map<String, Object> handleError(HttpMediaTypeNotSupportedException e) {
     	Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
-		data.put("resp_msg", e.getMessage());
+		data.put("code", HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
+		data.put("msg", e.getMessage());
 		return data;
     }
 	 
@@ -162,8 +162,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public Map<String, Object> dataAccessException(DataAccessException exception) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		data.put("resp_msg", exception.getMessage());
+		data.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		data.put("msg", exception.getMessage());
 
 		return data;
 
@@ -173,8 +173,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public Map<String, Object> serviceException(ServiceException exception) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		data.put("resp_msg", exception.getMessage());
+		data.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		data.put("msg", exception.getMessage());
 
 		return data;
 	}
@@ -183,8 +183,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public Map<String, Object> controllerException(ControllerException exception) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		data.put("resp_msg", exception.getMessage());
+		data.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		data.put("msg", exception.getMessage());
 
 		return data;
 	}
@@ -193,8 +193,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public Map<String, Object> hytrixException(HystrixException exception) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		data.put("resp_msg", exception.getMessage());
+		data.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		data.put("msg", exception.getMessage());
 
 		return data;
 	}
@@ -203,8 +203,8 @@ public class ExceptionHandlerAdvice {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public Map<String, Object> handleError(Throwable e) {
 		Map<String, Object> data = new HashMap<>();
-		data.put("resp_code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-		data.put("resp_msg", e.getMessage());
+		data.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		data.put("msg", e.getMessage());
 
 		return data;
 	}

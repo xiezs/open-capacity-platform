@@ -15,8 +15,8 @@ public class TestService {
     /**
      * 手动埋点
      * key
-     * resp_code
-     * resp_msg
+     * code
+     * msg
      */
     @Resource
     Tracing tracing;
@@ -28,8 +28,8 @@ public class TestService {
         StackTraceElement[] stes = Thread.currentThread().getStackTrace();
         chindSpan.tag("class", stes[1].getClassName());
         chindSpan.tag("method", stes[1].getMethodName());
-        chindSpan.tag("resp_code", "0000");
-        chindSpan.tag("resp_msg", "success");
+        chindSpan.tag("code", "0000");
+        chindSpan.tag("msg", "success");
         chindSpan.finish();
         log.info("end tracing,id:" + chindSpan.context().traceIdString());
     }

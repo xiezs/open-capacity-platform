@@ -67,7 +67,7 @@ public class SysPermissionServiceImpl implements SysPermissionService {
 	public void update(SysPermission sysPermission)  throws ServiceException {
 		try {
 			sysPermission.setUpdateTime(new Date());
-			sysPermissionDao.updateByOps(sysPermission);
+			sysPermissionDao.updateByPrimaryKey(sysPermission);
 			log.info("修改权限标识：{}", sysPermission);
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -83,7 +83,7 @@ public class SysPermissionServiceImpl implements SysPermissionService {
 				throw new IllegalArgumentException("权限标识不存在");
 			}
 
-			sysPermissionDao.deleteOps(id);
+			sysPermissionDao.deleteByPrimaryKey(id);
 			rolePermissionDao.deleteRolePermission(null, id);
 			log.info("删除权限标识：{}", permission);
 		} catch (Exception e) {

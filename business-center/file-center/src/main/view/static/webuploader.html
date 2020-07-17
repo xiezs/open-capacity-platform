@@ -89,7 +89,7 @@
             contentType:"application/json; charset=utf-8",
             dataType: "json",
             success: function(data){
-                if(data.resp_code == 0){
+                if(data.code == 0){
                     alert('上传成功!');
                 }
         }})
@@ -106,7 +106,7 @@
             contentType:"application/json; charset=utf-8",
             dataType: "json",
             success: function(data){
-                if(data.resp_code == 0){
+                if(data.code == 0){
                     alert('上传失败,清理临时文件');
                 }
         }})

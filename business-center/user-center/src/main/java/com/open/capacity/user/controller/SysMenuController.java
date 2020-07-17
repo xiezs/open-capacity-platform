@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.capacity.common.auth.details.LoginAppUser;
 import com.open.capacity.common.exception.controller.ControllerException;
 import com.open.capacity.common.exception.service.ServiceException;
@@ -53,9 +52,9 @@ public class SysMenuController {
 	 * @param id
 	 * @throws ControllerException 
 	 */
-	@PreAuthorize("hasAuthority('menu:delete/menus/{id}')")
-	@ApiOperation(value = "删除菜单")
 	@DeleteMapping("/{id}")
+	@ApiOperation(value = "删除菜单")
+	@PreAuthorize("hasAuthority('menu:delete/menus/{id}')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
 	public Result delete(@PathVariable Long id) throws ControllerException {
 
@@ -67,10 +66,9 @@ public class SysMenuController {
 		}
 
 	}
-
-	@PreAuthorize("hasAuthority('menu:get/menus/{roleId}/menus')")
-	@ApiOperation(value = "根据roleId获取对应的菜单")
 	@GetMapping("/{roleId}/menus")
+	@ApiOperation(value = "根据roleId获取对应的菜单")
+	@PreAuthorize("hasAuthority('menu:get/menus/{roleId}/menus')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
 	public List<Map<String, Object>> findMenusByRoleId(@PathVariable Long roleId) throws ControllerException {
 
@@ -107,9 +105,9 @@ public class SysMenuController {
 	 * 给角色分配菜单
 	 * @throws ControllerException 
 	 */
-	@PreAuthorize("hasAuthority('menu:post/menus/granted')")
-	@ApiOperation(value = "角色分配菜单")
 	@PostMapping("/granted")
+	@ApiOperation(value = "角色分配菜单")
+	@PreAuthorize("hasAuthority('menu:post/menus/granted')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
 	public Result setMenuToRole(@RequestBody SysMenu sysMenu) throws ControllerException {
 
@@ -122,10 +120,9 @@ public class SysMenuController {
 		}
 
 	}
-
-	@PreAuthorize("hasAuthority('menu:get/menus/findAlls')")
-	@ApiOperation(value = "查询所有菜单")
 	@GetMapping("/findAlls")
+	@ApiOperation(value = "查询所有菜单")
+	@PreAuthorize("hasAuthority('menu:get/menus/findAlls')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
 	public PageResult<SysMenu> findAlls() throws ControllerException {
 
@@ -137,9 +134,8 @@ public class SysMenuController {
 			throw new ControllerException(e);
 		}
 	}
-
-	@ApiOperation(value = "获取菜单以及顶级菜单")
 	@GetMapping("/findOnes")
+	@ApiOperation(value = "获取菜单以及顶级菜单")
 	@PreAuthorize("hasAuthority('menu:get/menus/findOnes')")
 	public PageResult<SysMenu> findOnes() throws ControllerException {
 		try {
@@ -157,9 +153,9 @@ public class SysMenuController {
 	 * @return
 	 * @throws ControllerException 
 	 */
-	@PreAuthorize("hasAnyAuthority('menu:post/menus','menu:put/menus')")
-	@ApiOperation(value = "新增菜单")
 	@PostMapping("saveOrUpdate")
+	@ApiOperation(value = "新增菜单")
+	@PreAuthorize("hasAnyAuthority('menu:post/menus','menu:put/menus')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
 	public Result saveOrUpdate(@RequestBody SysMenu menu) throws ControllerException {
 
@@ -183,9 +179,9 @@ public class SysMenuController {
 	 * @return
 	 * @throws ControllerException 
 	 */
-	@PreAuthorize("hasAuthority('menu:get/menus/current')")
 	@GetMapping("/current")
 	@ApiOperation(value = "查询当前用户菜单")
+	@PreAuthorize("hasAuthority('menu:get/menus/current')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
 	public List<SysMenu> findMyMenu() throws ControllerException {
 

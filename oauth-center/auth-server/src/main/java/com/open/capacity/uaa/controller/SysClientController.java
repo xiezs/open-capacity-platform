@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Maps;
+import com.open.capacity.common.exception.controller.ControllerException;
+import com.open.capacity.common.model.SysClient;
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.common.web.Result;
 import com.open.capacity.log.annotation.LogAnnotation;
 import com.open.capacity.uaa.dto.SysClientDto;
-import com.open.capacity.uaa.model.SysClient;
 import com.open.capacity.uaa.service.SysClientService;
 
 import io.swagger.annotations.Api;
@@ -46,7 +47,11 @@ public class SysClientController {
     @PreAuthorize("hasAuthority('client:get/clients')")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
     public PageResult<SysClient> listRoles(@RequestParam Map<String, Object> params) {
-        return sysClientService.listRoles(params) ;
+        try {
+			return sysClientService.listRoles(params) ;
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
     }
 
     @GetMapping("/{id}")
@@ -54,7 +59,11 @@ public class SysClientController {
     @PreAuthorize("hasAuthority('client:get/clients/{id}')")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
     public SysClient get(@PathVariable Long id) {
-        return sysClientService.getById(id);
+        try {
+			return sysClientService.getById(id);
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
     }
 
     @GetMapping("/all")
@@ -62,7 +71,11 @@ public class SysClientController {
     @LogAnnotation(module="auth-server",recordRequestParam=false)
     @PreAuthorize("hasAnyAuthority('client:get/clients')")
     public List<SysClient> roles() {
-        return sysClientService.findList(Maps.newHashMap());
+        try {
+			return sysClientService.findList(Maps.newHashMap());
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
     }
 
     @DeleteMapping("/{id}")
@@ -70,21 +83,33 @@ public class SysClientController {
     @PreAuthorize("hasAuthority('client:delete/clients')")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
     public void delete(@PathVariable Long id) {
-    	sysClientService.deleteClient(id);
+    	try {
+			sysClientService.deleteClient(id);
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
     }
 
 	@PostMapping("/saveOrUpdate")
     @ApiOperation(value = "保存或者修改应用")
     @PreAuthorize("hasAuthority('client:post/clients')")
     public Result saveOrUpdate(@RequestBody SysClientDto clientDto){
-        return  sysClientService.saveOrUpdate(clientDto);
+        try {
+			return  sysClientService.saveOrUpdate(clientDto);
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
     }
     @PutMapping("/updateEnabled")
     @ApiOperation(value = "修改状态")
     @PreAuthorize("hasAuthority('client:post/clients')")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
     public Result updateEnabled(@RequestBody Map<String, Object> params){
-        return  sysClientService.updateEnabled(params);
+        try {
+			return  sysClientService.updateEnabled(params);
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
     }
     
 }

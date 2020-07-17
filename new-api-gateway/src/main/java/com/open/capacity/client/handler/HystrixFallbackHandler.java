@@ -39,8 +39,8 @@ public class HystrixFallbackHandler implements HandlerFunction<ServerResponse> {
             .ifPresent(originalUrls -> log.error("网关执行请求:{}失败,hystrix服务降级处理", originalUrls));
 
         Map resp = new HashMap();
-        resp.put("resp_code", "9999");
-        resp.put("resp_msg", "程序失败");
+        resp.put("code", "9999");
+        resp.put("msg", "程序失败");
         return ServerResponse
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .contentType(MediaType.APPLICATION_JSON_UTF8)

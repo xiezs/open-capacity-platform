@@ -19,8 +19,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">是否为服务</label>
         <div class="layui-input-block">
-            <input type="radio" name="isMenu" value="1" title="是" checked/>
-            <input type="radio" name="isMenu" value="2" title="否"/>
+            <input type="radio" name="isService" value="1" title="是" checked/>
+            <input type="radio" name="isService" value="2" title="否"/>
         </div>
     </div>
 
@@ -84,11 +84,11 @@
             layer.load(2);
             admin.req('api-auth/services/saveOrUpdate', JSON.stringify(data.field), function (data) {
                 layer.closeAll('loading');
-                if (data.resp_code == 0) {
-                    layer.msg(data.resp_msg, {icon: 1, time: 500});
+                if (data.code == 0) {
+                    layer.msg(data.msg, {icon: 1, time: 500});
                     admin.finishPopupCenter();
                 } else {
-                    layer.msg(data.resp_msg, {icon: 2, time: 500});
+                    layer.msg(data.msg, {icon: 2, time: 500});
                 }
             }, $('#services-form').attr('method'));
             return false;
