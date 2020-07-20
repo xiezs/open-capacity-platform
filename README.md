@@ -216,9 +216,6 @@ e.启动gray-center的discovery-console-desktop
 # Spring Cloud NETFLIX 版本
 https://gitee.com/owenwangwen/open-capacity-platform/tree/2.0.1/
 
-# vue 版本
-vue 前端：https://gitee.com/owenwangwen/jeecp  
-vue 后端：https://gitee.com/owenwangwen/open-capacity-platform/tree/vue/
 
 # oracle 版本
 https://gitee.com/owenwangwen/open-capacity-platform/tree/oracle/
