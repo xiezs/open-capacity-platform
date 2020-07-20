@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.capacity.common.exception.controller.ControllerException;
 import com.open.capacity.common.exception.service.ServiceException;
 import com.open.capacity.common.model.SysPermission;
@@ -35,7 +33,7 @@ import io.swagger.annotations.ApiOperation;
 
 
 /**
-* @author 作者 owen E-mail: 624191343@qq.com
+* @author 作者 owen 
 * @version 创建时间：2017年11月12日 上午22:57:51
 * 权限管理
  */
@@ -46,16 +44,15 @@ public class SysPermissionController {
 	@Autowired
 	private SysPermissionService sysPermissionService;
 
-	private ObjectMapper objectMapper = new ObjectMapper();
 	/**
 	 * 删除权限标识
 	 * 参考 /permissions/1
 	 * @param id
 	 * @throws ControllerException 
 	 */
-	@PreAuthorize("hasAuthority('permission:delete/permissions/{id}')")
+	@DeleteMapping("/permissions/{id}")
 	@ApiOperation(value = "后台管理删除权限标识")
-	@DeleteMapping("permission:delete/permissions/{id}")
+	@PreAuthorize("hasAuthority('permission:delete/permissions/{id}')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
 	public Result delete(@PathVariable Long id) throws ControllerException {
 
@@ -75,14 +72,14 @@ public class SysPermissionController {
 	 * @return
 	 * @throws ControllerException 
 	 */
-	@PreAuthorize("hasAuthority('permission:get/permissions')")
+	@GetMapping("/permissions")
 	@ApiOperation(value = "后台管理查询所有的权限标识")
+	@PreAuthorize("hasAuthority('permission:get/permissions')")
 	@ApiImplicitParams({
         @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
         @ApiImplicitParam(name = "limit",value = "分页结束位置", required = true, dataType = "Integer")
     })
 	@LogAnnotation(module="user-center",recordRequestParam=false)
-	@GetMapping("/permissions")
 	public PageResult<SysPermission> findPermissions(@RequestParam Map<String, Object> params) throws ControllerException {
 		
 		try {
@@ -98,8 +95,8 @@ public class SysPermissionController {
 	 * @return
 	 * @throws ControllerException 
 	 */
-	@PreAuthorize("hasAnyAuthority('permission:put/permissions','permission:post/permissions')")
 	@PostMapping("/permissions/saveOrUpdate")
+	@PreAuthorize("hasAnyAuthority('permission:put/permissions','permission:post/permissions')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
 	public Result saveOrUpdate(@RequestBody SysPermission sysPermission) throws ControllerException {
 		try{
@@ -114,9 +111,9 @@ public class SysPermissionController {
 		}
 	}
 
-	@PreAuthorize("hasAuthority('permission:get/permissions/{roleId}/permissions')")
 	@ApiOperation(value = "根据roleId获取对应的权限")
 	@GetMapping("/permissions/{roleId}/permissions")
+	@PreAuthorize("hasAuthority('permission:get/permissions/{roleId}/permissions')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
 	public List<Map<String, Object>> findAuthByRoleId(@PathVariable Long roleId) throws ControllerException {
 		
@@ -152,9 +149,9 @@ public class SysPermissionController {
 	 * 给角色分配权限
 	 * @throws ControllerException 
 	 */
-	@PreAuthorize("hasAuthority('permission:post/permissions/granted')")
 	@ApiOperation(value = "角色分配权限")
 	@PostMapping("/permissions/granted")
+	@PreAuthorize("hasAuthority('permission:post/permissions/granted')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
 	public Result setAuthToRole(@RequestBody SysPermission sysPermission) throws ControllerException {
 		try {
@@ -164,16 +161,5 @@ public class SysPermissionController {
 			throw new ControllerException(e);
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
 
 }

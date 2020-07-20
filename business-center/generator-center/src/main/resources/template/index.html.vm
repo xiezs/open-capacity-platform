@@ -98,12 +98,12 @@
             }
             admin.req(url, JSON.stringify(data.field), function (data) {
                 layer.closeAll('loading');
-                if (data.resp_code == 0) {
-                    layer.msg(data.resp_msg, {icon: 1, time: 500});
+                if (data.code == 0) {
+                    layer.msg(data.msg, {icon: 1, time: 500});
                     table.reload('${classname}-table');
                     layer.closeAll('page');
                 } else {
-                    layer.msg(data.resp_msg, {icon: 2, time: 500});
+                    layer.msg(data.msg, {icon: 2, time: 500});
                 }
             }, $('#${classname}-form').attr('method'));
             return false;
@@ -154,11 +154,11 @@
                 layer.load(2);
                 admin.req('api-${moduleName}/${pathName}/delete/' + obj.data.id, {}, function (data) {
                     layer.closeAll('loading');
-                    if (data.resp_code == 0) {
-                        layer.msg(data.resp_msg, {icon: 1, time: 500});
+                    if (data.code == 0) {
+                        layer.msg(data.msg, {icon: 1, time: 500});
                         obj.del();
                     } else {
-                        layer.msg(data.resp_msg, {icon: 2, time: 500});
+                        layer.msg(data.msg, {icon: 2, time: 500});
                     }
                 }, 'DELETE');
             });

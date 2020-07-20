@@ -7,21 +7,21 @@
 		delete from sys_role_permission
 		<where>
 			<if test="roleId != null">
-				and roleId = #{roleId}
+				and role_id = #{roleId}
 			</if>
 			<if test="permissionId != null">
-				and permissionId = #{permissionId}
+				and permission_id = #{permissionId}
 			</if>
 		</where>
 	</delete>
 
 	<select id="findPermissionsByRoleIds" resultType="com.open.capacity.common.model.SysPermission">
-		select p.* from
+		select distinct p.id , p.permission, p.name, p.create_time createTime , p.update_time updateTime from
 		sys_permission p
 		inner join sys_role_permission rp on
-		p.id = rp.permissionId
+		p.id = rp.permission_id
 		<where>
-			rp.roleId in
+			rp.role_id in
 			<foreach collection="roleIds" item="roleId" open="("
 				separator="," close=")">
 				#{roleId}

@@ -52,9 +52,9 @@ public class XssUtils {
 		return taintedHTML;
 	}
 
-//	public static void main(String[] args) {
-//		String xsshtml = "hyf<script>alert(1)";
-//		System.out.println(XssUtils.cleanXSS(xsshtml));
-//
-//	}
+	public static void main(String[] args) {
+		String xsshtml = "hyf<script>alert(1)";
+		System.out.println(XssUtils.cleanXSS(xsshtml));
+
+	}
 }

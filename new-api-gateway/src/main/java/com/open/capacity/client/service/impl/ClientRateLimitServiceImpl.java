@@ -65,15 +65,15 @@ public class ClientRateLimitServiceImpl implements RateLimitService {
 					// limit_count 阈值
 					Map client = sysClientService.getClient(clientId);
 					if (client != null) {
-						String flag = MapUtils.getString(client, "if_limit");
+						String flag = MapUtils.getString(client, "ifLimit");
 
 						if ("1".equals(flag)) {
-							String accessLimitCount = MapUtils.getString(client, "limit_count");
+							String accessLimitCount = MapUtils.getString(client, "limitCount");
 							if (StringUtil.isNotBlank(accessLimitCount)) {
 								Result result = redisLimiterUtils.rateLimitOfDay(clientId, reqUrl,
 										Long.parseLong(accessLimitCount));
-								if (-1 == result.getResp_code()) {
-									log.trace("token: {} , limitCount: {} , desc: {} " ,accessToken ,accessLimitCount ,result.getResp_msg() ); 
+								if (-1 == result.getCode()) {
+									log.trace("token: {} , limitCount: {} , desc: {} " ,accessToken ,accessLimitCount ,result.getMsg() ); 
 									return false;
 								}
 							}

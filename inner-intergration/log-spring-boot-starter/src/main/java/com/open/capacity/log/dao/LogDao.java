@@ -21,7 +21,7 @@ import com.open.capacity.common.model.SysLog;
 @ConditionalOnBean(DataSource.class)
 public interface LogDao {
 
-	@Insert("insert into sys_log(username, module, params, remark, flag, createTime) values(#{username}, #{module}, #{params}, #{remark}, #{flag}, #{createTime})")
+	@Insert("insert into sys_log(username, module, params, remark, flag, create_time) values(#{username}, #{module}, #{params}, #{remark}, #{flag}, #{createTime})")
 	int save(SysLog log);
 
 }

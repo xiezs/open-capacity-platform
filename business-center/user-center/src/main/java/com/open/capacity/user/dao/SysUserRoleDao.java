@@ -12,7 +12,7 @@ import com.open.capacity.common.model.SysRole;
 
  
 /**
-* @author 作者 owen E-mail: 624191343@qq.com
+* @author 作者 owen 
 * @version 创建时间：2017年11月12日 上午22:57:51
 * 用户角色关系
  */
@@ -21,16 +21,15 @@ public interface SysUserRoleDao {
 
 	int deleteUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
 
-	@Insert("insert into sys_role_user(userId, roleId) values(#{userId}, #{roleId})")
+	@Insert("insert into sys_role_user(user_id, role_id) values(#{userId}, #{roleId})")
 	int saveUserRoles(@Param("userId") Long userId, @Param("roleId") Long roleId);
-
 	/**
 	 * 根据用户id获取角色
 	 * 
 	 * @param userId
 	 * @return
 	 */
-	@Select("select r.* from sys_role_user ru inner join sys_role r on r.id = ru.roleId where ru.userId = #{userId}")
+	@Select("select r.id ,r.code, r.name, r.create_time createTime , r.update_time  updateTime   from sys_role_user ru inner join sys_role r on r.id = ru.role_id where ru.user_id = #{userId}")
 	Set<SysRole> findRolesByUserId(Long userId);
 
 	/**
@@ -38,7 +37,8 @@ public interface SysUserRoleDao {
 	 * @param userIds
 	 * @return
 	 */
-	@Select("<script>select r.*,ru.userId from sys_role_user ru inner join sys_role r on r.id = ru.roleId where ru.userId IN " +
+ 
+	@Select("<script>select r.id  , r.code  ,r.name  , r.create_time createTime ,r.update_time updateTime ,ru.user_id userId from sys_role_user ru inner join sys_role r on r.id = ru.role_id where ru.user_id IN " +
 			" <foreach item='item' index='index' collection='list' open='(' separator=',' close=')'> " +
 			" #{item} " +
 			" </foreach>" +

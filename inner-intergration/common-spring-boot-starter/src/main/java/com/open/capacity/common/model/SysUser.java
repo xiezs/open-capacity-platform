@@ -18,31 +18,30 @@ import lombok.EqualsAndHashCode;
 /**
  * @author 作者 owen 
  * @version 创建时间：2017年11月12日 上午22:57:51 
- * 用户实体
+ * 类说明 用户实体
  */
 @Data
 @TableName("sys_user")
 @EqualsAndHashCode(callSuper=true)
 public class SysUser  extends Model<SysUser>  implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5886012896705137070L;
 	@TableId(value="id",type=IdType.ID_WORKER)  //雪花算法  id生成策略
 	@JsonSerialize(using=ToStringSerializer.class)
 	private Long id;
 	private String username;
 	private String password;
+	@TableField(value="nick_name")
 	private String nickname;
+	@TableField(value="head_img_url")
 	private String headImgUrl;
 	private String phone;
 	private Integer sex;
 	private Boolean enabled;
 	private String type;
-	@TableField(value="createTime")
+	@TableField(value="create_time")
 	private Date createTime;
-	@TableField(value="updateTime")
+	@TableField(value="update_time")
 	private Date updateTime;
 	
 	@TableField(exist=false)

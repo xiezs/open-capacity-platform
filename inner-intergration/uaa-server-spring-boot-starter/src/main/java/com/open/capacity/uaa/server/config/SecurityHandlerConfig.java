@@ -98,8 +98,8 @@ public class SecurityHandlerConfig {
 
 				response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
-				rsp.put("resp_code", HttpStatus.UNAUTHORIZED.value() + "");
-				rsp.put("resp_msg", msg);
+				rsp.put("code", HttpStatus.UNAUTHORIZED.value() + "");
+				rsp.put("msg", msg);
 
 				response.setContentType("application/json;charset=UTF-8");
 				response.getWriter().write(objectMapper.writeValueAsString(rsp));
@@ -138,8 +138,8 @@ public class SecurityHandlerConfig {
 
 				ResponseEntity<OAuth2Exception> response = super.translate(oAuth2Exception);
 				ResponseEntity.status(oAuth2Exception.getHttpErrorCode());
-				response.getBody().addAdditionalInformation("resp_code", oAuth2Exception.getHttpErrorCode() + "");
-				response.getBody().addAdditionalInformation("resp_msg", oAuth2Exception.getMessage());
+				response.getBody().addAdditionalInformation("code", oAuth2Exception.getHttpErrorCode() + "");
+				response.getBody().addAdditionalInformation("msg", oAuth2Exception.getMessage());
 
 				return response;
 			}

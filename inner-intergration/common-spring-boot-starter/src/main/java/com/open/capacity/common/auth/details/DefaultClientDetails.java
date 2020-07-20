@@ -22,15 +22,11 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class DefaultClientDetails extends BaseClientDetails implements Serializable {
-
-    /**
-     *
-     */
     private static final long serialVersionUID = -4996423520248249518L;
     //限流标识
-    private long if_limit;
+    private long ifLimit;
     //限流次数
-    private long limit_count;
+    private long limitCount;
 
 
     public DefaultClientDetails(String clientId, String resourceIds, String scopes,

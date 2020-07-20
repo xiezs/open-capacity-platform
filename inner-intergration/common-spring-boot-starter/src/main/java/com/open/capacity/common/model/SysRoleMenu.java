@@ -8,25 +8,28 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
  
 /**
 * @author 作者 gitgeek 
 * @version 创建时间：2018-08-06 21:29
-* 类说明  用户角色实体
+* 类说明  角色菜单实体
 */
 @Data
-@TableName("sys_role_user")
+@Builder
+@TableName("sys_role_menu")
 @EqualsAndHashCode(callSuper=true)
-public class SysUserRole  extends Model<SysUserRole> implements Serializable{
+public class SysRoleMenu  extends Model<SysRoleMenu> implements Serializable{
 
-	private static final long serialVersionUID = 2096687235759960875L;
-	@TableField(value="user_id")
-	@JsonSerialize(using=ToStringSerializer.class)
-	private Long userId;
+	private static final long serialVersionUID = 64240478379218861L;
+	 
 	@TableField(value="role_id")
 	@JsonSerialize(using=ToStringSerializer.class)
-    private Long roleId;
+	private Long roleId;
+	@TableField(value="menu_id")
+	@JsonSerialize(using=ToStringSerializer.class)
+    private Long menuId;
 
 }

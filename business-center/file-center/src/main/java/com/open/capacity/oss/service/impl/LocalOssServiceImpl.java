@@ -149,7 +149,7 @@ public class LocalOssServiceImpl extends AbstractFileService {
 
 			FileInfo fileInfo = FileUtil.getFileInfo(multipartFile);
 			fileInfo.setName(fileName);
-			FileInfo oldFileInfo = getFileDao().getById(fileInfo.getId());
+			FileInfo oldFileInfo = getFileDao().findById(fileInfo.getId());
 
 			if (oldFileInfo != null) {
 				destTempFile.delete();

@@ -51,6 +51,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.open.capacity.common.auth.details.LoginAppUser;
+import com.open.capacity.common.exception.controller.ControllerException;
 import com.open.capacity.common.model.SysPermission;
 import com.open.capacity.common.token.SmsCodeAuthenticationToken;
 import com.open.capacity.common.util.ResponseUtil;
@@ -79,6 +80,35 @@ public class OAuth2Controller {
 	@Autowired
 	private SysTokenService sysTokenService;
 
+	
+	@ApiOperation(value = "clientId获取token")
+	@PostMapping("/oauth/client/token")
+	@LogAnnotation(module = "auth-server", recordRequestParam = false)
+	public void getClientTokenInfo() {
+
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
+				.getRequestAttributes();
+		HttpServletRequest request = servletRequestAttributes.getRequest();
+		HttpServletResponse response = servletRequestAttributes.getResponse();
+
+		try {
+			String clientId = request.getHeader("client_id");
+			String clientSecret = request.getHeader("client_secret");
+			OAuth2AccessToken oAuth2AccessToken = sysTokenService.getClientTokenInfo(clientId, clientSecret);
+
+			ResponseUtil.renderJson(response, oAuth2AccessToken);
+
+		} catch (Exception e) {
+
+			Map<String, String> rsp = new HashMap<>();
+			rsp.put("code", HttpStatus.UNAUTHORIZED.value() + "");
+			rsp.put("msg", e.getMessage());
+
+			ResponseUtil.renderJsonError(response, rsp, HttpStatus.UNAUTHORIZED.value());
+
+		}
+	}
+	
 	@ApiOperation(value = "用户名密码获取token")
 	@PostMapping("/oauth/user/token")
 	@LogAnnotation(module = "auth-server", recordRequestParam = false)
@@ -103,130 +133,13 @@ public class OAuth2Controller {
 		} catch (Exception e) {
 
 			Map<String, String> rsp = new HashMap<>();
-			rsp.put("resp_code", HttpStatus.UNAUTHORIZED.value() + "");
-			rsp.put("resp_msg", e.getMessage());
+			rsp.put("code", HttpStatus.UNAUTHORIZED.value() + "");
+			rsp.put("msg", e.getMessage());
 			ResponseUtil.renderJsonError(response, rsp, HttpStatus.UNAUTHORIZED.value());
 
 		}
 	}
 
-	@ApiOperation(value = "clientId获取token")
-	@PostMapping("/oauth/client/token")
-	@LogAnnotation(module = "auth-server", recordRequestParam = false)
-	public void getClientTokenInfo() {
-
-		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
-				.getRequestAttributes();
-		HttpServletRequest request = servletRequestAttributes.getRequest();
-		HttpServletResponse response = servletRequestAttributes.getResponse();
-
-		try {
-			String clientId = request.getHeader("client_id");
-			String clientSecret = request.getHeader("client_secret");
-			OAuth2AccessToken oAuth2AccessToken = sysTokenService.getClientTokenInfo(clientId, clientSecret);
-
-			ResponseUtil.renderJson(response, oAuth2AccessToken);
-
-		} catch (Exception e) {
-
-			Map<String, String> rsp = new HashMap<>();
-			rsp.put("resp_code", HttpStatus.UNAUTHORIZED.value() + "");
-			rsp.put("resp_msg", e.getMessage());
-
-			ResponseUtil.renderJsonError(response, rsp, HttpStatus.UNAUTHORIZED.value());
-
-		}
-	}
-
-	@ApiOperation(value = "access_token刷新token")
-	@PostMapping(value = "/oauth/refresh/token", params = "access_token")
-	@LogAnnotation(module = "auth-server", recordRequestParam = false)
-	public void refreshTokenInfo(String access_token) {
-		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
-				.getRequestAttributes();
-		HttpServletRequest request = servletRequestAttributes.getRequest();
-		HttpServletResponse response = servletRequestAttributes.getResponse();
-
-		try {
-
-			OAuth2AccessToken oAuth2AccessToken = sysTokenService.getRefreshTokenInfo(access_token);
-
-			ResponseUtil.renderJson(response, oAuth2AccessToken);
-
-		} catch (Exception e) {
-			Map<String, String> rsp = new HashMap<>();
-			rsp.put("resp_code", HttpStatus.UNAUTHORIZED.value() + "");
-			rsp.put("resp_msg", e.getMessage());
-			ResponseUtil.renderJsonError(response, rsp, HttpStatus.UNAUTHORIZED.value());
-		}
-
-	}
-
-	/**
-	 * 移除access_token和refresh_token
-	 * 
-	 * @param access_token
-	 */
-	@ApiOperation(value = "移除token")
-	@PostMapping(value = "/oauth/remove/token", params = "access_token")
-	@LogAnnotation(module = "auth-server", recordRequestParam = false)
-	public void removeToken(String access_token) {
-
-		sysTokenService.removeToken(access_token);
-	}
-
-	@ApiOperation(value = "获取token信息")
-	@PostMapping(value = "/oauth/get/token", params = "access_token")
-	@LogAnnotation(module = "auth-server", recordRequestParam = false)
-	public OAuth2AccessToken getTokenInfo(String access_token) {
-
-		return sysTokenService.getTokenInfo(access_token);
-
-	}
-
-	/**
-	 * 当前登陆用户信息
-	 * security获取当前登录用户的方法是SecurityContextHolder.getContext().getAuthentication()
-	 * 这里的实现类是org.springframework.security.oauth2.provider.OAuth2Authentication
-	 * 
-	 * @return
-	 */
-	@ApiOperation(value = "当前登陆用户信息")
-	@GetMapping(value = { "/oauth/userinfo" }, produces = "application/json") // 获取用户信息。/auth/user
-	@LogAnnotation(module = "auth-server", recordRequestParam = false)
-	public Map<String, Object> getCurrentUserDetail() {
-		Map<String, Object> userInfo = new HashMap<>();
-		LoginAppUser loginUser = SysUserUtil.getLoginAppUser();
-		userInfo.put("user", loginUser);
-		log.debug("认证详细信息:" + loginUser.toString());
-
-		List<SysPermission> permissions = new ArrayList<>();
-
-		new ArrayList(loginUser.getAuthorities()).forEach(o -> {
-			SysPermission sysPermission = new SysPermission();
-			sysPermission.setPermission(o.toString());
-			permissions.add(sysPermission);
-		});
-		// userInfo.put("authorities",
-		// AuthorityUtils.authorityListToSet(SecurityContextHolder.getContext().getAuthentication().getAuthorities())
-		// );
-		userInfo.put("permissions", permissions);
-
-		userInfo.put("resp_code", "200");
-
-		log.info("返回信息:{}", userInfo);
-
-		return userInfo;
-	}
-
-	@ApiOperation(value = "token列表")
-	@PostMapping("/oauth/token/list")
-	@LogAnnotation(module = "auth-server", recordRequestParam = false)
-	public PageResult<Map<String, String>> getTokenList(@RequestParam Map<String, Object> params) throws Exception {
-
-		return sysTokenService.getTokenList(params);
-
-	}
 
 	@PostMapping("/authentication/sms")
 	public void getMobileInfo(
@@ -249,11 +162,112 @@ public class OAuth2Controller {
 		} catch (Exception e) {
 
 			Map<String, String> rsp = new HashMap<>();
-			rsp.put("resp_code", HttpStatus.UNAUTHORIZED.value() + "");
-			rsp.put("resp_msg", e.getMessage());
+			rsp.put("code", HttpStatus.UNAUTHORIZED.value() + "");
+			rsp.put("msg", e.getMessage());
 
 			ResponseUtil.renderJsonError(response, rsp, HttpStatus.UNAUTHORIZED.value());
 		}
 	}
+	
+	@ApiOperation(value = "access_token刷新token")
+	@PostMapping(value = "/oauth/refresh/token", params = "access_token")
+	@LogAnnotation(module = "auth-server", recordRequestParam = false)
+	public void refreshTokenInfo(String access_token) {
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
+				.getRequestAttributes();
+		HttpServletRequest request = servletRequestAttributes.getRequest();
+		HttpServletResponse response = servletRequestAttributes.getResponse();
+
+		try {
+
+			OAuth2AccessToken oAuth2AccessToken = sysTokenService.getRefreshTokenInfo(access_token);
+
+			ResponseUtil.renderJson(response, oAuth2AccessToken);
+
+		} catch (Exception e) {
+			Map<String, String> rsp = new HashMap<>();
+			rsp.put("code", HttpStatus.UNAUTHORIZED.value() + "");
+			rsp.put("msg", e.getMessage());
+			ResponseUtil.renderJsonError(response, rsp, HttpStatus.UNAUTHORIZED.value());
+		}
+
+	}
+
+	/**
+	 * 移除access_token和refresh_token
+	 * 
+	 * @param access_token
+	 */
+	@ApiOperation(value = "移除token")
+	@PostMapping(value = "/oauth/remove/token", params = "access_token")
+	@LogAnnotation(module = "auth-server", recordRequestParam = false)
+	public void removeToken(String access_token) {
+
+		try {
+			sysTokenService.removeToken(access_token);
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
+	}
+
+	@ApiOperation(value = "获取token信息")
+	@PostMapping(value = "/oauth/get/token", params = "access_token")
+	@LogAnnotation(module = "auth-server", recordRequestParam = false)
+	public OAuth2AccessToken getTokenInfo(String access_token) {
+
+		try {
+			return sysTokenService.getTokenInfo(access_token);
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
+
+	}
+
+	/**
+	 * 当前登陆用户信息
+	 * security获取当前登录用户的方法是SecurityContextHolder.getContext().getAuthentication()
+	 * 这里的实现类是org.springframework.security.oauth2.provider.OAuth2Authentication
+	 * 
+	 * @return
+	 */
+	@ApiOperation(value = "当前登陆用户信息")
+	@GetMapping(value = { "/oauth/userinfo" }, produces = "application/json") // 获取用户信息。/auth/user
+	@LogAnnotation(module = "auth-server", recordRequestParam = false)
+	public Map<String, Object> getCurrentUserDetail() {
+		try {
+			Map<String, Object> userInfo = new HashMap<>();
+			userInfo.put("code", "0");
+			LoginAppUser loginUser = SysUserUtil.getLoginAppUser();
+			userInfo.put("user", loginUser);
+			List<SysPermission> permissions = new ArrayList<>();
+			new ArrayList(loginUser.getAuthorities()).forEach(o -> {
+				SysPermission sysPermission = new SysPermission();
+				sysPermission.setPermission(o.toString());
+				permissions.add(sysPermission);
+			});
+			// userInfo.put("authorities",
+			// AuthorityUtils.authorityListToSet(SecurityContextHolder.getContext().getAuthentication().getAuthorities())
+			// );
+			userInfo.put("permissions", permissions);
+			return userInfo;
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
+	}
+
+	@ApiOperation(value = "token列表")
+	@PostMapping("/oauth/token/list")
+	@LogAnnotation(module = "auth-server", recordRequestParam = false)
+	public PageResult<Map<String, String>> getTokenList(@RequestParam Map<String, Object> params) throws Exception {
+
+		try {
+			return sysTokenService.getTokenList(params);
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
+
+	}
+
+	
 
 }

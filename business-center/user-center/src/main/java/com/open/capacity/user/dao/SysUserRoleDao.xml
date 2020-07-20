@@ -7,10 +7,10 @@
 		delete from sys_role_user
 		<where>
 			<if test="userId != null">
-				and userId = #{userId}
+				and user_id = #{userId}
 			</if>
 			<if test="roleId != null">
-				and roleId = #{roleId}
+				and role_id = #{roleId}
 			</if>
 		</where>
 	</delete>

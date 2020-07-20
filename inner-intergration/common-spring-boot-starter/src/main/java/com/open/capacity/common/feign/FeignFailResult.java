@@ -6,5 +6,5 @@ import lombok.Data;
 public class FeignFailResult {
 	
 	 private int status;
-	 private String resp_msg;
+	 private String msg;
 }

@@ -35,8 +35,8 @@ public class ResAuthenticationFailureHandler implements ServerAuthenticationFail
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
         //设置body
         Map message = new HashMap();
-		message.put("resp_code", HttpStatus.UNAUTHORIZED.value());
-		message.put("resp_msg",  e.getMessage());
+		message.put("code", HttpStatus.UNAUTHORIZED.value());
+		message.put("msg",  e.getMessage());
 		
         byte[]   dataBytes={};
         try {

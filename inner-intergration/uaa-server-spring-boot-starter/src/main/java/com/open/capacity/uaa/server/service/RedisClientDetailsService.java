@@ -43,14 +43,14 @@ import lombok.extern.slf4j.Slf4j;
 public class RedisClientDetailsService extends JdbcClientDetailsService {
 
 
-    // 扩展 默认的 ClientDetailsService, 增加逻辑删除判断( status = 1)
+    
     private static final String SELECT_CLIENT_DETAILS_SQL = "select client_id, client_secret, resource_ids, scope, authorized_grant_types, " +
             "web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove ,if_limit, limit_count " +
-            "from oauth_client_details where client_id = ? and `status` = 1 ";
-
+            "from oauth_client_details where client_id = ?  ";
+    // 扩展 默认的 ClientDetailsService, 增加逻辑删除判断( status = 1)
     private static final String SELECT_FIND_STATEMENT = "select client_id, client_secret,resource_ids, scope, "
             + "authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, "
-            + "refresh_token_validity, additional_information, autoapprove ,if_limit, limit_count    from oauth_client_details where `status` = 1 order by client_id " ;
+            + "refresh_token_validity, additional_information, autoapprove ,if_limit, limit_count    from oauth_client_details where status = 1 order by client_id " ;
 
    
 
@@ -209,10 +209,10 @@ public class RedisClientDetailsService extends JdbcClientDetailsService {
 			String scopes = rs.getString(11);
 			
 			long ifLimit = rs.getLong(12) ;
-			details.setIf_limit(ifLimit);
+			details.setIfLimit(ifLimit);
 			
 			long limitCount = rs.getLong(13) ;
-			details.setLimit_count(limitCount);
+			details.setLimitCount(limitCount);
 			if (scopes != null) {
 				details.setAutoApproveScopes(org.springframework.util.StringUtils.commaDelimitedListToSet(scopes));
 			}

@@ -1,7 +1,23 @@
 package com.open.capacity.oss.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.common.web.Result;
 import com.open.capacity.log.annotation.LogAnnotation;
@@ -10,16 +26,9 @@ import com.open.capacity.oss.model.FileInfo;
 import com.open.capacity.oss.model.FileType;
 import com.open.capacity.oss.model.MergeFileDTO;
 import com.open.capacity.oss.service.FileService;
+
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author 作者 owen 
@@ -34,7 +43,6 @@ public class FileController {
 
 	@Autowired
 	private OssServiceFactory fileServiceFactory;
-	private ObjectMapper objectMapper = new ObjectMapper();
 	@Value("${file.oss.path}")
 	private String localFilePath;
 
@@ -46,8 +54,8 @@ public class FileController {
 	 * @return
 	 * @throws Exception
 	 */
-	@LogAnnotation(module = "file-center", recordRequestParam = false)
 	@PostMapping("/files-anon")
+	@LogAnnotation(module = "file-center", recordRequestParam = false)
 	public FileInfo upload(@RequestParam("file") MultipartFile file) throws Exception {
 		
 		String fileType = FileType.QINIU.toString();
@@ -61,8 +69,8 @@ public class FileController {
 	 * @return
 	 * @throws Exception
 	 */
-	@LogAnnotation(module = "file-center", recordRequestParam = false)
 	@PostMapping("/files/layui")
+	@LogAnnotation(module = "file-center", recordRequestParam = false)
 	public Map<String, Object> uploadLayui(@RequestParam("file") MultipartFile file )
 			throws Exception {
 		
@@ -81,9 +89,9 @@ public class FileController {
 	 * 文件删除
 	 * @param id
 	 */
-	@LogAnnotation(module = "file-center", recordRequestParam = false)
-	@PreAuthorize("hasAuthority('file:del')") 
 	@DeleteMapping("/files/{id}")
+	@PreAuthorize("hasAuthority('file:del')") 
+	@LogAnnotation(module = "file-center", recordRequestParam = false)
 	public Result delete(@PathVariable String id) {
 
 		try{
@@ -105,8 +113,8 @@ public class FileController {
 	 * @return
 	 * @throws JsonProcessingException 
 	 */
-	@PreAuthorize("hasAuthority('file:query')")
 	@GetMapping("/files")
+	@PreAuthorize("hasAuthority('file:query')")
 	public PageResult<FileInfo> findFiles(@RequestParam Map<String, Object> params) throws JsonProcessingException {
         
 		return  fileServiceFactory.getFileService(FileType.QINIU.toString()).findList(params);
@@ -137,7 +145,7 @@ public class FileController {
 //	@ResponseStatus(code= HttpStatus.INTERNAL_SERVER_ERROR,reason="server error")
 	public Result bigFile( String guid, Integer chunk, MultipartFile file, Integer chunks){
 		try {
-            fileServiceFactory.getFileService(FileType.QINIU.toString()).chunk(guid,chunk,file,chunks,localFilePath);
+            fileServiceFactory.getFileService(FileType.LOCAL.toString()).chunk(guid,chunk,file,chunks,localFilePath);
             return Result.succeed("操作成功");
         }catch (Exception ex){
             return Result.failed("操作失败");
@@ -152,7 +160,7 @@ public class FileController {
 	@RequestMapping(value = "/files-anon/merge",method =RequestMethod.POST )
 	public Result mergeFile(@RequestBody MergeFileDTO mergeFileDTO){
 		try {
-			return Result.succeed(fileServiceFactory.getFileService(FileType.QINIU.toString()).merge(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath),"操作成功");
+			return Result.succeed(fileServiceFactory.getFileService(FileType.LOCAL.toString()).merge(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath),"操作成功");
 		}catch (Exception ex){
 			return Result.failed("操作失败");
 		}

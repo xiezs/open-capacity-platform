@@ -1,7 +1,9 @@
 package com.open.capacity.user.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import com.google.common.collect.Maps;
 import com.open.capacity.common.exception.service.ServiceException;
 import com.open.capacity.common.model.SysMenu;
-import com.open.capacity.log.dto.LogEntry;
-import com.open.capacity.log.monitor.BizLog;
+import com.open.capacity.common.model.SysRoleMenu;
 import com.open.capacity.user.dao.SysMenuDao;
 import com.open.capacity.user.dao.SysRoleMenuDao;
 import com.open.capacity.user.service.SysMenuService;
@@ -49,7 +51,7 @@ public class SysMenuServiceImpl implements SysMenuService {
 		try {
 			menu.setUpdateTime(new Date());
 
-			menuDao.updateByOps(menu);
+			menuDao.updateByPrimaryKey(menu);
 			log.info("修改菜单：{}", menu);
 		} catch (Exception e) {
 //			BizLog.info("菜单修改处理失败", LogEntry.builder().clazz(this.getClass().getName()).method("update").error(e.getMessage()).build());
@@ -62,10 +64,7 @@ public class SysMenuServiceImpl implements SysMenuService {
 	public void delete(Long id)  throws ServiceException{
 		try {
 			SysMenu menu = menuDao.findById(id);
-
-			menuDao.deleteByParentId(menu.getId());
-			menuDao.delete(id);
-
+			menuDao.deleteByPrimaryKey(id);
 			log.info("删除菜单：{}", menu);
 		} catch (Exception e) {
 //			BizLog.info("菜单删除处理失败", LogEntry.builder().clazz(this.getClass().getName()).method("delete").error(e.getMessage()).build());
@@ -73,15 +72,16 @@ public class SysMenuServiceImpl implements SysMenuService {
 		}
 	}
 
-	@Transactional
+	
 	@Override
+	@Transactional
 	public void setMenuToRole(Long roleId, Set<Long> menuIds)  throws ServiceException {
 		try {
-			roleMenuDao.delete(roleId, null);
+			roleMenuDao.deleteByPrimaryKey(roleId, null);
 
 			if (!CollectionUtils.isEmpty(menuIds)) {
 				menuIds.forEach(menuId -> {
-					roleMenuDao.save(roleId, menuId);
+					roleMenuDao.save(  SysRoleMenu.builder().menuId(menuId).roleId(roleId).build()  );
 				});
 			}
 		} catch (Exception e) {
@@ -103,7 +103,7 @@ public class SysMenuServiceImpl implements SysMenuService {
 	@Override
 	public List<SysMenu> findAll()  throws ServiceException{
 		try {
-			return menuDao.findAll();
+			return menuDao.findList(Maps.newHashMap()); //查询全部菜单
 		} catch (Exception e) {
 //			BizLog.info("菜单列表失败", LogEntry.builder().clazz(this.getClass().getName()).method("findAll").error(e.getMessage()).build());
 			throw new ServiceException(e);
@@ -131,7 +131,9 @@ public class SysMenuServiceImpl implements SysMenuService {
 	@Override
 	public List<SysMenu> findOnes()  throws ServiceException{
 		try {
-			return menuDao.findOnes();
+			HashMap<String, Object> params = Maps.newHashMap() ;
+			params.put("isMenu", 1);
+			return menuDao.findList(params);
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}

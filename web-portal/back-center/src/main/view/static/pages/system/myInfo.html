@@ -41,15 +41,6 @@
         </blockquote>
     </div>
 
-    <div id="uploader" class="wu-example">
-        <!--用来存放文件信息-->
-        <div id="thelist" class="uploader-list"></div>
-        <div class="btns">
-            <div id="picker">选择文件</div>
-            <button type="button" class="layui-btn layui-btn-primary" id="ctlBtn"><i class="layui-icon">&#xe67c;</i>开始上传</button>
-        </div>
-    </div>
-
 
     <div class="layui-form-item model-form-footer">
         <button class="layui-btn" lay-filter="user-form-submit" lay-submit>保存</button>
@@ -64,8 +55,6 @@
         var config = layui.config;
         var upload = layui.upload;
 
-        //加载样式
-        layui.link('module/uploader/webuploader.css');
 
         form.render('radio');
 
@@ -85,7 +74,7 @@
         form.on('submit(user-form-submit)', function (data) {
             layer.load(2);
             admin.req('api-user/users/me', JSON.stringify(data.field), function (data) {
-                if (data.resp_code == 0) {
+                if (data.code == 0) {
                     layer.closeAll('loading');
                     $(".layui-nav-img").attr("src",$("[name=headImgUrl]").val());
                     layer.msg("操作成功", {icon: 1, time: 500});
@@ -99,7 +88,7 @@
                     //     }
                     // }, 'POST');
                 } else {
-                    layer.msg(data.resp_msg, {icon: 2, time: 500});
+                    layer.msg(data.msg, {icon: 2, time: 500});
                 }
             }, $('#user-form').attr('method'));
             return false;
@@ -130,45 +119,6 @@
             }
         });
 
-
-        var GUID = WebUploader.Base.guid();//一个GUID
-        var uploader = WebUploader.create({
-            // swf文件路径
-            swf: 'http://cdn.staticfile.org/webuploader/0.1.5/Uploader.swf',
-            // 文件接收服务端。
-            // server: './files-anon/bigFile',
-            server: 'http://127.0.0.1:9200/api-file/files-anon/bigFile',
-            formData:{
-                guid : GUID
-            },
-            // 选择文件的按钮。可选。
-            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-            pick: '#picker',
-            chunked : true, // 分片处理
-            chunkSize : 1 * 1024 * 1024, // 每片32M,
-            chunkRetry : false,// 如果失败，则不重试
-            threads : 1,// 上传并发数。允许同时最大上传进程数。
-            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
-            resize: false
-        });
-        $("#ctlBtn").click(function () {
-            uploader.upload();
-        });
-        //当文件上传成功时触发。
-        uploader.on( "uploadSuccess", function( file ) {
-            $.ajax({
-                // url:'./files-anon/merge',
-                url:'http://127.0.0.1:9200/api-file/files-anon/merge',
-                type:"POST",
-                data: JSON.stringify(  { guid: GUID, fileName: file.name } ) ,
-                contentType:"application/json; charset=utf-8",
-                dataType: "json",
-                success: function(){
-                    if(data.code == 200){
-                        alert('上传成功!');
-                    }
-                }})
-        });
 
     });
 </script>

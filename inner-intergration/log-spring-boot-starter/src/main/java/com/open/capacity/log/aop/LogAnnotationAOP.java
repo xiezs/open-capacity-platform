@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,18 +16,14 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.task.TaskExecutor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.github.structlog4j.StructLog4J;
-import com.github.structlog4j.json.JsonFormatter;
 import com.open.capacity.common.auth.details.LoginAppUser;
 import com.open.capacity.common.constant.TraceConstant;
 import com.open.capacity.common.model.SysLog;
-import com.open.capacity.common.util.IPUtils;
 import com.open.capacity.common.util.SysUserUtil;
 import com.open.capacity.log.annotation.LogAnnotation;
 import com.open.capacity.log.service.LogService;

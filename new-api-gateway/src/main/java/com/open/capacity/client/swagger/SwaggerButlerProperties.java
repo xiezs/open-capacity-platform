@@ -6,13 +6,16 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 import lombok.Data;
 
- 
+/**
+ * Created by 程序猿DD/翟永超 on 2018/5/24.
+ * <p>
+ * Blog: http://blog.didispace.com/
+ * Github: https://github.com/dyc87112/
+ */ 
 @Data
-@RefreshScope
 @ConfigurationProperties("swagger.butler")
 public class SwaggerButlerProperties {
 

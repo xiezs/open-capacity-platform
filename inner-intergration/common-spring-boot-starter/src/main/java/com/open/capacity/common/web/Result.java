@@ -21,8 +21,8 @@ public class Result<T> implements Serializable {
 
     private static final long serialVersionUID = -4696008537295855861L;
     private T data;
-    private Integer resp_code;
-    private String resp_msg;
+    private Integer code;
+    private String msg;
 
     public static <T> Result<T> succeed(String msg) {
         return succeedWith(null, CodeEnum.SUCCESS.getCode(), msg);

@@ -257,8 +257,8 @@ public class UAAServerConfig {
 
                     response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
-                    rsp.put("resp_code", HttpStatus.UNAUTHORIZED.value() + "");
-                    rsp.put("resp_msg", authException.getMessage());
+                    rsp.put("code", HttpStatus.UNAUTHORIZED.value() + "");
+                    rsp.put("msg", authException.getMessage());
 
                     response.setContentType("application/json;charset=UTF-8");
                     response.getWriter().write(objectMapper.writeValueAsString(rsp));
@@ -277,8 +277,8 @@ public class UAAServerConfig {
 
                     response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
-                    rsp.put("resp_code", HttpStatus.UNAUTHORIZED.value() + "");
-                    rsp.put("resp_msg", authException.getMessage());
+                    rsp.put("code", HttpStatus.UNAUTHORIZED.value() + "");
+                    rsp.put("msg", authException.getMessage());
 
                     response.setContentType("application/json;charset=UTF-8");
                     response.getWriter().write(objectMapper.writeValueAsString(rsp));

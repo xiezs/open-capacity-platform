@@ -23,7 +23,7 @@ import com.open.capacity.uaa.server.UAAServerConfig;
 @EnableDiscoveryClient
 @SpringBootApplication
 @Import(UAAServerConfig.class)
-@EnableFeignClients(defaultConfiguration=GlobalFeignConfig.class)
+@EnableFeignClients(defaultConfiguration= GlobalFeignConfig.class)
 public class AuthServerApp {
 	
 	public static void main(String[] args) {

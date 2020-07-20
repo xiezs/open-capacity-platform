@@ -15,7 +15,7 @@ import org.apache.ibatis.annotations.Select;
 public interface SysClientDao {
 
 	 
-	@Select("select * from oauth_client_details t where t.client_id = #{clientId}")
+	@Select("select id id , client_id clientId , resource_ids resourceIds ,client_secret clientSecret,client_secret_str clientSecretStr ,web_server_redirect_uri webServerRedirectUri ,authorized_grant_types  authorizedGrantTypes ,if_limit ifLimit , limit_count limitCount  ,status from oauth_client_details t where t.client_id = #{clientId}")
 	Map getClient(String clientId);
  
 }

@@ -83,8 +83,7 @@ public class UAAClientAutoConfig {
         
         http.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION);
         
-        //访问授权
-//        AuthorizationWebFilter authorizationWebFilter=new AuthorizationWebFilter(delegatingAuthorizationManager);
+//        AuthorizationWebFilter authorizationWebFilter=new AuthorizationWebFilter(delegatingAuthorizationManager); //访问授权
 //        http.addFilterAt(authorizationWebFilter, SecurityWebFiltersOrder.FORM_LOGIN);
 
         ServerHttpSecurity.AuthorizeExchangeSpec authorizeExchange = http.authorizeExchange();
@@ -95,7 +94,7 @@ public class UAAClientAutoConfig {
         
         authorizeExchange
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()    //option 请求默认放行
-//                .anyExchange().access(authorizeConfigManager)  // 应用api权限控制
+//                .anyExchange().access(authorizeConfigManager)    // 应用api权限控制
                  .anyExchange().authenticated()                  //token 有效性控制
                 .and()
                     .exceptionHandling()

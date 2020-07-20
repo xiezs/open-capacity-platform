@@ -9,10 +9,10 @@
 				and t.name like concat('%', #{name}, '%')
 			</if>
 			<if test="beginTime != null and beginTime != ''">
-				and t.createTime &gt;= #{beginTime}
+				and t.create_time &gt;= #{beginTime}
 			</if>
 			<if test="endTime != null and endTime != ''">
-				and DATE(t.createTime) &lt;= #{endTime}
+				and DATE(t.create_time) &lt;= #{endTime}
 			</if>
 
             <if test="searchKey != null and searchKey != ''">
@@ -28,9 +28,9 @@
 	</select>
 
 	<select id="findList" resultType="com.open.capacity.oss.model.FileInfo">
-		select * from file_info t
+		select id, name, is_img isImg, content_type contentType , size, path, url, source, create_time createTime from file_info t
 		<include refid="where" />
-		order by t.createTime desc
+		order by t.create_time desc
 	</select>
 	<!--limit #{page}, #{limit}-->
 </mapper>

@@ -77,14 +77,10 @@ layui.config({
 }).use(['config', 'form'], function () {
 
 	let uuid = Math.uuid();
-	
     var $ = layui.jquery;
-    
     $("input[name='deviceId']").val(uuid);
-    
     var form = layui.form;
     var config = layui.config;
-
     if (config.getToken()) {
         location.replace('./');
         return;
@@ -94,20 +90,15 @@ layui.config({
     form.on('submit(login-submit)', function (obj) {
         var field = obj.field;
         field.grant_type = 'password';
-        field.scope = 'app';
-        field.client_id = 'webApp';
-        field.client_secret = 'webApp';
-
+        field.client_id = config.clientId ;
+        field.client_secret = config.clientSecret ;
+		field.scope = config.scope;
         layer.load(2);
-        
         debugger ;
-        
         $.ajax({
         	url: config.base_server + 'api-auth/oauth/token',
-        	//url:   'http://127.0.0.1:8000/oauth/token',
             data: field,
             type: 'POST',
-            //dataType: 'JSON',
             success: function (data) {
                 console.log(JSON.stringify(data));
                 if (data.access_token) {
@@ -124,17 +115,17 @@ layui.config({
                 layer.closeAll('loading');
                 if (xhr.status == 400) {
                     var error =JSON.parse(xhr.responseText) ;
-                	
-                	var error_msg = error.error_description ? error.error_description :error.resp_msg ;
-                
+                	var error_msg = error.error_description ? error.error_description :error.msg ;
                     layer.msg(error_msg ? error_msg  : xhr.statusText, {icon: 5, time: 500});
+                    // 图形验证码
+				    $('.login-captcha').attr("src", config.base_server + "api-auth/validata/code/"+uuid);
+				    $('.login-captcha').attr("style", "");
+                    
                 }else if( xhr.status  == 401){
-                	
                 	var error =JSON.parse(xhr.responseText) ;
-                	
-                	var error_msg = error.error_description ? error.error_description :error.resp_msg ;
-                
+                	var error_msg = error.error_description ? error.error_description :error.msg ;
                     layer.msg(error_msg ? error_msg  : xhr.statusText, {icon: 5, time: 500});
+                    
                 }
                 else if( xhr.status  == 500){
                     layer.msg('服务器异常,请联系管理员', {icon: 5, time: 500});

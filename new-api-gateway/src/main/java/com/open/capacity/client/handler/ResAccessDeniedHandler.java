@@ -26,8 +26,8 @@ public class ResAccessDeniedHandler implements ServerAccessDeniedHandler {
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, AccessDeniedException e) {
     	JSONObject message = new JSONObject();
-		message.put("resp_code", HttpStatus.FORBIDDEN);
-		message.put("resp_msg",  e.getMessage());
+		message.put("code", HttpStatus.FORBIDDEN);
+		message.put("msg",  e.getMessage());
 		
         ServerHttpResponse response = exchange.getResponse();
         response.getHeaders().setAccessControlAllowCredentials(true);

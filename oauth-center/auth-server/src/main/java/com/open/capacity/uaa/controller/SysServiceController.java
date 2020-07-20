@@ -18,11 +18,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.open.capacity.common.exception.controller.ControllerException;
+import com.open.capacity.common.model.SysService;
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.common.web.Result;
 import com.open.capacity.log.annotation.LogAnnotation;
 import com.open.capacity.uaa.dto.SysClientDto;
-import com.open.capacity.uaa.model.SysService;
 import com.open.capacity.uaa.service.SysServiceService;
 
 import io.swagger.annotations.Api;
@@ -55,9 +56,12 @@ public class SysServiceController {
     @PreAuthorize("hasAuthority('service:get/service/findAlls')")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
     public PageResult<SysService> findAlls() {
-        List<SysService> list = sysServiceService.findAll();
-
-        return PageResult.<SysService>builder().data(list).code(0).count((long)list.size()).build() ;
+        try {
+			List<SysService> list = sysServiceService.findAll();
+			return PageResult.<SysService>builder().data(list).code(0).count((long)list.size()).build() ;
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
     }
 
     /**
@@ -69,8 +73,12 @@ public class SysServiceController {
     @PreAuthorize("hasAuthority('service:get/service/findOnes')")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
     public PageResult<SysService> findOnes(){
-        List<SysService> list = sysServiceService.findOnes();
-        return PageResult.<SysService>builder().data(list).code(0).count((long)list.size()).build() ;
+        try {
+			List<SysService> list = sysServiceService.findOnes();
+			return PageResult.<SysService>builder().data(list).code(0).count((long)list.size()).build() ;
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
     }
 
     /**
@@ -86,13 +94,11 @@ public class SysServiceController {
     @LogAnnotation(module="auth-server",recordRequestParam=false)
     public Result delete(@PathVariable Long id){
         try {
-            sysServiceService.delete(id);
-
-        }catch (Exception ex){
-        	log.error("SysServiceController->delete:{}" ,ex.getMessage());
-            return Result.failed("操作失败");
-        }
-        return Result.succeed("操作成功");
+			sysServiceService.delete(id);
+			return Result.succeed("操作成功");
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
     }
 
     
@@ -109,8 +115,7 @@ public class SysServiceController {
             }
             return Result.succeed("操作成功");
         }catch (Exception ex){
-        	log.error("SysServiceController->saveOrUpdate:{}" ,ex.getMessage());
-            return Result.failed("操作失败");
+        	throw new ControllerException(ex);
         }
     }
 
@@ -118,39 +123,42 @@ public class SysServiceController {
     @GetMapping("/{clientId}/services")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
     public List<Map<String, Object>> findServicesByclientId(@PathVariable Long clientId) {
-        Set<Long> clientIds = new HashSet<Long>();
-        
-        //初始化应用
-        clientIds.add(clientId);
-        
-        List<SysService> clientService = sysServiceService.findByClient(clientIds);
-        List<SysService> allService = sysServiceService.findAll();
-        List<Map<String, Object>> authTrees = new ArrayList<>();
+        try {
+			Set<Long> clientIds = new HashSet<Long>();
+			//初始化应用
+			clientIds.add(clientId);
+			List<SysService> clientService = sysServiceService.findByClient(clientIds);
+			List<SysService> allService = sysServiceService.findAll();
+			List<Map<String, Object>> authTrees = new ArrayList<>();
+			Map<Long,SysService> clientServiceMap = clientService.stream().collect(Collectors.toMap(SysService::getId,SysService->SysService));
+			for (SysService sysService: allService) {
+			    Map<String, Object> authTree = new HashMap<>();
+			    authTree.put("id",sysService.getId());
+			    authTree.put("name",sysService.getName());
+			    authTree.put("pId",sysService.getParentId());
+			    authTree.put("open",true);
+			    authTree.put("checked", false);
+			    if (clientServiceMap.get(sysService.getId())!=null){
+			        authTree.put("checked", true);
+			    }
+			    authTrees.add(authTree);
+			}
 
-        Map<Long,SysService> clientServiceMap = clientService.stream().collect(Collectors.toMap(SysService::getId,SysService->SysService));
-
-        for (SysService sysService: allService) {
-            Map<String, Object> authTree = new HashMap<>();
-            authTree.put("id",sysService.getId());
-            authTree.put("name",sysService.getName());
-            authTree.put("pId",sysService.getParentId());
-            authTree.put("open",true);
-            authTree.put("checked", false);
-            if (clientServiceMap.get(sysService.getId())!=null){
-                authTree.put("checked", true);
-            }
-            authTrees.add(authTree);
-        }
-
-        return  authTrees;
+			return  authTrees;
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
     }
 
     @PostMapping("/granted")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
     public Result setMenuToClient(@RequestBody SysClientDto clientDto) {
-        sysServiceService.setMenuToClient(clientDto.getId(), clientDto.getServiceIds());
-
-        return Result.succeed("操作成功");
+        try {
+			sysServiceService.setMenuToClient(clientDto.getId(), clientDto.getServiceIds());
+			return Result.succeed("操作成功");
+		} catch (Exception e) {
+			throw new ControllerException(e);
+		}
     }
 
 

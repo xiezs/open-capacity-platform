@@ -47,7 +47,7 @@ import com.open.capacity.user.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author 作者 owen E-mail: 624191343@qq.com
+ * @author 作者 owen 
  * @version 创建时间：2017年11月12日 上午22:57:51
  */
 @Slf4j
@@ -66,8 +66,9 @@ public class SysUserServiceImpl implements SysUserService {
 	@Autowired(required = false)
 	private TokenStore redisTokenStore;
 
-	@Transactional
+	
 	@Override
+	@Transactional
 	public void addSysUser(SysUser sysUser)  throws ServiceException {
 		try {
 			String username = sysUser.getUsername();
@@ -116,8 +117,9 @@ public class SysUserServiceImpl implements SysUserService {
 		}
 	}
 
-	@Transactional
+	
 	@Override
+	@Transactional
 	public SysUser updateSysUser(SysUser sysUser)  throws ServiceException {
 		try {
 			sysUser.setUpdateTime(new Date());
@@ -178,7 +180,7 @@ public class SysUserServiceImpl implements SysUserService {
 				}
 			}
 
-			sysUserDao.updateByOps(sysUser);
+			sysUserDao.updateByPrimaryKey(sysUser);
 			log.info("修改用户：{}", sysUser);
 			return sysUser;
 		} catch (Exception e) {
@@ -186,8 +188,9 @@ public class SysUserServiceImpl implements SysUserService {
 		}
 	}
 
-	@Transactional
+	
 	@Override
+	@Transactional
 	public LoginAppUser findByUsername(String username)  throws ServiceException{
 		try {
 			SysUser sysUser = sysUserDao.findUserByUsername(username);
@@ -220,8 +223,9 @@ public class SysUserServiceImpl implements SysUserService {
 	}
 
 
-	@Transactional
+	
 	@Override
+	@Transactional
 	public LoginAppUser findByMobile(String mobile)  throws ServiceException {
 		try {
 			SysUser sysUser = sysUserDao.findUserByMobile(mobile);
@@ -265,8 +269,9 @@ public class SysUserServiceImpl implements SysUserService {
 	/**
 	 * 给用户设置角色
 	 */
-	@Transactional
+	
 	@Override
+	@Transactional
 	public void setRoleToUser(Long id, Set<Long> roleIds)  throws ServiceException {
 		try {
 			SysUser sysUser = sysUserDao.findById(id);
@@ -288,8 +293,9 @@ public class SysUserServiceImpl implements SysUserService {
 		}
 	}
 
-	@Transactional
+	
 	@Override
+	@Transactional
 	public Result updatePassword(Long id, String oldPassword, String newPassword)  throws ServiceException {
 		try {
 			SysUser sysUser = sysUserDao.findById(id);
@@ -358,7 +364,7 @@ public class SysUserServiceImpl implements SysUserService {
 			appUser.setEnabled(enabled);
 			appUser.setUpdateTime(new Date());
 
-			int i = sysUserDao.updateByOps(appUser);
+			int i = sysUserDao.updateByPrimaryKey(appUser);
 			log.info("修改用户：{}", appUser);
 
 			return i > 0 ? Result.succeed(appUser, "更新成功") : Result.failed("更新失败");
@@ -367,8 +373,9 @@ public class SysUserServiceImpl implements SysUserService {
 		}
 	}
 
-	@Transactional
+	
 	@Override
+	@Transactional
 	public Result saveOrUpdate(SysUser sysUser)  throws ServiceException {
 		try {
 			String username = sysUser.getUsername();
@@ -427,7 +434,7 @@ public class SysUserServiceImpl implements SysUserService {
 				i = sysUserDao.insert(sysUser);
 			} else {
 				sysUser.setUpdateTime(new Date());
-				i = sysUserDao.updateByOps(sysUser);
+				i = sysUserDao.updateByPrimaryKey(sysUser);
 			}
 
 			userRoleDao.deleteUserRole(sysUser.getId(), null);

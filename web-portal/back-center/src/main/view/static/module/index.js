@@ -240,7 +240,8 @@ layui.define(['config', 'admin', 'layer', 'laytpl', 'element', 'form'], function
             // admin.req('userInfo.json', {}, function (data) {
             admin.req('api-auth/oauth/userinfo', {}, function (data) {
                 layer.closeAll('loading');
-                if (200 == data.resp_code) {
+                debugger;
+                if (0 == data.code) {
                     config.putUser(data.user);
                     admin.putTempData("permissions",data.permissions);
                     success(data.user);
