@@ -38,14 +38,15 @@ public class SysPermissionServiceImpl implements SysPermissionService {
 	@Override
 	public Set<SysPermission> findByRoleIds(Set<Long> roleIds)  throws ServiceException {
 		try {
-			return rolePermissionDao.findPermissionsByRoleIds(roleIds);
+			return rolePermissionDao.findByRoleIds(roleIds);
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
 	}
 
-	@Transactional
+	
 	@Override
+	@Transactional
 	public void save(SysPermission sysPermission)  throws ServiceException {
 		try {
 			SysPermission permission = sysPermissionDao.findByPermission(sysPermission.getPermission());
@@ -62,8 +63,9 @@ public class SysPermissionServiceImpl implements SysPermissionService {
 		}
 	}
 
-	@Transactional
+	
 	@Override
+	@Transactional
 	public void update(SysPermission sysPermission)  throws ServiceException {
 		try {
 			sysPermission.setUpdateTime(new Date());
@@ -74,8 +76,9 @@ public class SysPermissionServiceImpl implements SysPermissionService {
 		}
 	}
 
-	@Transactional
+	
 	@Override
+	@Transactional
 	public void delete(Long id)  throws ServiceException {
 		try {
 			SysPermission permission = sysPermissionDao.findById(id);
@@ -84,7 +87,7 @@ public class SysPermissionServiceImpl implements SysPermissionService {
 			}
 
 			sysPermissionDao.deleteByPrimaryKey(id);
-			rolePermissionDao.deleteRolePermission(null, id);
+			rolePermissionDao.deleteBySelective(null, id);
 			log.info("删除权限标识：{}", permission);
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -107,15 +110,15 @@ public class SysPermissionServiceImpl implements SysPermissionService {
 
 	}
 
+	
 	@Override
-	public void setAuthToRole(Long roleId, Set<Long> authIds)  throws ServiceException {
+	@Transactional
+	public void setPermissionToRole(Long roleId, Set<Long> permissions)  throws ServiceException {
 		try {
-			rolePermissionDao.deleteRolePermission(roleId,null);
-
-			if (!CollectionUtils.isEmpty(authIds)) {
-				authIds.forEach(authId -> {
-					rolePermissionDao.saveRolePermission(roleId, authId);
-				});
+			rolePermissionDao.deleteBySelective(roleId, null) ;
+			
+			if (!CollectionUtils.isEmpty(permissions)) {
+				rolePermissionDao.saveBatch(roleId, permissions);
 			}
 		} catch (Exception e) {
 			throw new ServiceException(e);

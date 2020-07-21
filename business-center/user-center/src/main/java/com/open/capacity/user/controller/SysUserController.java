@@ -70,15 +70,12 @@ public class SysUserController {
     @GetMapping("/users/current")
     @LogAnnotation(module = "user-center", recordRequestParam = false)
     public LoginAppUser getLoginAppUser() throws ControllerException {
-
         try {
             LoginAppUser loginUser = SysUserUtil.getLoginAppUser();
             return loginUser;
         } catch (Exception e) {
             throw new ControllerException(e);
         }
-
-
     }
 
     @GetMapping(value = "/users-anon/login", params = "username")
@@ -186,13 +183,10 @@ public class SysUserController {
     }
 
 
-//    <!-- -->
-
     /**
      * 用户查询
      * http://192.168.3.2:7000/users?access_token=3b45d059-601b-4c63-85f9-9d77128ee94d&start=0&length=10
-     *
-     * @param params
+     * @param params //  searchKey=username, searchValue=as
      * @return
      * @throws ControllerException
      */
@@ -204,7 +198,6 @@ public class SysUserController {
     })
     @GetMapping("/users")
     @LogAnnotation(module = "user-center", recordRequestParam = false)
-//  searchKey=username, searchValue=as
     public PageResult<SysUser> findUsers(@RequestHeader(name = "trace_id", required = false) String traceId, @RequestParam Map<String, Object> params) throws ControllerException {
 
         try {
@@ -216,7 +209,6 @@ public class SysUserController {
 
     /**
      * 修改自己的个人信息
-     *
      * @param sysUser
      * @return
      * @throws ControllerException
@@ -229,7 +221,6 @@ public class SysUserController {
 //        sysUser.setId(user.getId());
         try {
             SysUser user = sysUserService.updateSysUser(sysUser);
-
             return Result.succeed(user, "操作成功");
         } catch (ServiceException e) {
             throw new ControllerException(e);
@@ -238,7 +229,6 @@ public class SysUserController {
 
     /**
      * 修改密码
-     *
      * @param sysUser
      * @throws ControllerException
      */
@@ -253,11 +243,9 @@ public class SysUserController {
             if (StringUtils.isBlank(sysUser.getNewPassword())) {
                 throw new IllegalArgumentException("新密码不能为空");
             }
-
             if (sysUser.getId() == 1277137734524300032L) {
                 return Result.failed("超级管理员不给予修改");
             }
-
             return sysUserService.updatePassword(sysUser.getId(), sysUser.getOldPassword(), sysUser.getNewPassword());
         } catch (ServiceException e) {
             throw new ControllerException(e);
@@ -266,7 +254,6 @@ public class SysUserController {
 
     /**
      * 修改用户状态
-     *
      * @param params
      * @return
      * @throws ControllerException
@@ -294,7 +281,6 @@ public class SysUserController {
 
     /**
      * 管理后台，给用户重置密码
-     *
      * @param id
      * @throws ControllerException
      * @author gitgeek
@@ -317,7 +303,6 @@ public class SysUserController {
 
     /**
      * 新增or更新
-     *
      * @param sysUser
      * @return
      * @throws ControllerException
@@ -344,7 +329,6 @@ public class SysUserController {
     public void exportUser(@RequestParam Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) throws ControllerException {
         try {
             List<SysUserExcel> result = sysUserService.findAllUsers(params);
-
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("Content-disposition", "attachment;filename=myExcel.xls");
             @Cleanup OutputStream ouputStream = null;
@@ -363,7 +347,6 @@ public class SysUserController {
 
     /**
      * 测试幂等接口
-     *
      * @param sysUser
      * @return
      * @throws ControllerException

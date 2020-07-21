@@ -153,9 +153,9 @@ public class SysPermissionController {
 	@PostMapping("/permissions/granted")
 	@PreAuthorize("hasAuthority('permission:post/permissions/granted')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
-	public Result setAuthToRole(@RequestBody SysPermission sysPermission) throws ControllerException {
+	public Result setPermissionToRole(@RequestBody SysPermission sysPermission) throws ControllerException {
 		try {
-			sysPermissionService.setAuthToRole(sysPermission.getRoleId(),sysPermission.getAuthIds());
+			sysPermissionService.setPermissionToRole(sysPermission.getRoleId(),sysPermission.getAuthIds());
 			return Result.succeed("操作成功");
 		} catch (ServiceException e) {
 			throw new ControllerException(e);

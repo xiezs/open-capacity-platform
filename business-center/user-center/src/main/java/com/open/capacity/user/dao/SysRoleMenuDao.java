@@ -23,10 +23,15 @@ public interface SysRoleMenuDao  extends BaseMapper<SysRoleMenu> {
 	@Insert("insert into sys_role_menu(role_id, menu_id) values(#{roleId}, #{menuId})")
 	int save( SysRoleMenu menu );
 
-	int deleteByPrimaryKey(@Param("roleId") Long roleId, @Param("menuId") Long menuId);
+	
+	void saveBatch(@Param("roleId") Long roleId, @Param("menuIds") Set<Long> menuIds);
+	
+	int deleteBySelective(@Param("roleId") Long roleId, @Param("menuId") Long menuId);
 
 	@Select("select t.menu_id menuId from sys_role_menu t where t.role_id = #{roleId}")
 	Set<Long> findMenuIdsByRoleId(Long roleId);
 
 	List<SysMenu> findMenusByRoleIds(@Param("roleIds") Set<Long> roleIds);
+
+	
 }

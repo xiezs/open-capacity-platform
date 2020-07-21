@@ -33,12 +33,7 @@ public interface SysRoleService {
 	 */
 	void deleteRole(Long id)  throws ServiceException;
 
-	/**
-	 * 分配权限
-	 * @param id
-	 * @param permissionIds
-	 */
-	void setPermissionToRole(Long id, Set<Long> permissionIds)  throws ServiceException;
+	
 
 	/**
 	 * ID获取角色

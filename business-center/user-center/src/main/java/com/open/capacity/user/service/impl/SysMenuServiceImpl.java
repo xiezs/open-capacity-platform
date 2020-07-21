@@ -3,7 +3,6 @@ package com.open.capacity.user.service.impl;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.util.CollectionUtils;
 import com.google.common.collect.Maps;
 import com.open.capacity.common.exception.service.ServiceException;
 import com.open.capacity.common.model.SysMenu;
-import com.open.capacity.common.model.SysRoleMenu;
 import com.open.capacity.user.dao.SysMenuDao;
 import com.open.capacity.user.dao.SysRoleMenuDao;
 import com.open.capacity.user.service.SysMenuService;
@@ -77,12 +75,9 @@ public class SysMenuServiceImpl implements SysMenuService {
 	@Transactional
 	public void setMenuToRole(Long roleId, Set<Long> menuIds)  throws ServiceException {
 		try {
-			roleMenuDao.deleteByPrimaryKey(roleId, null);
-
+			roleMenuDao.deleteBySelective(roleId, null);
 			if (!CollectionUtils.isEmpty(menuIds)) {
-				menuIds.forEach(menuId -> {
-					roleMenuDao.save(  SysRoleMenu.builder().menuId(menuId).roleId(roleId).build()  );
-				});
+				roleMenuDao.saveBatch(roleId , menuIds ) ;
 			}
 		} catch (Exception e) {
 //			BizLog.info("菜单角色处理失败", LogEntry.builder().clazz(this.getClass().getName()).method("setMenuToRole").error(e.getMessage()).build());

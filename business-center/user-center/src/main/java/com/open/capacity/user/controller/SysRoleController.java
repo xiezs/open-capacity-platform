@@ -37,8 +37,6 @@ public class SysRoleController {
 	@Autowired
 	private SysRoleService sysRoleService;
 
-
-//	<!-- -->
 	/**
 	 * 后台管理查询角色
 	 * @param params
@@ -96,5 +94,4 @@ public class SysRoleController {
 			 throw new ControllerException(e);
 		}
 	}
-
 }

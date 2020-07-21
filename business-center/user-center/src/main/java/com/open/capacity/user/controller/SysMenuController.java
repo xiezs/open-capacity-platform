@@ -45,44 +45,40 @@ public class SysMenuController {
 	@Autowired
 	private SysMenuService menuService;
 
-	// <!-- -->
 	/**
 	 * 删除菜单
 	 * 
 	 * @param id
-	 * @throws ControllerException 
+	 * @throws ControllerException
 	 */
 	@DeleteMapping("/{id}")
 	@ApiOperation(value = "删除菜单")
 	@PreAuthorize("hasAuthority('menu:delete/menus/{id}')")
-	@LogAnnotation(module="user-center",recordRequestParam=false)
+	@LogAnnotation(module = "user-center", recordRequestParam = false)
 	public Result delete(@PathVariable Long id) throws ControllerException {
-
 		try {
-				menuService.delete(id);
-				return Result.succeed("操作成功");
+			menuService.delete(id);
+			return Result.succeed("操作成功");
 		} catch (Exception e) {
 			throw new ControllerException(e);
 		}
-
 	}
+
 	@GetMapping("/{roleId}/menus")
 	@ApiOperation(value = "根据roleId获取对应的菜单")
 	@PreAuthorize("hasAuthority('menu:get/menus/{roleId}/menus')")
-	@LogAnnotation(module="user-center",recordRequestParam=false)
+	@LogAnnotation(module = "user-center", recordRequestParam = false)
 	public List<Map<String, Object>> findMenusByRoleId(@PathVariable Long roleId) throws ControllerException {
 
 		try {
-			Set<Long> roleIds = new HashSet<Long>()  ;
-			//初始化角色
-			roleIds.add(roleId) ;
+			Set<Long> roleIds = new HashSet<Long>();
+			// 初始化角色
+			roleIds.add(roleId);
 			List<SysMenu> roleMenus = menuService.findByRoles(roleIds); // 获取该角色对应的菜单
 			List<SysMenu> allMenus = menuService.findAll(); // 全部的菜单列表
 			List<Map<String, Object>> authTrees = new ArrayList<>();
-
 			Map<Long, SysMenu> roleMenusMap = roleMenus.stream()
 					.collect(Collectors.toMap(SysMenu::getId, SysMenu -> SysMenu));
-
 			for (SysMenu sysMenu : allMenus) {
 				Map<String, Object> authTree = new HashMap<>();
 				authTree.put("id", sysMenu.getId());
@@ -103,37 +99,36 @@ public class SysMenuController {
 
 	/**
 	 * 给角色分配菜单
-	 * @throws ControllerException 
+	 * 
+	 * @throws ControllerException
 	 */
 	@PostMapping("/granted")
 	@ApiOperation(value = "角色分配菜单")
 	@PreAuthorize("hasAuthority('menu:post/menus/granted')")
-	@LogAnnotation(module="user-center",recordRequestParam=false)
+	@LogAnnotation(module = "user-center", recordRequestParam = false)
 	public Result setMenuToRole(@RequestBody SysMenu sysMenu) throws ControllerException {
-
 		try {
 			menuService.setMenuToRole(sysMenu.getRoleId(), sysMenu.getMenuIds());
-
 			return Result.succeed("操作成功");
 		} catch (ServiceException e) {
 			throw new ControllerException(e);
 		}
-
 	}
+
 	@GetMapping("/findAlls")
 	@ApiOperation(value = "查询所有菜单")
 	@PreAuthorize("hasAuthority('menu:get/menus/findAlls')")
-	@LogAnnotation(module="user-center",recordRequestParam=false)
+	@LogAnnotation(module = "user-center", recordRequestParam = false)
 	public PageResult<SysMenu> findAlls() throws ControllerException {
 
 		try {
 			List<SysMenu> list = menuService.findAll();
-
 			return PageResult.<SysMenu>builder().data(list).code(0).count((long) list.size()).build();
 		} catch (ServiceException e) {
 			throw new ControllerException(e);
 		}
 	}
+
 	@GetMapping("/findOnes")
 	@ApiOperation(value = "获取菜单以及顶级菜单")
 	@PreAuthorize("hasAuthority('menu:get/menus/findOnes')")
@@ -151,53 +146,45 @@ public class SysMenuController {
 	 * 
 	 * @param menu
 	 * @return
-	 * @throws ControllerException 
+	 * @throws ControllerException
 	 */
 	@PostMapping("saveOrUpdate")
 	@ApiOperation(value = "新增菜单")
 	@PreAuthorize("hasAnyAuthority('menu:post/menus','menu:put/menus')")
-	@LogAnnotation(module="user-center",recordRequestParam=false)
+	@LogAnnotation(module = "user-center", recordRequestParam = false)
 	public Result saveOrUpdate(@RequestBody SysMenu menu) throws ControllerException {
-
-			try {
-				if (menu.getId() != null) {
-					menuService.update(menu);
-				} else {
-					menuService.save(menu);
-				}
-				return Result.succeed("操作成功");
-			} catch (ServiceException e) {
-				throw new ControllerException(e);
+		try {
+			if (menu.getId() != null) {
+				menuService.update(menu);
+			} else {
+				menuService.save(menu);
 			}
-		 
-
+			return Result.succeed("操作成功");
+		} catch (ServiceException e) {
+			throw new ControllerException(e);
+		}
 	}
 
 	/**
 	 * 当前登录用户的菜单
 	 * 
 	 * @return
-	 * @throws ControllerException 
+	 * @throws ControllerException
 	 */
 	@GetMapping("/current")
 	@ApiOperation(value = "查询当前用户菜单")
 	@PreAuthorize("hasAuthority('menu:get/menus/current')")
-	@LogAnnotation(module="user-center",recordRequestParam=false)
+	@LogAnnotation(module = "user-center", recordRequestParam = false)
 	public List<SysMenu> findMyMenu() throws ControllerException {
-
 		try {
 			LoginAppUser loginAppUser = SysUserUtil.getLoginAppUser();
 			Set<SysRole> roles = loginAppUser.getSysRoles();
 			if (CollectionUtils.isEmpty(roles)) {
 				return Collections.emptyList();
 			}
-
 			List<SysMenu> menus = menuService
 					.findByRoles(roles.parallelStream().map(SysRole::getId).collect(Collectors.toSet()));
-
-			List<SysMenu> sysMenus = TreeBuilder(menus);
-
-			return sysMenus;
+			return treeBuilder(menus);
 		} catch (ServiceException e) {
 			throw new ControllerException(e);
 		}
@@ -208,10 +195,9 @@ public class SysMenuController {
 	 * 
 	 * @param sysMenus
 	 * @return
-	 * @throws ControllerException 
+	 * @throws ControllerException
 	 */
-	public static List<SysMenu> TreeBuilder(List<SysMenu> sysMenus) throws ControllerException {
-
+	public static List<SysMenu> treeBuilder(List<SysMenu> sysMenus) throws ControllerException {
 		try {
 			List<SysMenu> menus = new ArrayList<SysMenu>();
 			for (SysMenu sysMenu : sysMenus) {
@@ -232,5 +218,4 @@ public class SysMenuController {
 			throw new ControllerException(e);
 		}
 	}
-
 }

@@ -18,10 +18,12 @@ import com.open.capacity.common.model.SysPermission;
 public interface SysRolePermissionDao {
 
 	@Insert("insert into sys_role_permission(role_id, permission_id) values(#{roleId}, #{permissionId})")
-	int saveRolePermission(@Param("roleId") Long roleId, @Param("permissionId") Long permissionId);
+	int save(@Param("roleId") Long roleId, @Param("permissionId") Long permissionId);
 
-	int deleteRolePermission(@Param("roleId") Long roleId, @Param("permissionId") Long permissionId);
+	void saveBatch(@Param("roleId") Long roleId, @Param("permissions") Set<Long> permissions);
+	
+	int deleteBySelective(@Param("roleId") Long roleId, @Param("permissionId") Long permissionId);
 
-	Set<SysPermission> findPermissionsByRoleIds(@Param("roleIds") Set<Long> roleIds);
+	Set<SysPermission> findByRoleIds(@Param("roleIds") Set<Long> roleIds);
 
 }
