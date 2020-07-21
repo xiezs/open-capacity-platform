@@ -67,7 +67,12 @@
            
         </div>
         
-        
+        <div class="layui-form-item">
+	        <label class="layui-form-label">限流次数</label>
+	        <div class="layui-input-block">
+	            <input name="limitCount" placeholder="请输入限流次数" type="number" class="layui-input" lay-verify="required" value="10000" required/>
+	        </div>
+   		 </div>
         
         <div class="layui-form-item">
             <label class="layui-form-label">授权模式</label>
@@ -113,7 +118,9 @@
                 {field: 'clientId', sort: true, title: '应用标识'},
                 {field: 'clientSecretStr',  sort: true, title: '应用密钥'},
                 {field: 'webServerRedirectUri',sort: true, title: '回调地址'},
-                {field: 'authorizedGrantTypes', width:320 ,sort: true, title: 'oauth授权方式'},
+                {field: 'authorizedGrantTypes', width:320 ,sort: true, title: '授权方式'},
+                {field: 'ifLimit',sort: true, title: '是否限流'},
+                {field: 'limitCount'  ,sort: true, title: '每日API可访问次数'},
                 {field: 'enabled', sort: true, templet: '#client-tpl-state', title: '状态',width: 150},
                 {align: 'center',width:250, toolbar: '#app-table-bar', title: '操作'}
             ]]

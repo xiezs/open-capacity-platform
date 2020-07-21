@@ -28,6 +28,10 @@
 			<if test="ifLimit != null">
 				if_limit = #{ifLimit,jdbcType=INTEGER},
 			</if>
+			
+			<if test="limitCount != null">
+				limit_count = #{limitCount,jdbcType=BIGINT},
+			</if> 
 			 
 		</set>
 		where id = #{id,jdbcType=BIGINT}
