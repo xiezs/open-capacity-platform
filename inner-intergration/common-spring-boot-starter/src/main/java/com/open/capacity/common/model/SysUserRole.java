@@ -22,6 +22,9 @@ import lombok.EqualsAndHashCode;
 public class SysUserRole  extends Model<SysUserRole> implements Serializable{
 
 	private static final long serialVersionUID = 2096687235759960875L;
+	
+	@JsonSerialize(using=ToStringSerializer.class)
+	private Long id;
 	@TableField(value="user_id")
 	@JsonSerialize(using=ToStringSerializer.class)
 	private Long userId;

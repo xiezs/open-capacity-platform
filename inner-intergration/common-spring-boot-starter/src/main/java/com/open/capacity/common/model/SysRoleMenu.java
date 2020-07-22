@@ -25,6 +25,8 @@ public class SysRoleMenu  extends Model<SysRoleMenu> implements Serializable{
 
 	private static final long serialVersionUID = 64240478379218861L;
 	 
+	@JsonSerialize(using=ToStringSerializer.class)
+	private Long id;
 	@TableField(value="role_id")
 	@JsonSerialize(using=ToStringSerializer.class)
 	private Long roleId;

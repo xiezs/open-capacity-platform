@@ -192,7 +192,7 @@ CREATE TABLE `sys_role_user` (
   `user_id` bigint(20) NOT NULL,
   `role_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `user_id` (`user_id`,`role_id`)
+  UNIQUE KEY (`user_id`,`role_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
 
 #

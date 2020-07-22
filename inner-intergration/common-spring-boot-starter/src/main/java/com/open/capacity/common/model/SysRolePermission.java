@@ -23,6 +23,9 @@ public class SysRolePermission  extends Model<SysRolePermission> implements Seri
 
 	 
 	private static final long serialVersionUID = 4105899775460060259L;
+	
+	@JsonSerialize(using=ToStringSerializer.class)
+	private Long id;
 	@TableField(value="role_id")
 	@JsonSerialize(using=ToStringSerializer.class)
 	private Long roleId;
