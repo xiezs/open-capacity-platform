@@ -1,17 +1,14 @@
 package com.open.capacity.user.service.impl;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -21,8 +18,6 @@ import com.open.capacity.common.model.SysPermission;
 import com.open.capacity.common.model.SysRole;
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.common.web.Result;
-import com.open.capacity.log.dto.LogEntry;
-import com.open.capacity.log.monitor.BizLog;
 import com.open.capacity.user.dao.SysRoleDao;
 import com.open.capacity.user.dao.SysRoleMenuDao;
 import com.open.capacity.user.dao.SysRolePermissionDao;
@@ -84,11 +79,9 @@ public class SysRoleServiceImpl implements SysRoleService {
 			SysRole sysRole = sysRoleDao.findById(id);
 
 			sysRoleDao.deleteByPrimaryKey(id);
-			rolePermissionDao.deleteRolePermission(id, null);
-			roleMenuDao.deleteByPrimaryKey(id, null) ;
+			rolePermissionDao.deleteBySelective(id, null);
+			roleMenuDao.deleteBySelective(id, null) ;
 			userRoleDao.deleteUserRole(null, id);
-			
-			
 
 			log.info("删除角色：{}", sysRole);
 		} catch (Exception e) {
@@ -97,40 +90,7 @@ public class SysRoleServiceImpl implements SysRoleService {
 
 	}
 
-	@Transactional
-	@Override
-	public void setPermissionToRole(Long roleId, Set<Long> permissionIds)  throws ServiceException {
-		try {
-			SysRole sysRole = sysRoleDao.findById(roleId);
-			if (sysRole == null) {
-				throw new IllegalArgumentException("角色不存在");
-			}
-
-			// 查出角色对应的old权限
-			Set<Long> oldPermissionIds = rolePermissionDao.findPermissionsByRoleIds(Sets.newHashSet(roleId)).stream()
-					.map(p -> p.getId()).collect(Collectors.toSet());
-
-			// 需要添加的权限
-			Collection<Long> addPermissionIds = org.apache.commons.collections4.CollectionUtils.subtract(permissionIds,
-					oldPermissionIds);
-			if (!CollectionUtils.isEmpty(addPermissionIds)) {
-				addPermissionIds.forEach(permissionId -> {
-					rolePermissionDao.saveRolePermission(roleId, permissionId);
-				});
-			}
-			// 需要移除的权限
-			Collection<Long> deletePermissionIds = org.apache.commons.collections4.CollectionUtils
-					.subtract(oldPermissionIds, permissionIds);
-			if (!CollectionUtils.isEmpty(deletePermissionIds)) {
-				deletePermissionIds.forEach(permissionId -> {
-					rolePermissionDao.deleteRolePermission(roleId, permissionId);
-				});
-			}
-		} catch (Exception e) {
-			throw new ServiceException(e);
-		}
-
-	}
+	
 
 	@Override
 	public SysRole findById(Long id)  throws ServiceException{
@@ -161,7 +121,7 @@ public class SysRoleServiceImpl implements SysRoleService {
 	@Override
 	public Set<SysPermission> findPermissionsByRoleId(Long roleId)  throws ServiceException {
 		try {
-			return rolePermissionDao.findPermissionsByRoleIds(Sets.newHashSet(roleId));
+			return rolePermissionDao.findByRoleIds(Sets.newHashSet(roleId));
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}

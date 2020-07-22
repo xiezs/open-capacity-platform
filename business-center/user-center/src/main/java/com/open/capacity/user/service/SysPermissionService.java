@@ -49,8 +49,8 @@ public interface SysPermissionService {
 	/**
 	 * 授权
 	 * @param roleId
-	 * @param authIds
+	 * @param permissions
 	 */
-	void setAuthToRole(Long roleId, Set<Long> authIds)  throws ServiceException;
+	void setPermissionToRole(Long roleId, Set<Long> permissions)  throws ServiceException;
 
 }
