@@ -10,7 +10,7 @@ spring:
       scg:
         fallback:
           response-status: 426
-          response-body: "{'resp_code':'426' , 'resp_msg':'程序异常'}"
+          response-body: "{'code':'426' , 'msg':'程序异常'}"
         enabled: true 
       filter:
         enabled: true    
