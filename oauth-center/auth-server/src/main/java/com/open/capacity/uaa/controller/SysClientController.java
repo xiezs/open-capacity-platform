@@ -21,7 +21,6 @@ import com.open.capacity.common.model.SysClient;
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.common.web.Result;
 import com.open.capacity.log.annotation.LogAnnotation;
-import com.open.capacity.uaa.dto.SysClientDto;
 import com.open.capacity.uaa.service.SysClientService;
 
 import io.swagger.annotations.Api;
@@ -46,9 +45,9 @@ public class SysClientController {
     @ApiOperation(value = "应用列表")
     @PreAuthorize("hasAuthority('client:get/clients')")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
-    public PageResult<SysClient> listRoles(@RequestParam Map<String, Object> params) {
+    public PageResult<SysClient> list(@RequestParam Map<String, Object> params) {
         try {
-			return sysClientService.listRoles(params) ;
+			return sysClientService.list(params) ;
 		} catch (Exception e) {
 			throw new ControllerException(e);
 		}
@@ -70,7 +69,7 @@ public class SysClientController {
     @ApiOperation(value = "所有应用")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
     @PreAuthorize("hasAnyAuthority('client:get/clients')")
-    public List<SysClient> roles() {
+    public List<SysClient> findList() {
         try {
 			return sysClientService.findList(Maps.newHashMap());
 		} catch (Exception e) {
@@ -84,7 +83,7 @@ public class SysClientController {
     @LogAnnotation(module="auth-server",recordRequestParam=false)
     public void delete(@PathVariable Long id) {
     	try {
-			sysClientService.deleteClient(id);
+			sysClientService.delete(id);
 		} catch (Exception e) {
 			throw new ControllerException(e);
 		}
@@ -93,9 +92,9 @@ public class SysClientController {
 	@PostMapping("/saveOrUpdate")
     @ApiOperation(value = "保存或者修改应用")
     @PreAuthorize("hasAuthority('client:post/clients')")
-    public Result saveOrUpdate(@RequestBody SysClientDto clientDto){
+    public Result saveOrUpdate(@RequestBody SysClient sysClient){
         try {
-			return  sysClientService.saveOrUpdate(clientDto);
+			return  sysClientService.saveOrUpdate(sysClient);
 		} catch (Exception e) {
 			throw new ControllerException(e);
 		}
