@@ -16,8 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 
-import com.open.capacity.client.dao.SysClientDao;
-import com.open.capacity.client.dao.SysServiceDao;
+import com.open.capacity.client.service.SysClientService;
 
 import reactor.core.publisher.Mono;
 
@@ -30,10 +29,7 @@ import reactor.core.publisher.Mono;
 public class AuthorizeConfigManager implements ReactiveAuthorizationManager<AuthorizationContext> {
 
 	@Resource
-	private SysServiceDao sysServiceDao;
-
-	@Resource
-	private SysClientDao sysClientDao;
+	private SysClientService sysClientService ;
 
 	private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -54,12 +50,12 @@ public class AuthorizeConfigManager implements ReactiveAuthorizationManager<Auth
 
 				String clientId = athentication.getOAuth2Request().getClientId();
 
-				Map map = sysClientDao.getClient(clientId);
+				Map map = sysClientService.getClient(clientId);
 
 				if (map == null) {
 					return new AuthorizationDecision(false);
 				} else {
-					List<Map> list = sysServiceDao.listByClientId(Long.valueOf(String.valueOf(map.get("id"))));
+					List<Map> list = sysClientService.listByClientId(Long.valueOf(String.valueOf(map.get("id"))));
 
 					for (Iterator<Map> it = list.iterator(); it.hasNext();) {
 						Map temp = it.next();
