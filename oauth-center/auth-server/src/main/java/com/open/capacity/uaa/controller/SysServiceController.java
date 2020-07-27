@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.open.capacity.common.exception.controller.ControllerException;
+import com.open.capacity.common.model.SysClient;
 import com.open.capacity.common.model.SysService;
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.common.web.Result;
 import com.open.capacity.log.annotation.LogAnnotation;
-import com.open.capacity.uaa.dto.SysClientDto;
 import com.open.capacity.uaa.service.SysServiceService;
 
 import io.swagger.annotations.Api;
@@ -152,9 +152,9 @@ public class SysServiceController {
 
     @PostMapping("/granted")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
-    public Result setMenuToClient(@RequestBody SysClientDto clientDto) {
+    public Result setMenuToClient(@RequestBody SysClient sysClient) {
         try {
-			sysServiceService.setMenuToClient(clientDto.getId(), clientDto.getServiceIds());
+			sysServiceService.setMenuToClient(sysClient.getId(), sysClient.getServiceIds());
 			return Result.succeed("操作成功");
 		} catch (Exception e) {
 			throw new ControllerException(e);

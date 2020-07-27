@@ -1,10 +1,15 @@
 package com.open.capacity.common.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.security.oauth2.provider.client.BaseClientDetails;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.open.capacity.common.auth.details.DefaultClientDetails;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,10 +32,10 @@ public class SysClient implements Serializable{
    @JsonSerialize(using=ToStringSerializer.class)
    private Long id;
    private String clientId;
-   private String resourceIds = "";
    private String clientSecret;
    private String clientSecretStr;
    private String scope = "all";
+   private String resourceIds = "";
    private String authorizedGrantTypes = "authorization_code,password,refresh_token,client_credentials";
    private String webServerRedirectUri;
    private String authorities = "";
@@ -43,4 +48,20 @@ public class SysClient implements Serializable{
    @JsonSerialize(using=ToStringSerializer.class)
    private Long limitCount=10000L ;
    
+   
+   private List<Long> permissionIds;
+
+   private Set<Long> serviceIds;
+   
+   public DefaultClientDetails map(){
+	   DefaultClientDetails defaultClientDetails = new DefaultClientDetails(this.clientId, this.resourceIds , this.scope,this.authorizedGrantTypes,this.authorities,this.webServerRedirectUri) ;
+	   
+	   defaultClientDetails.setAccessTokenValiditySeconds(this.accessTokenValidity);
+	   defaultClientDetails.setRefreshTokenValiditySeconds(this.refreshTokenValidity);
+	   defaultClientDetails.setAutoApproveScopes(StringUtils.commaDelimitedListToSet(this.scope));
+	   defaultClientDetails.setIfLimit(this.ifLimit);
+	   defaultClientDetails.setLimitCount(this.limitCount);
+	   
+	   return defaultClientDetails;
+   }
 }

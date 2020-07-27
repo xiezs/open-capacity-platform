@@ -23,7 +23,6 @@ import com.open.capacity.common.web.PageResult;
 import com.open.capacity.common.web.Result;
 import com.open.capacity.uaa.dao.SysClientDao;
 import com.open.capacity.uaa.dao.SysClientServiceDao;
-import com.open.capacity.uaa.dto.SysClientDto;
 import com.open.capacity.uaa.service.SysClientService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -53,18 +52,18 @@ public class SysClientServiceImpl implements SysClientService {
 
      
     @Override
-    public Result saveOrUpdate(SysClientDto clientDto) {
+    public Result saveOrUpdate(SysClient sysClient) {
         try {
-			clientDto.setClientSecret(passwordEncoder.encode(clientDto.getClientSecretStr()));
+			sysClient.setClientSecret(passwordEncoder.encode(sysClient.getClientSecretStr()));
 
-			if (clientDto.getId() != null) {// 修改
-			    sysClientDao.updateByPrimaryKey(clientDto);
+			if (sysClient.getId() != null) {// 修改
+			    sysClientDao.updateByPrimaryKey(sysClient);
 			} else {// 新增
-				SysClient r = sysClientDao.getClient(clientDto.getClientId());
+				SysClient r = sysClientDao.getClient(sysClient.getClientId());
 			    if (r != null) {
-			        return Result.failed(clientDto.getClientId()+"已存在");
+			        return Result.failed(sysClient.getClientId()+"已存在");
 			    }
-			    sysClientDao.save(clientDto);
+			    sysClientDao.save(sysClient);
 			}
 			return Result.succeed("操作成功");
 		} catch (Exception e) {
@@ -76,11 +75,12 @@ public class SysClientServiceImpl implements SysClientService {
 
     @Override
     @Transactional
-    public void deleteClient(Long id) {
+    public void delete(Long id) {
         try {
+        	SysClient client = sysClientDao.getById(id);
 			sysClientDao.delete(id);
 			sysClientServiceDao.delete(id,null);
-			redisTemplate.boundHashOps(UaaConstant.CACHE_CLIENT_KEY).delete(id) ;
+			redisTemplate.boundHashOps(UaaConstant.CACHE_CLIENT_KEY).delete(client.map().getClientId()) ;
 			log.debug("删除应用id:{}", id);
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -88,7 +88,7 @@ public class SysClientServiceImpl implements SysClientService {
     }
 
 	@Override
-	public PageResult<SysClient> listRoles(Map<String, Object> params) {
+	public PageResult<SysClient> list(Map<String, Object> params) {
 
         try {
 			//设置分页信息，分别是当前页数和每页显示的总记录数【记住：必须在mapper接口中的方法执行之前设置该分页信息】
@@ -130,7 +130,7 @@ public class SysClientServiceImpl implements SysClientService {
 
 			int i = sysClientDao.updateByPrimaryKey(client) ;
 			
-			ClientDetails clientDetails = jdbcClientDetailsService.loadClientByClientId(client.getClientId()); 
+			ClientDetails clientDetails = client.map();
 			
 			if(enabled){
 				redisTemplate.boundHashOps(UaaConstant.CACHE_CLIENT_KEY).put(client.getClientId(), JSONObject.toJSONString(clientDetails));

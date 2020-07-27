@@ -6,24 +6,26 @@ import java.util.Map;
 import com.open.capacity.common.model.SysClient;
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.common.web.Result;
-import com.open.capacity.uaa.dto.SysClientDto;
 
 @SuppressWarnings("all")
 public interface SysClientService {
 
 	
+	Result saveOrUpdate(SysClient clientDto);
+	
+	void delete(Long id);
+	
+	Result updateEnabled(Map<String, Object> params);
+	
 	SysClient getById(Long id) ;
-	 
 
-    Result saveOrUpdate(SysClientDto clientDto);
-
-    void deleteClient(Long id);
+  
     
-    public PageResult<SysClient> listRoles(Map<String, Object> params);
+    public PageResult<SysClient> list(Map<String, Object> params);
     
     List<SysClient> findList(Map<String, Object> params) ;
     
 
-	Result updateEnabled(Map<String, Object> params);
+	
     
 }
