@@ -1,20 +1,18 @@
 package com.open.capacity.uaa.client.service.impl;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
-import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.open.capacity.common.constant.UaaConstant;
 import com.open.capacity.uaa.client.dao.SysClientDao;
+import com.open.capacity.uaa.client.dao.SysServiceDao;
 import com.open.capacity.uaa.client.service.SysClientService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +35,9 @@ public class SysClientServiceImpl implements SysClientService {
     @Autowired
     private SysClientDao sysClientDao ;
     
+    @Autowired
+    private SysServiceDao sysServiceDao ;
+    @Cacheable(value = "client", key ="#clientId") 
 	public Map getClient(String clientId){
 		// 先从redis获取
 		Map client = null  ;
@@ -48,6 +49,11 @@ public class SysClientServiceImpl implements SysClientService {
         	client = JSONObject.parseObject(value, Map.class);
         }
         return client ;
+	}
+
+	@Cacheable(value = "service", key ="#clientId") 
+	public List<Map> listByClientId(Long clientId) {
+		return sysServiceDao.listByClientId(clientId);
 	}
 	
 	 
