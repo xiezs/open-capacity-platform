@@ -64,7 +64,7 @@ public class RateLimitFilter implements GlobalFilter, Ordered {
             exchange.getResponse().setStatusCode(HttpStatus.TOO_MANY_REQUESTS);
             ServerHttpResponse response = exchange.getResponse();
             JSONObject message = new JSONObject();
-            message.put("code", -1);
+            message.put("code", 429);
             message.put("msg", "TOO MANY REQUESTS!");
             byte[] bits = message.toJSONString().getBytes(StandardCharsets.UTF_8);
             DataBuffer buffer = response.bufferFactory().wrap(bits);
