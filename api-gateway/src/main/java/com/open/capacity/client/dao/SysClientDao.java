@@ -1,4 +1,4 @@
-package com.open.capacity.uaa.client.dao;
+package com.open.capacity.client.dao;
 
 import java.util.List;
 import java.util.Map;

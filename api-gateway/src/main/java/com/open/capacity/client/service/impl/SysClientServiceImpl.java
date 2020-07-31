@@ -1,4 +1,4 @@
-package com.open.capacity.uaa.client.service.impl;
+package com.open.capacity.client.service.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -10,10 +10,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.open.capacity.client.dao.SysClientDao;
+import com.open.capacity.client.dao.SysServiceDao;
+import com.open.capacity.client.service.SysClientService;
 import com.open.capacity.common.constant.UaaConstant;
-import com.open.capacity.uaa.client.dao.SysClientDao;
-import com.open.capacity.uaa.client.dao.SysServiceDao;
-import com.open.capacity.uaa.client.service.SysClientService;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -16,6 +16,7 @@ import com.open.capacity.uaa.client.service.RbacService;
 * @version 创建时间：2018年2月1日 下午9:50:27 
 * blog: https://blog.51cto.com/13005375 
 * code: https://gitee.com/owenwangwen/open-capacity-platform
+* RbacService适用于zuul网关应用API分配，需要在api-gateway中实现接口
 */
 @Component
 @SuppressWarnings("all")
@@ -57,9 +58,9 @@ public class OpenAuthorizeConfigManager implements AuthorizeConfigManager {
 			
 			case 1 : 
 				//方式1：网关根据API权限处理，根据应用分配服务权限，建议采用此方式
-//	 			config
-//	 			.anyRequest()
-//	 				.access("@rbacService.hasPermission(request, authentication)") ;
+//				if(rbacService!=null){
+//					config.anyRequest().access("@rbacService.hasPermission(request, authentication)") ;
+//				}
 	 			//方式2：强制校验token 非API权限处理，此方式不需要页面根据应用分配服务权限
 				config.anyRequest().authenticated() ;
 				break ;
