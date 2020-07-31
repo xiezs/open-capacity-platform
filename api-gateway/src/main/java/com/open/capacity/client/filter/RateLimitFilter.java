@@ -18,9 +18,9 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import com.open.capacity.client.service.SysClientService;
 import com.open.capacity.client.utils.RedisLimiterUtils;
 import com.open.capacity.common.web.Result;
-import com.open.capacity.uaa.client.service.SysClientService;
 
 import lombok.extern.slf4j.Slf4j;
 

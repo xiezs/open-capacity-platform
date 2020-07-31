@@ -57,14 +57,9 @@ public class AuthorizeConfigManager implements ReactiveAuthorizationManager<Auth
 				} else {
 					List<Map> list = sysClientService.listByClientId(Long.valueOf(String.valueOf(map.get("id"))));
 
-					for (Iterator<Map> it = list.iterator(); it.hasNext();) {
-						Map temp = it.next();
-
-						if (antPathMatcher.match(String.valueOf(temp.get("path")), request.getURI().getPath())) {
-							return new AuthorizationDecision(true);
-						}
-					}
-					return new AuthorizationDecision(false);
+					boolean flag = list.stream().anyMatch(item -> antPathMatcher.match(String.valueOf(item.get("path")),request.getURI().getPath()));
+					
+					return new AuthorizationDecision(flag);
 				}
 
 			}
