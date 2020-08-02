@@ -62,7 +62,7 @@
                        for (i = 0; i < resp.data.length; i++) {
                             var item = resp.data[i];
                            if(item != null && typeof(item) !=undefined) {
-                               var coordinates = [Number(item.geoip.longitude),Number(item.geoip.latitude)];
+                               var coordinates = [Number(item.lon),Number(item.lat)];
                                features.push( new ol.Feature(new ol.geom.Point(coordinates)));
                            }
                        }

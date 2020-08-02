@@ -28,33 +28,30 @@ import io.swagger.annotations.ApiOperation;
  * ELK收集mysql慢查询日志数据
  */
 @RestController
-public class SqlSlowController  {
-    private static final String ES_PARAM_QUERY = "query";
+public class SqlSlowController {
+	private static final String ES_PARAM_QUERY = "query";
 
-    @Autowired
-    public SqlSlowDao sqlSlowDao;
+	@Autowired
+	public SqlSlowDao sqlSlowDao;
 
-    @ApiOperation(value = "系统日志查询列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
-            @ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer")
-    })
-    @GetMapping(value = "/slowQueryLog")
-    public PageResult<SqlSlowDocument> getPage(@RequestParam Map<String, Object> params) {
-        BoolQueryBuilder builder = QueryBuilders.boolQuery();
-        String searchKey = (String) params.get("searchKey");
-        String searchValue = (String) params.get("searchValue");
-        if (StrUtil.isNotEmpty(searchKey) && StrUtil.isNotEmpty(searchValue)) {
-            // 模糊查询
-            builder.must(QueryBuilders.matchQuery(ES_PARAM_QUERY, searchValue));
-        }
+	@ApiOperation(value = "系统日志查询列表")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "page", value = "分页起始位置", required = true, dataType = "Integer"),
+			@ApiImplicitParam(name = "limit", value = "分页结束位置", required = true, dataType = "Integer") })
+	@GetMapping(value = "/slowQueryLog")
+	public PageResult<SqlSlowDocument> getPage(@RequestParam Map<String, Object> params) {
+		BoolQueryBuilder builder = QueryBuilders.boolQuery();
+		String searchKey = MapUtils.getString(params, "searchKey");
+		String searchValue = MapUtils.getString(params, "searchValue");
+		if (StrUtil.isNotEmpty(searchKey) && StrUtil.isNotEmpty(searchValue)) {
+			// 模糊查询 相当于and
+			builder.must(QueryBuilders.matchQuery(ES_PARAM_QUERY, searchValue));
+		}
 
-        
-		Pageable pageable = PageRequest.of(MapUtils.getInteger(params, "page")-1, MapUtils.getInteger(params, "limit")
-				//, Sort.Direction.DESC,"timestamp"
-				);
+		Pageable pageable = PageRequest.of(MapUtils.getInteger(params, "page") - 1,
+				MapUtils.getInteger(params, "limit")); //// Sort.Direction.DESC,"@timestamp"
 		SearchQuery query = new NativeSearchQueryBuilder().withQuery(builder).withPageable(pageable).build();
 		Page<SqlSlowDocument> result = sqlSlowDao.search(query);
-		return PageResult.<SqlSlowDocument>builder().data(result.getContent()).code(0).count(result.getTotalElements()).build();
-    }
+		return PageResult.<SqlSlowDocument>builder().data(result.getContent()).code(0).count(result.getTotalElements())
+				.build();
+	}
 }

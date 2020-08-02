@@ -52,7 +52,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- apo -->
+        <!-- aop -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>

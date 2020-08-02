@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.open.capacity.es.entity.ServiceLogDocument;
 
 /**
- * @author zlt
+ * ELK收集ocp中info.info日志查询接口
  */
 @Repository
 public interface ServiceLogDao extends ElasticsearchRepository<ServiceLogDocument, String> {

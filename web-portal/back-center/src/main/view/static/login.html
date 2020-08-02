@@ -94,7 +94,6 @@ layui.config({
         field.client_secret = config.clientSecret ;
 		field.scope = config.scope;
         layer.load(2);
-        debugger ;
         $.ajax({
         	url: config.base_server + 'api-auth/oauth/token',
             data: field,
