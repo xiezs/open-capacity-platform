@@ -9,9 +9,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import lombok.Data;
 
 /**
- * 日志对象
- *
- * @author zlt
+ * 日志对象，映射es中的索引ocp-log-*
  */
 @Data
 @Document(indexName = "ocp-log-*", type = "doc")

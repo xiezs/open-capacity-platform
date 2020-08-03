@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.open.capacity.es.entity.NinxLogDocument;
 
 /**
- * @author zlt
+ * ELK收集nginx中的日志查询接口
  */
 @Repository
 public interface NginxLogDao extends ElasticsearchRepository<NinxLogDocument, String> {

@@ -8,18 +8,41 @@
     </div>
     <div class="layui-card-body">
         <div class="layui-form toolbar">
-            搜索：
-            <select id="log-search-key">
-                <option value="">-请选择-</option>
-                <option value="message">日志信息</option>
-                <option value="logLevel">日志级别</option>
-                <option value="appName">应用名</option>
-                <option value="classname">类名</option>
-                <option value="contextTraceId">上下文跟踪号</option>
-                <option value="currentTraceId">当前跟踪号</option>
-            </select>&emsp;
-            <input id="log-search-value" class="layui-input search-input" type="text" placeholder="输入关键字"/>&emsp;
-            <button id="log-btn-search" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+        
+        	<div class="layui-inline">
+        		搜索：
+        		<div class="layui-input-inline">
+	        		<select id="log-search-key">
+		                <option value="">-请选择-</option>
+		                <option value="message">日志信息</option>
+		                <option value="logLevel">日志级别</option>
+		                <option value="appName">应用名</option>
+		                <option value="classname">类名</option>
+		                <option value="contextTraceId">上下文跟踪号</option>
+		                <option value="currentTraceId">当前跟踪号</option>
+	            	</select>&emsp;
+        		</div>
+        	</div>
+            <div class="layui-inline">
+            	<input id="log-search-value" class="layui-input search-input" type="text" placeholder="输入关键字"/>&emsp;
+            </div>
+            <div class="layui-inline">
+            	开始时间: 
+            	<div class="layui-input-inline">	
+            		<input type="text" id="startDate" class="layui-input search-input" type="text">
+            	</div>
+            </div>
+            
+            <div class="layui-inline">
+            	结束时间: 
+            	<div class="layui-input-inline">	
+            		<input type="text" id="endDate" class="layui-input search-input" type="text">
+            	</div>
+            </div>
+            
+            <div class="layui-inline">
+            	<button id="log-btn-search" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+            </div>
         </div>
 
         <table class="layui-table" id="log-table" lay-filter="log-table"></table>
@@ -27,10 +50,22 @@
 </div>
 
 <script>
-    layui.use(['form', 'table', 'util', 'config', 'admin', 'upload'], function () {
+    layui.use(['form', 'table', 'util', 'config', 'admin', 'upload' ,'laydate'], function () {
         var table = layui.table;
         var config = layui.config;
         var util = layui.util;
+        var laydate = layui.laydate ;
+
+
+		laydate.render({
+   			elem: '#startDate',
+   			type: 'datetime'
+   		});
+   		 
+   		laydate.render({
+   			elem: '#endDate',
+   			type: 'datetime'
+   		});
 
         // 渲染表格
         table.render({
@@ -69,7 +104,10 @@
         $('#log-btn-search').click(function () {
             var key = $('#log-search-key').val();
             var value = $('#log-search-value').val();
-            table.reload('log-table', {where: {searchKey: key, searchValue: value}});
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+            
+            table.reload('log-table', {where: {searchKey: key, searchValue:value ,startDate:startDate,endDate:endDate}});
         });
     });
 </script>
