@@ -269,7 +269,6 @@ public class SysUserServiceImpl implements SysUserService {
 	/**
 	 * 给用户设置角色
 	 */
-	
 	@Override
 	@Transactional
 	public void setRoleToUser(Long id, Set<Long> roleIds)  throws ServiceException {

@@ -1,3 +1,13 @@
+server:
+  servlet:
+    session:
+      cookie: 
+        path: /
+        max-age: -1
+        http-only: false
+        name: SESSIONID
+ 
+
 spring:
   session:
     store-type: redis  

@@ -48,9 +48,9 @@ public class RequestStatFilter extends ZuulFilter {
 		String traceId = MDC.get(TraceConstant.LOG_B3_TRACEID);
 	    MDC.put(TraceConstant.LOG_TRACE_ID, traceId);
 		RequestContext requestContext = RequestContext.getCurrentContext();
-		String URL = requestContext.getRequest().getRequestURL().toString();
+		String url = requestContext.getRequest().getRequestURL().toString();
 		requestContext.addZuulRequestHeader(TraceConstant.HTTP_HEADER_TRACE_ID, traceId);
-		log.info("request url = " + URL + ", traceId = " + traceId);
+		log.info("request url = " + url + ", traceId = " + traceId);
 //		RibbonFilterContextHolder.getContext().add("hello", "hello");
 		return null;
 	}

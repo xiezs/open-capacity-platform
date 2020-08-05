@@ -26,7 +26,7 @@ import lombok.EqualsAndHashCode;
 public class SysUser  extends Model<SysUser>  implements Serializable {
 
 	private static final long serialVersionUID = -5886012896705137070L;
-	@TableId(value="id",type=IdType.ID_WORKER)  //雪花算法  id生成策略
+	@TableId(value="id",type=IdType.ASSIGN_ID)  //雪花算法  id生成策略
 	@JsonSerialize(using=ToStringSerializer.class)
 	private Long id;
 	private String username;

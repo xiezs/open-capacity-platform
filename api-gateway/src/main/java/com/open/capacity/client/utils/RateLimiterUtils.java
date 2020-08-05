@@ -6,9 +6,7 @@ import com.google.common.util.concurrent.RateLimiter;
 
 //http://blog.csdn.net/lzy_lizhiyang/article/details/47951423
 public class RateLimiterUtils {
-
-	private static final ConcurrentHashMap<String, RateLimiter> resourceLimitMap = new ConcurrentHashMap<String, RateLimiter>();
-
+	private static final ConcurrentHashMap<String, RateLimiter> RESOURCE_LIMIT_MAP = new ConcurrentHashMap<String, RateLimiter>();
 	/**
 	 * 限流
 	 * 
@@ -30,21 +28,21 @@ public class RateLimiterUtils {
 	 *            需要限流的对象标识
 	 */
 	public static RateLimiter getRateLimit(String resource) {
-		RateLimiter limit = resourceLimitMap.get(resource);
+		RateLimiter limit = RESOURCE_LIMIT_MAP.get(resource);
 		if (limit == null) {
 			synchronized (RateLimiterUtils.class) {
-				limit = resourceLimitMap.get(resource);
+				limit = RESOURCE_LIMIT_MAP.get(resource);
 				// double qps = getQpsByResource(resource);
 				double qps = 0.0;
 				if (limit == null) {
 					limit = RateLimiter.create(qps);
-					resourceLimitMap.putIfAbsent(resource, limit);
+					RESOURCE_LIMIT_MAP.putIfAbsent(resource, limit);
 					// LoggerUtil.info(RateLimiterUtils.class, "create rate
 					// limiter for key:{0},QPS:{1}", resource,qps);
 				}
 			}
 		}
-		return resourceLimitMap.get(resource);
+		return RESOURCE_LIMIT_MAP.get(resource);
 	}
 
 	 

@@ -27,7 +27,7 @@ import lombok.EqualsAndHashCode;
 public class SysPermission extends Model<SysPermission> implements Serializable {
 
 	private static final long serialVersionUID = 1389727646460449239L;
-	@TableId(value="id",type=IdType.ID_WORKER)  //雪花算法  id生成策略
+	@TableId(value="id",type=IdType.ASSIGN_ID)  //雪花算法  id生成策略
 	@JsonSerialize(using=ToStringSerializer.class)
 	private Long id;
 	private String permission;

@@ -198,7 +198,7 @@ public class SysUserController {
     })
     @GetMapping("/users")
     @LogAnnotation(module = "user-center", recordRequestParam = false)
-    public PageResult<SysUser> findUsers(@RequestHeader(name = "trace_id", required = false) String traceId, @RequestParam Map<String, Object> params) throws ControllerException {
+    public PageResult<SysUser> findUsers(@RequestParam Map<String, Object> params) throws ControllerException {
 
         try {
             return sysUserService.findUsers(params);

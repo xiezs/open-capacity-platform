@@ -20,25 +20,25 @@ import com.open.capacity.common.constant.TraceConstant;
 public class TraceUtil {
 
 	public static String getTrace() {
-		String app_trace_id = "";
+		String appTraceId = "";
 		try {
 			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 					.getRequest();
 
-			app_trace_id = request.getHeader(TraceConstant.HTTP_HEADER_TRACE_ID);
+			appTraceId = request.getHeader(TraceConstant.HTTP_HEADER_TRACE_ID);
 
 			// 未经过HandlerInterceptor的设置
 			if (StringUtils.isBlank(MDC.get(TraceConstant.LOG_TRACE_ID))) {
 				// 但是有请求头，重新设置
-				if (StringUtils.isNotEmpty(app_trace_id)) {
-					MDC.put(TraceConstant.LOG_TRACE_ID, app_trace_id);
+				if (StringUtils.isNotEmpty(appTraceId)) {
+					MDC.put(TraceConstant.LOG_TRACE_ID, appTraceId);
 				}
 			}
 		} catch (Exception e) {
 
 		}
 
-		return app_trace_id;
+		return appTraceId;
 
 	}
 

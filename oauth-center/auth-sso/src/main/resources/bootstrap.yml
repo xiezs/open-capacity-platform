@@ -4,6 +4,8 @@ server:
 #  context-path: /clientOne #2.0不再使用此方式配置
 #服务名称
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: auth-sso
   
