@@ -8,7 +8,6 @@ import java.util.UUID;
 public class UUIDUtils {
     /**
      * 生产GUID 36位
-     *
      * @return
      */
     public static String getGUID() {

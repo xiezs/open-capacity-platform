@@ -38,9 +38,9 @@ public class ResponseStatFilter extends ZuulFilter {
 
 	@Override public Object run() {
 		RequestContext requestContext = RequestContext.getCurrentContext();
-		String URL = requestContext.getRequest().getRequestURL().toString();
+		String url = requestContext.getRequest().getRequestURL().toString();
 		String traceId =  MDC.get(TraceConstant.LOG_B3_TRACEID) ;
-		log.info("response url " + URL + ", traceId = " + traceId);
+		log.info("response url " + url + ", traceId = " + traceId);
 		requestContext.getResponse().addHeader(TraceConstant.HTTP_HEADER_TRACE_ID, traceId); 
 		return null;
 	}

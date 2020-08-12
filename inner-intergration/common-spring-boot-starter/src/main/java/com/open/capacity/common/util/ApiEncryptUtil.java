@@ -96,7 +96,7 @@ public class ApiEncryptUtil {
 			// 这样即使在TS_DIFF有效期内，短时间内再收到相同报文的请求也不会重复处理了
 
 			// 返回解密的数据
-			resp.put(DATA, decryptBy3DES(data, getSignKey(appId)));
+			resp.put(DATA, decryptBy3Des(data, getSignKey(appId)));
 
 		} catch (Exception e) {
 			resp.put(CODE, "1000");
@@ -138,7 +138,7 @@ public class ApiEncryptUtil {
 	 * 密钥长度不少于24的倍数位
 	 * @return
 	 */
-	private static String encryptBy3DES(String data, String desKey) {
+	private static String encryptBy3Des(String data, String desKey) {
 		String result = null;
 		try {
 			SecureRandom secureRandom = new SecureRandom();
@@ -162,7 +162,7 @@ public class ApiEncryptUtil {
 	 * @param desKey
 	 * @return
 	 */
-	private static String decryptBy3DES(String data, String desKey) {
+	private static String decryptBy3Des(String data, String desKey) {
 		String desResult = null;
 		try {
 			SecureRandom secureRandom = new SecureRandom();
@@ -219,7 +219,7 @@ public class ApiEncryptUtil {
 			data.put("scope", "app");
 			
 			// 业务请求参数使用3des加密
-			String dataStr = encryptBy3DES(JSON.toJSONString(data), signKey);
+			String dataStr = encryptBy3Des(JSON.toJSONString(data), signKey);
 			// 生成请求参数的签名
 			sign = generateSign(appId, timestamp, dataStr, signKey);
 			// 请求报文

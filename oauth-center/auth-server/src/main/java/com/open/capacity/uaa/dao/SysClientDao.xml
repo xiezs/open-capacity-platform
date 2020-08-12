@@ -86,7 +86,7 @@
     </select>
 
     <select id="findList" resultType="com.open.capacity.common.model.SysClient">
-        select  id id , client_id clientId , resource_ids resourceIds ,client_secret clientSecret,client_secret_str clientSecretStr ,web_server_redirect_uri webServerRedirectUri ,authorized_grant_types  authorizedGrantTypes ,if_limit ifLimit , limit_count limitCount  ,status   from oauth_client_details t
+        select id id , client_id clientId, client_secret clientSecret, client_secret_str clientSecretStr  , resource_ids resourceIds ,scope,authorized_grant_types  authorizedGrantTypes ,access_token_validity accessTokenValidity ,refresh_token_validity  refreshTokenValidity ,web_server_redirect_uri webServerRedirectUri , additional_information additionalInformation ,authorities,if_limit ifLimit , limit_count limitCount  ,autoapprove,status  from oauth_client_details t
         <include refid="where"/>
         <!--<if test="params.page != null and params.page != ''  and params.limit != null and params.limit != '' ">-->
 			<!--limit #{params.page},#{params.limit}-->

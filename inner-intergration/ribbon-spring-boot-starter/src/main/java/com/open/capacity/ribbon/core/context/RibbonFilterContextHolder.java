@@ -105,14 +105,13 @@ public class RibbonFilterContextHolder {
 			// Set default
 			strategyName = MODE_INHERITABLETHREADLOCAL;
 		}
-
-		if (strategyName.equals(MODE_THREADLOCAL)) {
+		if (MODE_THREADLOCAL.equals(strategyName)) {
 			strategy = new ThreadLocalRibbonFilterContextHolderStrategy();
 		}
-		else if (strategyName.equals(MODE_INHERITABLETHREADLOCAL)) {
+		else if (MODE_INHERITABLETHREADLOCAL.equals(strategyName)) {
 			strategy = new InheritableThreadLocalRibbonFilterContextHolderStrategy();
 		}
-		else if (strategyName.equals(MODE_GLOBAL)) {
+		else if (MODE_GLOBAL.equals(strategyName)) {
 			strategy = new GlobalRibbonFilterContextHolderStrategy();
 		}
 		else {

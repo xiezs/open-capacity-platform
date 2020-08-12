@@ -14,7 +14,10 @@ import com.open.capacity.client.dao.SysClientDao;
 import com.open.capacity.client.dao.SysServiceDao;
 import com.open.capacity.client.service.SysClientService;
 import com.open.capacity.common.constant.UaaConstant;
+import com.open.capacity.common.exception.service.ServiceException;
+import com.open.capacity.common.model.SysClient;
 
+import cn.hutool.core.bean.BeanUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -35,19 +38,38 @@ public class SysClientServiceImpl implements SysClientService {
     private SysClientDao sysClientDao;
     @Autowired
     private SysServiceDao sysServiceDao ;
-    @Cacheable(value = "client", key ="#clientId") 
     public Map getClient(String clientId) {
-        // 先从redis获取
-        Map client = null;
-        String value = (String) redisTemplate.boundHashOps(UaaConstant.CACHE_CLIENT_KEY).get(clientId);
-        if (StringUtils.isBlank(value)) {
-            // 没有从数据库读取
-            client = sysClientDao.getClient(clientId);
-        } else {
-            client = JSONObject.parseObject(value, Map.class);
-        }
-        return client;
-    }
+		// 先从redis获取
+		Map client = null;
+		String value = (String) redisTemplate.boundHashOps(UaaConstant.CACHE_CLIENT_KEY).get(clientId);
+		// 没有从数据库获取
+		if (StringUtils.isBlank(value)) {
+			client = cacheAndGetClient(clientId);
+		} else {
+			client = JSONObject.parseObject(value, Map.class);
+		}
+		return client;
+	}
+
+	private Map cacheAndGetClient(String clientId) {
+		// 从数据库读取
+		Map client = null;
+		try {
+			client = sysClientDao.getClient(clientId);
+			if (client != null) {
+				SysClient sysClient = BeanUtil.toBean(client, SysClient.class);
+				// 写入redis缓存
+				redisTemplate.boundHashOps(UaaConstant.CACHE_CLIENT_KEY).put(clientId,
+						JSONObject.toJSONString(sysClient.map()));
+				log.info("缓存clientId:{},{}", clientId, sysClient);
+			}
+
+		} catch (Exception e) {
+			throw new ServiceException("应用状态不合法")  ;
+		}
+
+		return client;
+	}
 
     @Cacheable(value = "service", key ="#clientId") 
 	public List<Map> listByClientId(Long clientId) {

@@ -47,15 +47,13 @@ public class SysClient implements Serializable{
    private Integer ifLimit ;
    @JsonSerialize(using=ToStringSerializer.class)
    private Long limitCount=10000L ;
-   
-   
    private List<Long> permissionIds;
-
    private Set<Long> serviceIds;
    
    public DefaultClientDetails map(){
 	   DefaultClientDetails defaultClientDetails = new DefaultClientDetails(this.clientId, this.resourceIds , this.scope,this.authorizedGrantTypes,this.authorities,this.webServerRedirectUri) ;
-	   
+	   defaultClientDetails.setId(this.id);
+	   defaultClientDetails.setClientSecret(this.clientSecret);
 	   defaultClientDetails.setAccessTokenValiditySeconds(this.accessTokenValidity);
 	   defaultClientDetails.setRefreshTokenValiditySeconds(this.refreshTokenValidity);
 	   defaultClientDetails.setAutoApproveScopes(StringUtils.commaDelimitedListToSet(this.scope));
