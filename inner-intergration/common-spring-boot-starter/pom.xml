@@ -9,7 +9,7 @@
   <description>公共支撑</description>
   
   <properties>
-  		<xss-version>1.5.5</xss-version>
+  		<xss-version>1.5.7</xss-version>
   		<chaos-monkey>2.1.1</chaos-monkey>
 		<orika-version>1.5.2</orika-version>
 		<modelmapper-version>2.3.3</modelmapper-version>
